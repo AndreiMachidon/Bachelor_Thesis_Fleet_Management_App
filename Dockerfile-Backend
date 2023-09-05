@@ -1,0 +1,29 @@
+# Use a base image with OpenJDK 19
+FROM openjdk:19-jdk-alpine as build
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the Maven project file (pom.xml)
+COPY pom.xml .
+
+# Download dependencies (this step is cached if the pom.xml file hasn't changed)
+RUN mvn dependency:go-offline -B
+
+# Copy the application source code into the container
+COPY src ./src
+
+# Build the application
+RUN mvn clean install
+
+# Create a directory for the application
+RUN mkdir /app
+
+# Copy the JAR file from the build stage into the container
+COPY --from=build /app/target/*.jar /app/
+
+# Expose the port your Spring Boot application listens on (customize as needed)
+EXPOSE 8080
+
+# Start the Spring Boot application
+CMD ["java", "-jar", "your-spring-app-name.jar"]
