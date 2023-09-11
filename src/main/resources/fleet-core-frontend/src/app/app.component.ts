@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TestServiceService } from './services/test-service.service';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +8,9 @@ import { TestServiceService } from './services/test-service.service';
 export class AppComponent {
   greeting: string = '';
 
-  constructor(private testService: TestServiceService){}
+  constructor(){}
 
 
   ngOnInit(){
-      this.testService.getGreetings().subscribe((response) => {
-        this.greeting = response;
-      })
   }
 }

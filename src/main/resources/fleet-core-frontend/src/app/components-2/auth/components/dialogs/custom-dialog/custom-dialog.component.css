@@ -1,0 +1,13 @@
+.dialog-card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.mat-typography{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
