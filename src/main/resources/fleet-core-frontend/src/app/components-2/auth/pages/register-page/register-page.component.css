@@ -1,7 +1,7 @@
 .main-container{
     width: 100%;
     height: 100%;
-    background-color: #0B1437;
+    background-color: #424242;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,8 +10,8 @@
 .register-container{
     height: 100%;
     width: 80%;
-    padding: 2rem;
-    padding-top: 4rem;
+    padding: 1rem;
+    padding-top: 2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -26,26 +26,25 @@
 }
 
 .register-header{
-    color: #03DAA3;
-    font-size: xx-large;
+    color: white;
+    font-size: x-large;
     font-weight: bold;
 }
 
 .register-container p{
     color: white;
     font-size: large;
-    margin-top: 2rem;
 
 }
 
 mat-form-field{
-    margin-top: 2rem;
+    margin-top: 1rem;
     width: 40%;
 }
 
 .admin-details-header{
-    color: #03DAA3;
-    font-size: xx-large;
+    color: white;
+    font-size: x-large;
     font-weight: bold;
     margin-top: 2rem;
 }
@@ -57,35 +56,31 @@ mat-form-field{
     width: 100%;
 }
 
-.submit-register-form-button{
-    width: 15%;
-    height: 4rem;
-    border-radius: 2.5rem;
-    margin-top: 2rem;
-    background-color: #03DAA3;
-    color: white;
-    font-weight: bold;
-    font-size: large;
-}
-
 mat-divider{
     width: 70%;
     background-color: grey;
     margin-top: 3rem;
 }
 
+.register-button{
+    margin-top: 1.5rem;
+    width: 120px;
+    height: 40px;
+}
+
 .sign-in-return{
     display: flex;
     align-items: center;
+    margin-top: 1.5rem;
 }
 
 .sign-in-link{
-    color: #03DAA3;
+    color: #69F0AE;
 }
 
   
 .sign-in-return a:hover {
-    color: #028F6D;
+    color: #00C853
 }
 
 mat-icon {  
@@ -93,10 +88,6 @@ mat-icon {
     vertical-align: top;
 }
 
-mat-form-field mat-label,
-mat-form-field mat-input-element {
-  color: #03DAA3;
-}
 
 
 

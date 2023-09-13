@@ -1,0 +1,50 @@
+.user-details-container {
+    background: linear-gradient(to right, #5D5D5D, #333333);
+    height: 50px;
+    width: 300px;
+    border-radius: 25px; 
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    padding-left: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    justify-content: space-between;
+}
+
+.profile-image {
+    border: 2px solid #69F0AE;
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    overflow: hidden;
+}
+
+.avatar {
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: small;
+    color: white;
+    width: 60%;
+    height: 150%;
+}
+
+.name-text{
+    margin-top: 10px;
+    color: #69F0AE;
+}
+
+.role-text{
+    margin-top: -24px;
+    color: white;
+    opacity: 0.5;
+}
+

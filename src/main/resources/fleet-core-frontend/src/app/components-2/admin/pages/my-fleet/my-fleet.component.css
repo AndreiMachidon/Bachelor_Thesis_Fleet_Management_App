@@ -1,0 +1,12 @@
+.my-fleet-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%; 
+    overflow-x: auto; 
+  }
+  
+  .vehicle-card {
+    width: 550px;
+    margin: 5px;
+    box-sizing: border-box; 
+  }

@@ -5,13 +5,27 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginPageComponent } from './components-2/auth/pages/login-page/login-page.component';
 import { ForgotPasswordPageComponent } from './components-2/auth/pages/forgot-password-page/forgot-password-page.component';
 import { RegisterPageComponent } from './components-2/auth/pages/register-page/register-page.component';
-import { AdminDashboardComponent } from './components-2/admin-dashboard/admin-dashboard/admin-dashboard.component';
+import { AdminDashboardComponent } from './components-2/admin/admin-dashboard/admin-dashboard.component';
+import { MyFleetComponent } from './components-2/admin/pages/my-fleet/my-fleet.component';
+import { MyDriversComponent } from './components-2/admin/pages/my-drivers/my-drivers.component';
+import { RoutesComponent } from './components-2/admin/pages/routes/routes.component';
+import { DashboardComponent } from './components-2/admin/pages/dashboard/dashboard.component';
 
 const routes: Routes = [
-    {path: '', component: LoginPageComponent},
-    {path: 'register', component: RegisterPageComponent},
-    {path: 'forgot-password', component: ForgotPasswordPageComponent},
-    {path: 'admin-dashboard', component: AdminDashboardComponent}
+  { path: '', component: LoginPageComponent },
+  { path: 'register', component: RegisterPageComponent },
+  { path: 'forgot-password', component: ForgotPasswordPageComponent },
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    children: [
+      { path: '', component: DashboardComponent },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'my-fleet', component: MyFleetComponent },
+      { path: 'my-drivers', component: MyDriversComponent },
+      { path: 'routes', component: RoutesComponent },
+    ],
+  },
 ];
 
 @NgModule({

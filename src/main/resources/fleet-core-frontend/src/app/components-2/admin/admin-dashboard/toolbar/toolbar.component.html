@@ -1,0 +1,13 @@
+<mat-toolbar class="mat-elevation-z8">
+    <div class="toolbar-container">
+        <button
+        mat-icon-button
+        (click)="matSidenav.toggle()"
+      >
+        <mat-icon *ngIf="!matSidenav.opened"> menu </mat-icon>
+        <mat-icon *ngIf="matSidenav.opened"> close </mat-icon>
+      </button>
+      <app-uer-details></app-uer-details>
+    </div>
+
+</mat-toolbar>
