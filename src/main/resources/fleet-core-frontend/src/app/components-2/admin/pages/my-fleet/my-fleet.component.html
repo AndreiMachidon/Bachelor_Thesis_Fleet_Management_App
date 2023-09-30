@@ -1,17 +1,27 @@
-<div class="my-fleet-container">
-    <div class="vehicle-card" *ngFor="let vehicle of vehicles">
-      <mat-card class="example-card">
-        <mat-card-header>
-          <mat-card-title>{{vehicle.make}}  {{vehicle.model}}</mat-card-title>
-          <mat-card-subtitle>{{ vehicle.vehicleType }}</mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image [src]="vehicle.imageSrc">
-        <mat-card-content>
-          <p>&#8226;</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-raised-button color="accent">DETAILS</button>
-        </mat-card-actions>
-      </mat-card>
+<div class="main-container">
+  <div class="header">
+    <div class="title-container">
+      <h1 class="title">My Fleet</h1>
+    </div>
+    <div class="actions-buttons">
+      <button mat-raised-button color="accent" (click) = "addVehicle()">Add vehicle</button>
+      <button mat-raised-button color="warn" (click)="deleteSelectedVehicles()" [disabled]="selectedVehicles.length === 0">Delete vehicles</button>
     </div>
   </div>
+  <mat-divider></mat-divider>
+  <div class="vehicle-status-filter">
+    <mat-chip-listbox aria-label="chip-selection">
+      <mat-chip-option color="accent" selected (click)="setFilter('ALL')">All</mat-chip-option>
+      <mat-chip-option color="accent" (click)="setFilter('IDLE')">Idle</mat-chip-option>
+      <mat-chip-option color="accent" (click)="setFilter('ON_ROUTE')">On Route</mat-chip-option>
+      <mat-chip-option color="warn" (click)="setFilter('IN_SERVICE')">In Service</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <div class="my-fleet-container">
+    <div class="vehicle-card" *ngFor="let vehicle of filteredVehicles">
+      <vehicle-card [vehicle]="vehicle" (vehicleSelected)="onVehicleSelected($event)"></vehicle-card>
+    </div>
+    </div>
+</div>
+

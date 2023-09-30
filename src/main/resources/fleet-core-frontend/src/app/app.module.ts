@@ -9,6 +9,13 @@ import { RegisterPageComponent } from './components-2/auth/pages/register-page/r
 import { ForgotPasswordPageComponent } from './components-2/auth/pages/forgot-password-page/forgot-password-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+//locales
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import { LOCALE_ID } from '@angular/core';
+registerLocaleData(localeDe);
+
+
 
 //angular material
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -33,8 +40,18 @@ import { DashboardComponent } from './components-2/admin/pages/dashboard/dashboa
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { VehicleCardComponent } from './components-2/admin/pages/my-fleet/vehicle-card/vehicle-card.component';
 import {MatCardModule} from '@angular/material/card';
-
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { AddVehicleComponent } from './components-2/admin/pages/my-fleet/add-vehicle/add-vehicle.component';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
+import {MatSelectModule} from '@angular/material/select';
+import { AddVehicleDialogComponent } from './components-2/admin/pages/my-fleet/add-vehicle/dialogs/add-vehicle-dialog/add-vehicle-dialog.component';
+import { CancelDialogComponent } from './components-2/admin/pages/my-fleet/add-vehicle/dialogs/cancel-dialog/cancel-dialog.component';
+import { DeleteVehicleDialogComponent } from './components-2/admin/pages/my-fleet/dialogs/delete-vehicle-dialog/delete-vehicle-dialog.component';
+import {MatChipsModule} from '@angular/material/chips';
+import { DriverCardComponent } from './components-2/admin/pages/my-drivers/driver-card/driver-card.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +70,12 @@ import {MatCardModule} from '@angular/material/card';
     RoutesComponent,
     DashboardComponent,
     VehicleCardComponent,
+    AddVehicleComponent,
+    AddVehicleDialogComponent,
+    CancelDialogComponent,
+    DeleteVehicleDialogComponent,
+    DriverCardComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -70,11 +93,19 @@ import {MatCardModule} from '@angular/material/card';
     MatSidenavModule,
     MatToolbarModule,
     MatAutocompleteModule,
-    MatCardModule
+    MatCardModule,
+    MatCheckboxModule,
+    MatStepperModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatChipsModule
+    
 
   ],
   
-  providers: [],
+  providers: [DatePipe, 
+            { provide: LOCALE_ID, useValue: 'de' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

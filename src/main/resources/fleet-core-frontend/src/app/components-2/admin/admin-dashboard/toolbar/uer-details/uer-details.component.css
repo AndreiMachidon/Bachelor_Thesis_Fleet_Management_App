@@ -48,3 +48,11 @@
     opacity: 0.5;
 }
 
+@media (max-width: 600px) {
+    .profile-image {
+        display: none;
+    }
+    .user-details-container {
+        width: 250px;
+    }
+}

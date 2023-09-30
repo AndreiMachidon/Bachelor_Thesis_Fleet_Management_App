@@ -17,11 +17,11 @@ export class RoutesComponent {
   startingLocation: string = '';
   destinationLocation: string = '';
 
-  // Declare form controls for autocomplete options
+
   startingLocationControl = new FormControl();
   destinationLocationControl = new FormControl();
 
-  // Reference to the MatAutocomplete components
+
   @ViewChild('startingLocationAuto') startingLocationAuto: MatAutocomplete;
   @ViewChild('destinationLocationAuto') destinationLocationAuto: MatAutocomplete;
 
@@ -60,7 +60,7 @@ export class RoutesComponent {
 
     }
   }
-    // Implement autocomplete logic for starting location
+
     startingLocationAutocomplete(inputElement: HTMLInputElement) {
 
       const options = {
@@ -76,7 +76,6 @@ export class RoutesComponent {
       });
     }
   
-    // Implement autocomplete logic for destination location
     destinationLocationAutocomplete(inputElement: HTMLInputElement) {
       const options = {
         fields: ["formatted_address", "geometry", "name"],

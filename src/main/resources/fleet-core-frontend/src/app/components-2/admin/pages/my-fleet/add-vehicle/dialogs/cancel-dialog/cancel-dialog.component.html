@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Leave Vehicle Adding!</h2>
+<mat-dialog-content class="mat-typography">
+    <h3>Are you sure you want to discard your vehicle information?</h3>
+    <p>All your current progress will be lost</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button [mat-dialog-close]="'Close'" cdkFocusInitial>Close</button>
+    <button mat-raised-button color="warn" [mat-dialog-close]="'Leave'">Leave</button>
+</mat-dialog-actions>

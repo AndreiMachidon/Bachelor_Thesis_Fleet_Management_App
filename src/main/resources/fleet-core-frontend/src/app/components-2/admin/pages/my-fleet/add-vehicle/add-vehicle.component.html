@@ -1,0 +1,214 @@
+<div class="header">
+    <h1 class="title">My Fleet</h1>
+</div>
+
+<mat-divider></mat-divider>
+
+<mat-stepper [linear]="true" #stepper>
+
+    <mat-step [stepControl]="generalDetilsFormGroup">
+        <form class="generalDetailsForm" [formGroup]="generalDetilsFormGroup">
+            <ng-template matStepLabel>General Details</ng-template>
+            <div class="form-fields">
+                <div class="left-form">
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Make</mat-label>
+                        <input matInput placeholder="Make" formControlName="makeControl" required>
+                        <mat-error *ngIf="generalDetilsFormGroup.get('makeControl').hasError('required')">
+                            Make is required.
+                        </mat-error>
+                        <mat-error *ngIf="!generalDetilsFormGroup.get('makeControl').hasError('required') && generalDetilsFormGroup.get('makeControl').hasError('pattern')">
+                            Only alphabets allowed!
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Model</mat-label>
+                        <input matInput placeholder="Model" formControlName="modelControl" required>
+                        <mat-error *ngIf="generalDetilsFormGroup.get('modelControl').hasError('required')">
+                            Model is required.
+                        </mat-error>
+                        <mat-error *ngIf="!generalDetilsFormGroup.get('modelControl').hasError('required') && generalDetilsFormGroup.get('modelControl').hasError('pattern') ">
+                            Only alphabets and numbers are allowed.
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>VIN</mat-label>
+                        <input matInput placeholder="VIN" formControlName="VINControl" required>
+                        <mat-error *ngIf="generalDetilsFormGroup.get('VINControl').hasError('required')">
+                            VIN is required
+                        </mat-error>
+                        <mat-error *ngIf="!generalDetilsFormGroup.get('VINControl').hasError('required') && generalDetilsFormGroup.get('VINControl').hasError('minlength')">
+                            VIN should be at least 17 characters long.
+                        </mat-error>
+                        <mat-error *ngIf="!generalDetilsFormGroup.get('VINControl').hasError('required') && generalDetilsFormGroup.get('VINControl').hasError('maxlength')">
+                            VIN should not exceed 17 characters.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="right-form">                 
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Lincese Plate</mat-label>
+                        <input matInput placeholder="Lincese Plate" formControlName="lincesePlateControl" required>
+                        <mat-error *ngIf="generalDetilsFormGroup.get('lincesePlateControl').hasError('required')">
+                            License Plate is required.
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Milenage (in kilometers)</mat-label>
+                        <input matInput placeholder="Milenage" formControlName="milenageControl" required>
+                        <mat-error *ngIf="generalDetilsFormGroup.get('milenageControl').hasError('required')">
+                            Milenage is required.
+                        </mat-error>
+                        <mat-error *ngIf="!generalDetilsFormGroup.get('milenageControl').hasError('required') && generalDetilsFormGroup.get('milenageControl').hasError('pattern')">
+                            Only digits allowed
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Fuel Type</mat-label>
+                        <mat-select formControlName="fuelTypeControl">
+                            <mat-option *ngFor="let type of fuelTypes" [value]="type.value">
+                                {{type.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="generalDetilsFormGroup.get('fuelTypeControl').hasError('required')">
+                            Please select a fuel type.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="next-button">
+                <button mat-button matStepperNext color="accent">Next</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step [stepControl]="technicalDetailsFormGroup">
+        <form class="specificDetailsForm" [formGroup]="technicalDetailsFormGroup">
+            <ng-template matStepLabel>Technical Details</ng-template>
+            <div class="form-fields">
+                <div class="left-form">                  
+                    <mat-form-field>
+                        <input matInput formControlName="yearOfManufactureControl" [matDatepicker]="picker" placeholder="Year of Manufacture" readonly>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker startView="multi-year" (yearSelected)="yearChanged($event, picker)"></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Cargo capacity (in m<sup>3</sup> ) </mat-label>
+                        <input matInput placeholder="Capacity" formControlName="cargoCapacityControl" required>
+                        <mat-error *ngIf="technicalDetailsFormGroup.get('cargoCapacityControl').hasError('required')">
+                            Cargo capacity is required.
+                        </mat-error>
+                        <mat-error *ngIf="!technicalDetailsFormGroup.get('cargoCapacityControl').hasError('required') && technicalDetailsFormGroup.get('cargoCapacityControl').hasError('pattern')">
+                            Only digits allowed
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="right-form">
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Fuel capacity( in {{ getFuelCapacityUnit() }} )</mat-label>
+                        <input matInput placeholder="Fuel Capacity" formControlName="fuelCapacityControl" required>
+                        <mat-error *ngIf="technicalDetailsFormGroup.get('fuelCapacityControl').hasError('required')">
+                            Fuel capacity is required.
+                        </mat-error>
+                        <mat-error *ngIf="!technicalDetailsFormGroup.get('fuelCapacityControl').hasError('required') && technicalDetailsFormGroup.get('fuelCapacityControl').hasError('pattern')">
+                            Only digits allowed
+                        </mat-error>
+                    </mat-form-field>          
+                    
+                    <mat-form-field class="first-page-form-field">
+                        <mat-label>Fuel Consumption( in {{ getFuelConsumptionUnit() }} )</mat-label>
+                        <input matInput placeholder="Fuel Consumption" formControlName="fuelConsumptionControl" required>
+                        <mat-error *ngIf="technicalDetailsFormGroup.get('fuelConsumptionControl').hasError('required')">
+                            Fuel consumption is required.
+                        </mat-error>
+                        <mat-error *ngIf="!technicalDetailsFormGroup.get('fuelConsumptionControl').hasError('required') && technicalDetailsFormGroup.get('fuelConsumptionControl').hasError('pattern')">
+                            Only digits allowed
+                        </mat-error>
+                    </mat-form-field>          
+                    
+                </div>
+            </div>
+            <div class="next-button">
+                <button mat-button matStepperNext color="accent">Next</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step [stepControl]="photoFormGroup">
+        <form class="photoFormGroup" [formGroup]="photoFormGroup">
+            <ng-template matStepLabel>Photo Upload</ng-template>
+            <div class="form-fields">
+                <div class="left-form">
+                    <div class="image-buttons"> 
+                        <div class="file-upload-buttons">
+                            <button mat-raised-button color="accent" (click)="fileInput.click()" class="upload-photo-button">Upload a photo</button>
+                            <input hidden #fileInput type="file" (change)="onFileSelected($event)"> 
+                            <button mat-raised-button (click)="clearImage()" color="warn" class="remove-img-button">Remove</button>
+                        </div>                      
+                        <div class="file-uploader">                         
+                            <span *ngIf="fileName" class="span-filename">{{ fileName }}</span>     
+                        </div>                       
+                      </div>        
+                </div>
+                <div class="right-form-tehnical-details">
+                    <div class="upload-container">
+                        <div class="upload-image" [ngStyle]="{'background-image': uploadedImage ? 'url(' + uploadedImage + ')' : 'url(../../../../../../assets/images/truck-default-image.svg)'}"></div>
+                      
+                        <div *ngIf="photoFormGroup.get('imageData').hasError('invalidFileType')" class="file-upload-error">
+                            Invalid file type. Only PNG and JPG are allowed.
+                          </div>                               
+                    </div>
+                </div>                
+            </div>
+            <div class="next-button">
+                <button mat-button matStepperNext color="accent">Next</button>
+            </div>
+        </form>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Summary</ng-template>
+        <div class="save-summary-header">
+            <h3 class="vehicle-information-header">Vehicle Information</h3>
+        </div>
+        <mat-divider horizontal></mat-divider>
+        <div class="summary-content">
+            <div class="first-column">
+                <p><strong>Make:</strong> {{ generalDetilsFormGroup.get('makeControl').value }}</p>
+                <p><strong>Model:</strong> {{ generalDetilsFormGroup.get('modelControl').value }}</p>
+                <p><strong>VIN:</strong> {{ generalDetilsFormGroup.get('VINControl').value }}</p>
+                <p><strong>License Plate:</strong> {{ generalDetilsFormGroup.get('lincesePlateControl').value }}</p>
+                <p><strong>Mileage:</strong> {{ formatMilenage(generalDetilsFormGroup.get('milenageControl').value) }} km</p>
+            </div>
+            <mat-divider vertical></mat-divider>
+            <div class="second-column">               
+                <p><strong>Year of Manufacture:</strong> {{ getYearFromDate(technicalDetailsFormGroup.get('yearOfManufactureControl').value) }}</p>
+                <p><strong>Fuel Type:</strong> {{ generalDetilsFormGroup.get('fuelTypeControl').value | titlecase }}</p>
+                <p> 
+                    <span *ngIf="selectedFuelType === 'ELECTRIC'"><strong>Battery Capacity:</strong></span>
+                    <span *ngIf="selectedFuelType !== 'ELECTRIC'"><strong>Fuel Capacity:</strong></span> 
+                    {{technicalDetailsFormGroup.get('fuelCapacityControl').value}} 
+                    <span *ngIf="selectedFuelType === 'ELECTRIC'">kWh</span>
+                    <span *ngIf="selectedFuelType !== 'ELECTRIC'">Liters</span>
+                </p>
+
+                <p>
+                    <span *ngIf="selectedFuelType === 'ELECTRIC'"><strong>Consumption:</strong></span>
+                    <span *ngIf="selectedFuelType !== 'ELECTRIC'"><strong>Consumption:</strong></span> 
+                    {{technicalDetailsFormGroup.get('fuelConsumptionControl').value}} 
+                    <span *ngIf="selectedFuelType === 'ELECTRIC'">kWh/100km</span>
+                    <span *ngIf="selectedFuelType !== 'ELECTRIC'">L/100km</span>
+                </p>
+            </div>
+            <mat-divider vertical></mat-divider>
+          <div class="third-column">           
+            <img class="image-view" [src]="uploadedImage ? uploadedImage :  '../../../../../../assets/images/truck-default-image.svg'"  width="400px" height="300px">
+          </div>
+        </div>
+        <mat-divider horizontal></mat-divider>
+        <div class="actions-button">
+            <button mat-raised-button (click)="onCancel()" color="warn">Cancel</button>
+            <button class="save-button" mat-raised-button (click)="onSave()" color="accent" >Save</button>
+        </div>
+    </mat-step>
+</mat-stepper>

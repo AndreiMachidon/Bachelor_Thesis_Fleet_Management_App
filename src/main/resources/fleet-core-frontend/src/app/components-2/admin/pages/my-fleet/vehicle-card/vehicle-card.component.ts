@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Vehicle } from '../../../admin-dashboard/models/vehicle.model';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'vehicle-card',
@@ -7,5 +9,43 @@ import { Component } from '@angular/core';
 })
 export class VehicleCardComponent {
 
+  @Input() vehicle : Vehicle;
+  @Output() vehicleSelected = new EventEmitter<{vehicle: Vehicle, selected: boolean}>();
+
+
+
+  checked: boolean  = false
+  formatEngineSize(value: number): string {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    const formattedValue = Math.floor(value);
+    return `${formattedValue} L`;
+  }
+
+  getVehicleAvailabilityColor(status: string): string {
+    switch (status) {
+      case 'IDLE':
+        return 'yellow';
+      case 'ON_ROUTE':
+        return 'green';
+      case 'IN_SERVICE':
+        return 'red';
+      default:
+        return 'yellow';
+    }
+  }
+
+  formatVehicleStatus(status: string): string {
+    return status.replace(/_/g, ' ').toLowerCase().replace(/\b[a-z]/g, letter => letter.toUpperCase());
+  }
+
+  onCheckboxChange() {
+    this.vehicleSelected.emit({ vehicle: this.vehicle, selected: this.checked });
+  }
+
+  formatMilenage(milenage: number): string {
+    return formatNumber(milenage, 'de', '1.0-0');
+  }
 
 }

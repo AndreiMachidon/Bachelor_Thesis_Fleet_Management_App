@@ -1,5 +1,6 @@
 package com.fleetcore.fleetcorebackend.dto;
 
+import com.fleetcore.fleetcorebackend.entities.DriverDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,6 @@ public class UserDto {
     private String email;
     private String role;
     private String token;
+    private byte[] imageData;
+    private Integer driverDetailsId;
 }

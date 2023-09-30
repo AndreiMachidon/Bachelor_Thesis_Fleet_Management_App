@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 
 @Component({
   selector: 'app-uer-details',
@@ -7,4 +8,16 @@ import { Component } from '@angular/core';
 })
 export class UerDetailsComponent {
 
+  firstName: string;
+  lastName: string;
+  role: string;
+
+  constructor(private authService: AuthService){};
+
+  ngAfterContentInit(){
+    this.firstName = this.authService.getUserDetails().firstName;
+    this.lastName = this.authService.getUserDetails().lastName;
+    const initialRole = this.authService.getUserDetails().role;
+    this.role = initialRole.charAt(0).toUpperCase() + initialRole.slice(1);
+  }
 }

@@ -1,19 +1,49 @@
 <mat-card class="example-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Shiba Inu</mat-card-title>
-      <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-    </mat-card-header>
-    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg">
+  <mat-card-header>
+    <div class="header-left">
+      <mat-card-title>{{vehicle.make}}  {{vehicle.model}}</mat-card-title>
+      <mat-card-subtitle>Truck</mat-card-subtitle>
+      <div class="vehicle-status">
+        <div class="vehicle-availability" 
+        [ngStyle]="{'background-color': getVehicleAvailabilityColor(vehicle.vehicleStatus)}">
+        </div>
+        <p class="vehicle-status-text">{{ formatVehicleStatus(vehicle.vehicleStatus) }}</p>
+      </div>  
+    </div>
+    <div class="header-right">
+      <mat-checkbox class="example-margin" [(ngModel)]="checked" (change)="onCheckboxChange()"></mat-checkbox>
+    </div>
+  </mat-card-header>
+  <div class="card-body">
+    <img mat-card-image [src]="vehicle.imageData ? 'data:image/jpeg;base64,' + vehicle.imageData : '../../../../../../assets/images/truck-default-image.svg'">
     <mat-card-content>
-      <p>
-        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-        bred for hunting.
+      <div class="left-content">    
+        <p>&#8226; Lincese Plate: {{vehicle.lincesePlate}}</p>
+        <p>&#8226; Manufacture Year: {{vehicle.yearOfManufacture}}</p>
+        <p>&#8226; Milenage: {{ formatMilenage(vehicle.milenage) }} km</p>
+      </div>
+      <div class="right-content">
+        <p>&#8226; Fuel type: {{vehicle.fuelType | titlecase}}</p>
+        <p>&#8226; 
+          <span *ngIf="vehicle.fuelType === 'ELECTRIC'">Battery Capacity:</span>
+          <span *ngIf="vehicle.fuelType !== 'ELECTRIC'">Fuel Capacity:</span> 
+          {{vehicle.fuelCapacity}} 
+          <span *ngIf="vehicle.fuelType === 'ELECTRIC'">kWh</span>
+          <span *ngIf="vehicle.fuelType !== 'ELECTRIC'">Liters</span>
       </p>
+      
+      <p>&#8226; 
+          <span *ngIf="vehicle.fuelType === 'ELECTRIC'">Consumption:</span>
+          <span *ngIf="vehicle.fuelType !== 'ELECTRIC'">Consumption:</span> 
+          {{vehicle.fuelConsumption}} 
+          <span *ngIf="vehicle.fuelType === 'ELECTRIC'">kWh/100km</span>
+          <span *ngIf="vehicle.fuelType !== 'ELECTRIC'">L/100km</span>
+      </p>
+      </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
+      <button class="details-button" mat-raised-button color="accent">DETAILS</button>
     </mat-card-actions>
-  </mat-card>
+  </div>
+</mat-card>
+

@@ -1,11 +1,14 @@
 package com.fleetcore.fleetcorebackend.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,5 +42,14 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Lob
+    @Column(name = "image_data", columnDefinition = "BLOB")
+    private byte[] imageData;
+
+    //todo: foreign key
+    @Nullable
+    private Integer driverDetailsId;
+
 
 }

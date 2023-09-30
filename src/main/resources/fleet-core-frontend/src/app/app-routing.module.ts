@@ -10,6 +10,7 @@ import { MyFleetComponent } from './components-2/admin/pages/my-fleet/my-fleet.c
 import { MyDriversComponent } from './components-2/admin/pages/my-drivers/my-drivers.component';
 import { RoutesComponent } from './components-2/admin/pages/routes/routes.component';
 import { DashboardComponent } from './components-2/admin/pages/dashboard/dashboard.component';
+import { AddVehicleComponent } from './components-2/admin/pages/my-fleet/add-vehicle/add-vehicle.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'my-fleet', component: MyFleetComponent },
       { path: 'my-drivers', component: MyDriversComponent },
       { path: 'routes', component: RoutesComponent },
+      {path: 'add-vehicle', component: AddVehicleComponent}
     ],
   },
 ];

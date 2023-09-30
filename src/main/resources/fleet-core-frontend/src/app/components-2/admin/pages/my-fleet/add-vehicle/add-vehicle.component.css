@@ -1,0 +1,198 @@
+.mat-divider{
+    color: white;
+    width: 100%;
+    height: 2px;
+    margin-bottom: 2rem;
+}
+
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mat-stepper{
+    width: 100%;
+    height: 85%;
+}
+
+form{
+    margin-top: 30px;
+}
+
+.form-fields{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.left-form{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    width: 40%;
+}
+
+.right-form{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    width: 40%;
+}
+
+.first-page-form-field{
+    width: 100%
+}
+
+.next-button{
+    width: 95%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 50px;
+}
+
+.technicalDetailsFormGroup{
+    width: 100%;
+    height: 100%;
+}
+
+
+
+.upload-container{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+
+.upload-image {
+    width: 450px;
+    height: 320px;
+    margin-left: 50px;
+    margin-bottom: 20px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s ease; 
+}
+
+.image-view{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.image-view:hover{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.upload-image:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.span-filename{
+    margin-top: 20px;
+    display: block;
+}
+
+.upload-photo-button{
+    justify-self: flex-end;
+}
+
+.file-upload-error{
+    color:red;
+}
+
+.image-buttons{
+    display: flex;
+    flex-direction: column;
+}
+
+.remove-img-button{
+    margin-left: 20px;
+}
+
+
+.save-summary-header{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.summary-content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 50px;
+}
+
+.first-column{
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ width: 100%;
+ height: 100%;
+}
+
+.second-column{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.third-column{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.actions-button{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+mat-divider[horizontal]{
+    background-color: white;
+    margin: 0;
+    height: 1px;
+    width: 100%;
+
+}
+
+mat-divider[vertical] {
+    background-color: white;
+    width: 1px;
+    height: 300px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.save-button{
+    margin-left: 10px;
+}
+
+.vehicle-information-header{
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.file-uploader{
+    display: flex;
+    flex-direction: column;
+}
+
+
+

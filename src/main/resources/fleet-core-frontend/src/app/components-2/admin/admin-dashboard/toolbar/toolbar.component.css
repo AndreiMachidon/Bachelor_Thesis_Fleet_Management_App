@@ -6,6 +6,7 @@ mat-toolbar {
     justify-content: flex-start;
     padding-left: 25px;
     padding-right: 25px;
+
 }
 
 .menu-button {
@@ -14,8 +15,6 @@ mat-toolbar {
     align-items: center;
     justify-content: flex-start;
     font-size: 1rem;
-  
-
 }
 
 .menu-button mat-icon {

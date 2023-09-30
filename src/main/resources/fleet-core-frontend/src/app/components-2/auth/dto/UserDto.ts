@@ -6,6 +6,8 @@ export class UserDto{
     lastName : string;
     phoneNumber : string;
     email: string;
+    role: string;
     token: string;
-
+    imageData: string | null;
+    driverDetailsId: number | null;
 }

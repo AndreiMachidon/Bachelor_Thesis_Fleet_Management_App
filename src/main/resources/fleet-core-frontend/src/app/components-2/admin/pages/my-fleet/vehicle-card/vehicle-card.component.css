@@ -1,8 +1,98 @@
 .example-card {
-    max-width: 400px;
-  }
+  width: 100%;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
   
-.example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
 }
+
+.example-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+img {
+  border-radius: 5%;
+  width: 100%;
+  height: 210px;
+  object-fit: fill;
+  max-width: 100%;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background: linear-gradient(to bottom, #9E9E9E, #616161);
+  margin-bottom: 5px;
+}
+
+.header-left{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.vehicle-status{
+  display: flex;
+  margin-top: 20px;
+}
+
+.vehicle-status-text{
+  font-size: 18px;
+}
+
+.vehicle-availability{
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  margin-right: 8px;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 7px;
+  width: 100%;
+}
+
+.right-content{
+  margin-left: -9px;;
+}
+
+mat-card-actions {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+
+p {
+  font-size: 12px;
+}
+
+

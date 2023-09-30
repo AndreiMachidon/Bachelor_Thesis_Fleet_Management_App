@@ -30,12 +30,14 @@ export class LoginPageComponent {
 
       signInDto.email = this.loginFormGroup.value.emailFormControl;
       signInDto.password = this.loginFormGroup.value.passwordFormControl;
+        console.log(signInDto);
         
       this.authService.login(signInDto)
       .subscribe((response: UserDto) => {
         if (response) {
           console.log('Login successful:', response);
           this.authService.setAuthToken(response.token);
+          this.authService.setUserDetails(response);
           this.router.navigate(['admin-dashboard']);
         } else {
           console.log('Login failed.');
@@ -50,7 +52,7 @@ export class LoginPageComponent {
           this.emailNotFound = true;
           this.incorrectPassword = false;
         } else if(error.status === 400){
-          console.log("Password incorrect");
+          console.log("Incorrect Password");
           this.emailNotFound = false;
           this.incorrectPassword = true;
         }
