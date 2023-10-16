@@ -14,9 +14,10 @@ export class RoutesComponent {
   map: google.maps.Map;
   userPosition: google.maps.LatLng;
 
+  directionsDisplay: google.maps.DirectionsRenderer;
+
   startingLocation: string = '';
   destinationLocation: string = '';
-
 
   startingLocationControl = new FormControl();
   destinationLocationControl = new FormControl();
@@ -33,12 +34,14 @@ export class RoutesComponent {
   }
 
   initMap() {
-    const mapOptions: google.maps.MapOptions = {
+    const mapOptions: any = {
       center: this.userPosition,
       zoom: 15,
       disableDefaultUI: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapId: '1d3279d2082b9187'
+  };
+
 
     this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
   }
@@ -92,34 +95,34 @@ export class RoutesComponent {
     distance: string;
     duration: string;
 
-    calculateRoute(){
+    calculateRoute() {
       const directionService = new google.maps.DirectionsService();
-      const directionsDisplay = new google.maps.DirectionsRenderer();
-      directionsDisplay.setMap(null);
+      this.directionsDisplay = new google.maps.DirectionsRenderer();
       
-      directionsDisplay.setMap(this.map);
-
+      this.directionsDisplay.setDirections(null);
+      
+   
       const request = {
-        origin: this.startingLocation,
-        destination: this.destinationLocation,
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC
+         origin: this.startingLocation,
+         destination: this.destinationLocation,
+         travelMode: google.maps.TravelMode.DRIVING,
+         unitSystem: google.maps.UnitSystem.METRIC
       }
-
+   
       directionService.route(request, (response, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
-
-          directionsDisplay.setDirections(response); 
-          this.distance = response.routes[0].legs[0].distance.text
-          this.duration = response.routes[0].legs[0].duration.text
-        
-        } else {
-          console.error('Directions request failed:', status);
-        }
+         if (status === google.maps.DirectionsStatus.OK) {
+            
+            this.directionsDisplay.setMap(this.map);
+            this.directionsDisplay.setDirections(response);
+            this.distance = response.routes[0].legs[0].distance.text;
+            this.duration = response.routes[0].legs[0].duration.text;
+         
+         } else {
+            console.error('Directions request failed:', status);
+         }
       });
-
-    }
-  
+   }
+   
 
 }
 

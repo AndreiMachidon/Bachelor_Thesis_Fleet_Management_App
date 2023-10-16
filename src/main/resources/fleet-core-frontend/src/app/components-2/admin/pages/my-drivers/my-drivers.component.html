@@ -1,1 +1,16 @@
-<p>my-drivers works!</p>
+<div class="main-container">
+    <div class="header">
+        <div class="title-container">
+          <h1 class="title">My Drivers</h1>
+        </div>
+        <div class="actions-buttons">
+          <button mat-raised-button color="accent" (click)="addDriver()">Add Driver</button>
+        </div>
+      </div>
+      <mat-divider class="header-divider"></mat-divider>
+
+    <div class="my-drivers-container">
+        <div class="driver-card" *ngFor="let driver of drivers">
+        <driver-card [driver]="driver"></driver-card>
+    </div>
+</div>

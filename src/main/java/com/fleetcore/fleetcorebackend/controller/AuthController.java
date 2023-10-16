@@ -1,10 +1,15 @@
 package com.fleetcore.fleetcorebackend.controller;
 
 import com.fleetcore.fleetcorebackend.config.UserAuthProvider;
+import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.dto.SignInDto;
 import com.fleetcore.fleetcorebackend.dto.SignUpDto;
 import com.fleetcore.fleetcorebackend.dto.UserDto;
+import com.fleetcore.fleetcorebackend.entities.DriverDetails;
+import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.exceptions.AppException;
+import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
+import com.fleetcore.fleetcorebackend.services.DriverService;
 import com.fleetcore.fleetcorebackend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +24,12 @@ public class AuthController {
 
     public final UserService userService;
     private final UserAuthProvider userAuthProvider;
+    private final DriverService driverService;
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@RequestBody SignInDto signInDto){
         try{
             UserDto user = userService.login(signInDto);
-            user.setToken(userAuthProvider.createToken(user));
             return ResponseEntity.ok(user);
         }catch (AppException ex){
             return ResponseEntity
@@ -38,8 +43,7 @@ public class AuthController {
     public ResponseEntity<UserDto> register(@RequestBody SignUpDto signUpDto){
         try{
             UserDto user = userService.register(signUpDto);
-            user.setToken(userAuthProvider.createToken(user));
-            return ResponseEntity.created(URI.create("/users/" + user.getId())).body(user);
+            return ResponseEntity.created(URI.create("/users/")).body(user);
         }catch (AppException ex){
             return ResponseEntity
                     .status(ex.getStatus())
@@ -47,6 +51,17 @@ public class AuthController {
         }
 
     }
+
+    @PostMapping("register/driver")
+    public ResponseEntity<DriverDto> registerDriver(@RequestParam("adminId") Long adminId, @RequestBody DriverDto driverDto){
+
+        DriverDto createdDriver = driverService.registerDriver(adminId, driverDto);
+
+        return ResponseEntity.ok(createdDriver);
+
+    }
+
+
 
 
 

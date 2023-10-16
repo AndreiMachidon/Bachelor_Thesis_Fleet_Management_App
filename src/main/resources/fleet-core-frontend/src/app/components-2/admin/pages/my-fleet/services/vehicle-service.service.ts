@@ -29,4 +29,8 @@ export class VehicleService {
   public deleteVehicles(vehiclesIds: number[]) {
     return this.http.delete(`${API_URL}/vehicles/delete`, {headers: this.httpHeaders, body: vehiclesIds} )
   }
+
+  public getVehicleById(vehicleID: number): Observable<Vehicle>{
+    return this.http.get<Vehicle>(`${API_URL}/vehicles/getVehicle?id=${vehicleID}`, { 'headers': this.httpHeaders })
+  }
 }

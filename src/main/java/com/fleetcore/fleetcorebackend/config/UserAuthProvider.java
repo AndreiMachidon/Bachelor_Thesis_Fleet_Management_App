@@ -4,7 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.dto.UserDto;
+import com.fleetcore.fleetcorebackend.entities.User;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,32 +32,55 @@ public class UserAuthProvider {
     }
 
 
-    
-    public String createToken(UserDto dto){
+    public String createTokenForAdmin(User user){
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + 86_400_000);
 
         return JWT.create()
-                .withIssuer(dto.getEmail())
+                .withIssuer(user.getEmail())
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
-                .withClaim("organisationName", dto.getOrganisationName())
-                .withClaim("firstName", dto.getFirstName())
-                .withClaim("lastName", dto.getLastName())
-                .withClaim("phoneNumber", dto.getPhoneNumber())
-                .withClaim("role", dto.getRole())
+                .withClaim("organisationName", user.getOrganisationName())
+                .withClaim("firstName", user.getFirstName())
+                .withClaim("lastName", user.getLastName())
+                .withClaim("phoneNumber", user.getPhoneNumber())
+                .withClaim("role", user.getRole())
+                .withClaim("email", user.getEmail())
+                .withClaim("id", user.getId())
                 .sign(Algorithm.HMAC256(secretKey));
     }
 
-    public Authentication validateToken(String token){
+    public String createTokenForDriver(DriverDto driverDto){
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + 86_400_000);
+
+        return JWT.create()
+                .withIssuer(driverDto.getEmail())
+                .withIssuedAt(now)
+                .withExpiresAt(validity)
+                .withClaim("organisationName", driverDto.getOrganisationName())
+                .withClaim("firstName", driverDto.getFirstName())
+                .withClaim("lastName", driverDto.getLastName())
+                .withClaim("phoneNumber", driverDto.getPhoneNumber())
+                .withClaim("role", driverDto.getRole())
+                .withClaim("email", driverDto.getEmail())
+                .withClaim("id", driverDto.getId())
+                .withClaim("ratePerKilometer", driverDto.getRatePerKilometer())
+                .withClaim("licenseExpiryDate", driverDto.getLicenseExpiryDate())
+                .withClaim("yearsOfExperience", driverDto.getYearsOfExperience())
+                .withClaim("totalKilometersDriven", driverDto.getTotalKilometersDriven())
+                .sign(Algorithm.HMAC256(secretKey));
+    }
+
+    public  Authentication validateToken(String token){
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
         JWTVerifier verifier = JWT.require(algorithm).build();
 
         DecodedJWT decoded = verifier.verify(token);
 
-        UserDto user = UserDto.builder()
+        User user = User.builder()
                 .email(decoded.getIssuer())
                 .organisationName(decoded.getClaim("organisationName").asString())
                 .firstName(decoded.getClaim("firstName").asString())
@@ -67,6 +92,5 @@ public class UserAuthProvider {
         return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
 
     }
-
 
 }

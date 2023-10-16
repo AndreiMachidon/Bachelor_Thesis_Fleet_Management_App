@@ -40,4 +40,10 @@ public class VehicleController {
         vehicleService.deleteVehiclesById(vehicleIds);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/getVehicle")
+    public ResponseEntity<Vehicle> getVehicleById(@RequestParam("id") Long vehicleId){
+        Vehicle vehicle = vehicleService.getVehicleById(vehicleId);
+        return ResponseEntity.ok(vehicle);
+    }
 }

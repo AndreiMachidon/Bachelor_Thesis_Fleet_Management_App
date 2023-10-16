@@ -1,1 +1,14 @@
-<p>driver-card works!</p>
+<div class="profile-card">
+  <div class="profile-header"></div>
+  <div class="profile-content">
+      <img [src]="driver.imageData ? 'data:image/jpeg;base64,' + driver.imageData : '../../../../../../assets/images/profile-default-icon.png'" alt="Profile Picture" class="profile-image">
+      <h2>{{driver.firstName}} {{driver.lastName}}</h2>
+      <p class="role">Driver</p>
+      <p><strong>Rate:</strong> {{driver.ratePerKilometer}} € / km</p>
+      <p><strong>Experience:</strong> {{driver.yearsOfExperience}} years</p>
+      <p><strong>License expiry date:</strong> {{ formatDate(driver.licenseExpiryDate) }}</p>
+      <p><strong>Total kilometers driven:</strong> {{ formatKilometers(driver.totalKilometersDriven)}} km</p>
+      <mat-divider></mat-divider>
+      <button mat-raised-button color="accent">Details</button>
+  </div>
+</div>

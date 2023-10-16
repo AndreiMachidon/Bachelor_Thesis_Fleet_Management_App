@@ -24,9 +24,12 @@ public class VehicleService {
 
 
     public void deleteVehiclesById(List<Long> vehicleIds) {
-        for(Long id: vehicleIds){
+        for(Long id: vehicleIds) {
             vehicleRepository.deleteVehicleById(id);
         }
+    }
 
+    public Vehicle getVehicleById(Long id){
+        return this.vehicleRepository.getVehiclesById(id);
     }
 }

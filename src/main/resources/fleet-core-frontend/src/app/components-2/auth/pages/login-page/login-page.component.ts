@@ -37,7 +37,6 @@ export class LoginPageComponent {
         if (response) {
           console.log('Login successful:', response);
           this.authService.setAuthToken(response.token);
-          this.authService.setUserDetails(response);
           this.router.navigate(['admin-dashboard']);
         } else {
           console.log('Login failed.');

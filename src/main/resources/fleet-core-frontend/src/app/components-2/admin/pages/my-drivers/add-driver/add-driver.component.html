@@ -1,0 +1,102 @@
+<div class="main-container">
+
+  <input type="file"
+    style="display: none;"
+    #fileInput
+    (change)="onFileSelected($event)"
+    [formControl]="addDriverFormGroup.controls.imageDataFromControl">
+
+  <div class="image-upload-container" (click)="fileInput.click()">
+    <img [src]="uploadedImage ? uploadedImage : '../../../../../../assets/../assets/images/upload-svg.svg'">
+  </div>
+
+    <form class="add-driver-form" [formGroup]="addDriverFormGroup">
+        <div class="form-row">
+            <mat-form-field class="form-field">
+                <mat-label>First Name</mat-label>
+                <input matInput formControlName="firstNameFormControl"
+                       placeholder="First Name">
+                <mat-error *ngIf="addDriverFormGroup.get('firstNameFormControl').hasError('required')">
+                  First name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="form-field">
+                <mat-label>Last name</mat-label>
+                <input matInput formControlName="lastNameFormControl"
+                       placeholder="Last name">
+                <mat-error *ngIf="addDriverFormGroup.get('lastNameFormControl').hasError('required')">
+                  Last name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+        </div>       
+
+        <div class="form-row">
+            <mat-form-field class="form-field">
+                <mat-label>Phone number</mat-label>
+                <input matInput formControlName="phoneNumberFormControl"
+                       placeholder="Phone number">
+                <mat-error *ngIf="addDriverFormGroup.get('phoneNumberFormControl').hasError('required')">
+                  Phone number is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="!addDriverFormGroup.get('phoneNumberFormControl').hasError('required') && addDriverFormGroup.get('phoneNumberFormControl').hasError('pattern') ">
+                  Invalid Phone number
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="form-field">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="emailFormControl"
+                       placeholder="Ex. pat@example.com">
+                <mat-error *ngIf="!addDriverFormGroup.get('emailFormControl').hasError('required') && addDriverFormGroup.get('emailFormControl').hasError('email')">
+                  Please enter a valid email address
+                </mat-error>
+                <mat-error *ngIf="addDriverFormGroup.get('emailFormControl').hasError('required')">
+                  Email is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+        </div>       
+
+        <div class="form-row">
+            <mat-form-field floatLabel="always" class="form-field">
+              <mat-label>Rate</mat-label>
+              <input matInput type="number" class="example-right-align" placeholder="0" formControlName="ratePerKilometerFormControl">
+              <span matTextPrefix>$&nbsp;</span>
+              <span matTextSuffix>/km</span>
+              <mat-error *ngIf="addDriverFormGroup.get('ratePerKilometerFormControl').hasError('required')">
+                Rate is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="form-field">
+              <mat-label>License Expiry Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="licenseExpiryDateFormControl">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="addDriverFormGroup.get('licenseExpiryDateFormControl').hasError('required')">
+                License Expiry Date is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+        </div>       
+
+        <div class="form-row">
+            <mat-form-field class="form-field">
+                <mat-label>Years of experience</mat-label>
+                <input matInput formControlName="yearsOfExperienceFormControl"
+                       placeholder="Years of experience">
+                <span matTextSuffix>years</span>
+                <mat-error *ngIf="addDriverFormGroup.get('yearsOfExperienceFormControl').hasError('required')">
+                  Experience is <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="!addDriverFormGroup.get('yearsOfExperienceFormControl').hasError('required') && addDriverFormGroup.get('yearsOfExperienceFormControl').hasError('pattern')">
+                  Only digits allowed
+                </mat-error>
+              </mat-form-field>
+            
+        </div>    
+        
+        <button mat-raised-button color="accent" (click)="addDriver()" type="submit">Add Driver</button>
+      </form>
+
+     
+</div>

@@ -1,12 +1,15 @@
 package com.fleetcore.fleetcorebackend.config;
 
+import com.fleetcore.fleetcorebackend.entities.DriverDetails;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
 import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
+import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
 import jakarta.annotation.PostConstruct;
+import org.mapstruct.control.MappingControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
@@ -15,9 +18,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MockEntities {
@@ -26,6 +27,9 @@ public class MockEntities {
     private UserRepository userRepository;
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private DriverDetailsRepository driverDetailsRepository;
 
     @PostConstruct
     public void mockUser(){
@@ -93,13 +97,68 @@ public class MockEntities {
         vehicleRepository.saveAll(vehicleList);
     }
 
+    @PostConstruct
+    public void mockDrivers() throws Exception {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(2025, Calendar.JANUARY, 1);
+        Date date1 = cal.getTime();
+
+        DriverDetails driverDetails = new DriverDetails(1L, 0.5, date1, 4, 150000, 1L);
+        driverDetailsRepository.save(driverDetails);
+        User user = new User(2L, "Deloitte", "Marian", "Radu", "0747019239", "andreimachidon09@gmail.com", "driver", "$2a$12$/6d2ZYTIv5x5l5hi48Uad.SHszfvO00uYC7KYybzzFAZSsmDrPaNq", null, 1L);
+        userRepository.save(user);
+
+        cal.set(2024, Calendar.JANUARY, 1);
+        Date date2 = cal.getTime();
+
+        DriverDetails driverDetails1 = new DriverDetails(2L, 0.5,date2, 4, 250000, 1L);
+        driverDetailsRepository.save(driverDetails1);
+        User user1 = new User(3L, "Deloitte", "Laur", "Chrila", "0747019239", "andreimachidon03@gmail.com", "driver", "$2a$12$/6d2ZYTIv5x5l5hi48Uad.SHszfvO00uYC7KYybzzFAZSsmDrPaNq", null, 2L);
+        userRepository.save(user1);
+
+        cal.set(2024, Calendar.JANUARY, 1);
+        Date date3 = cal.getTime();
+
+        DriverDetails driverDetails2 = new DriverDetails(3L, 0.5, date3, 4, 100000, 1L);
+        driverDetailsRepository.save(driverDetails2);
+        User user2 = new User(4L, "Deloitte", "Paulescu", "Dragos", "0747019239", "andreimachidon05@gmail.com", "driver", "$2a$12$/6d2ZYTIv5x5l5hi48Uad.SHszfvO00uYC7KYybzzFAZSsmDrPaNq", null, 3L);
+        userRepository.save(user2);
+
+        cal.set(2027, Calendar.JANUARY, 1);
+        Date date4 = cal.getTime();
+
+        DriverDetails driverDetails3 = new DriverDetails(4L, 0.5, date4, 4, 200000, 1L);
+        driverDetailsRepository.save(driverDetails3);
+        User user3 = new User(5L, "Deloitte", "Simion", "Mircea", "0747019239", "andreimachidon06@gmail.com", "driver", "$2a$12$/6d2ZYTIv5x5l5hi48Uad.SHszfvO00uYC7KYybzzFAZSsmDrPaNq", null, 4L);
+        userRepository.save(user3);
+
+        cal.set(2025, Calendar.JANUARY, 1);
+        Date date5 = cal.getTime();
+
+        DriverDetails driverDetails4 = new DriverDetails(5L, 0.5, date5, 4, 175000, 1L);
+        driverDetailsRepository.save(driverDetails4);
+        User user4 = new User(6L, "Deloitte", "Popescu", "Marius", "0747019239", "andreimachidon07@gmail.com", "driver", "$2a$12$/6d2ZYTIv5x5l5hi48Uad.SHszfvO00uYC7KYybzzFAZSsmDrPaNq", null, 5L);
+        userRepository.save(user4);
+
+        cal.set(2030, Calendar.JANUARY, 1);
+        Date date6 = cal.getTime();
+
+        DriverDetails driverDetails5 = new DriverDetails(6L, 0.5, date6, 4, 190000, 1L);
+        driverDetailsRepository.save(driverDetails5);
+        User user5 = new User(7L, "Deloitte", "Chiritescu", "Rares", "0747019239", "andreimachidon08@gmail.com", "driver", "$2a$12$/6d2ZYTIv5x5l5hi48Uad.SHszfvO00uYC7KYybzzFAZSsmDrPaNq", null, 6L);
+        userRepository.save(user5);
+
+        try {
+            String base64ImageData = fetchImageFromInternetAsBase64("https://media.istockphoto.com/id/1300512215/photo/headshot-portrait-of-smiling-ethnic-businessman-in-office.jpg?s=612x612&w=0&k=20&c=QjebAlXBgee05B3rcLDAtOaMtmdLjtZ5Yg9IJoiy-VY=");
+            user.setImageData(base64ImageData);
+        } catch (Exception ex) {
+            user.setImageData(null);
+        }
+    }
 
 
-
-
-
-
-    public String fetchImageFromInternetAsBase64(String imageUrl) throws IOException, MalformedURLException {
+    public String fetchImageFromInternetAsBase64(String imageUrl) throws IOException {
         URL url = new URL(imageUrl);
         URLConnection connection = url.openConnection();
         try (InputStream inputStream = connection.getInputStream();

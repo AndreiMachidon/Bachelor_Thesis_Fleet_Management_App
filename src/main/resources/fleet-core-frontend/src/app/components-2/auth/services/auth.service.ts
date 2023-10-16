@@ -1,15 +1,20 @@
 import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Admin } from '../dto/Admin';
 import { UserDto } from '../dto/UserDto';
 import { SignUpDto } from '../dto/SignUpDto';
 import { API_URL } from 'src/app/contants';
 import { Observable } from 'rxjs';
 import { SignInDto } from '../dto/SignInDto';
-
+import jwtDecode from 'jwt-decode';
+import { DecodedTokenAdmin } from '../dto/DecodedTokenAdmin';
+import { Driver } from '../dto/Driver';
+import { DecodedTokenDriver } from '../dto/DecodedTokenDriver';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   constructor(private http: HttpClient) { }
@@ -33,23 +38,46 @@ export class AuthService {
         window.localStorage.removeItem("auth_token");
       }
   }
-  
-  setUserDetails(userDto: UserDto): void {
-    if (userDto != null) {
-      const userDtoJson = JSON.stringify(userDto);
 
-      window.localStorage.setItem("user_details", userDtoJson);
-    } else {
-    }
-  }
+  getUserDetails(): Admin | Driver	{
+    const token = this.getAuthToken();
 
+    if (token) {
+      const decodedToken : DecodedTokenAdmin = jwtDecode(token);
 
-  getUserDetails(): UserDto | null {
-    const userDtoJson = window.localStorage.getItem("user_details");
+      if(decodedToken.role === 'admin'){
+          const admin: Admin = {
+            id: decodedToken.id,
+            firstName: decodedToken.firstName,
+            lastName: decodedToken.lastName,
+            phoneNumber: decodedToken.phoneNumber,
+            email: decodedToken.email,
+            role: decodedToken.role,
+            imageData: decodedToken.imageData,
+            organisationName: decodedToken.organisationName
+          }
+          
+          return admin;
 
-    if (userDtoJson) {
-      const userDto: UserDto = JSON.parse(userDtoJson);
-      return userDto;
+      }else{
+          const decodedTokenDriver: DecodedTokenDriver = jwtDecode(token)
+          const driver: Driver = {
+            id: decodedTokenDriver.id,
+            firstName: decodedTokenDriver.firstName,
+            lastName: decodedTokenDriver.lastName,
+            phoneNumber: decodedTokenDriver.phoneNumber,
+            email: decodedTokenDriver.email,
+            role: decodedTokenDriver.role,
+            imageData: decodedTokenDriver.imageData,
+            ratePerKilometer: decodedTokenDriver.ratePerKilometer,
+            licenseExpiryDate: decodedTokenDriver.licenseExpiryDate,
+            yearsOfExperience: decodedTokenDriver.yearsOfExperience,
+            totalKilometersDriven: decodedTokenDriver.totalKilometersDriven ,
+            organisationName: decodedTokenDriver.organisationName       
+          }
+
+          return driver;
+      }
     } else {
       return null;
     }

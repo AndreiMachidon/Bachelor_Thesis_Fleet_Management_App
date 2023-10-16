@@ -1,0 +1,44 @@
+.main-container{
+    width: 100%;
+}
+
+.my-drivers-container{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap:20px;
+    column-gap: 10px;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    padding-right: 50px;
+}
+
+.title-container{
+    display: flex;
+    justify-content:flex-end;
+    align-items: center;
+  }
+  
+  .title{
+    font-size: 30px;
+  }
+  
+  .actions-buttons {
+      display: flex; 
+      align-items: center;
+      align-self: flex-end;
+      gap: 10px; 
+  }
+
+  .header-divider{
+   width: 100%;
+   margin-bottom: 20px;
+  }

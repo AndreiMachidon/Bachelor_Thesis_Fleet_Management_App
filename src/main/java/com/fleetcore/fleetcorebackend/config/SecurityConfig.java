@@ -29,8 +29,5 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll());
         return http.build();
-
     }
-
-
 }

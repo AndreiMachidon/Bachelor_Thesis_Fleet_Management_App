@@ -52,6 +52,9 @@ import { CancelDialogComponent } from './components-2/admin/pages/my-fleet/add-v
 import { DeleteVehicleDialogComponent } from './components-2/admin/pages/my-fleet/dialogs/delete-vehicle-dialog/delete-vehicle-dialog.component';
 import {MatChipsModule} from '@angular/material/chips';
 import { DriverCardComponent } from './components-2/admin/pages/my-drivers/driver-card/driver-card.component';
+import { AddDriverComponent } from './components-2/admin/pages/my-drivers/add-driver/add-driver.component';
+import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/vehicle-details/vehicle-details.component';
+
 
 @NgModule({
   declarations: [
@@ -75,6 +78,8 @@ import { DriverCardComponent } from './components-2/admin/pages/my-drivers/drive
     CancelDialogComponent,
     DeleteVehicleDialogComponent,
     DriverCardComponent,
+    AddDriverComponent,
+    VehicleDetailsComponent,
     
   ],
   imports: [

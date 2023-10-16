@@ -13,6 +13,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     public List<Vehicle> getVehiclesByAdminId(Long adminId);
 
+    public Vehicle getVehiclesById(Long id);
+
     @Transactional
     void deleteVehicleById(Long id);
 

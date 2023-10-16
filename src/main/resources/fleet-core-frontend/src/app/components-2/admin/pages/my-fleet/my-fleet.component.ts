@@ -18,7 +18,10 @@ export class MyFleetComponent implements OnInit{
     selectedVehicles: Vehicle[] = [];
     currentFilter: string = 'ALL'
 
-    constructor(private vehicleService: VehicleService, private authService: AuthService, private router: Router, public dialog: MatDialog){}
+    constructor(private vehicleService: VehicleService, 
+                private authService: AuthService, 
+                private router: Router, 
+                public dialog: MatDialog){}
 
     ngOnInit(){
       this.refreshVehicles()
@@ -62,8 +65,6 @@ export class MyFleetComponent implements OnInit{
     addVehicle(){
       this.router.navigate(["admin-dashboard/add-vehicle"]);
     }
-
-;
 
     setFilter(filter: string) {
       this.currentFilter = filter;

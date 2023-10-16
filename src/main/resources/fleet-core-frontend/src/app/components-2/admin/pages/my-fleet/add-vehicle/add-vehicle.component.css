@@ -67,8 +67,8 @@ form{
 }
 
 .upload-image {
-    width: 450px;
-    height: 320px;
+    width: 650px;
+    height: 330px;
     margin-left: 50px;
     margin-bottom: 20px;
     background-size: cover;
@@ -192,6 +192,22 @@ mat-divider[vertical] {
 .file-uploader{
     display: flex;
     flex-direction: column;
+}
+
+.form-fields-photo{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-form-photo{
+    width: 30%;
+    height: 100%;
+}
+
+.right-form-photo{
+    width: 60%;
 }
 
 

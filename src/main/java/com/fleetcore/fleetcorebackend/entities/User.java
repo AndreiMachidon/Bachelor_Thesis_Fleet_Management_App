@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Base64;
 import java.util.List;
 
 @AllArgsConstructor
@@ -40,16 +41,32 @@ public class User {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     @Lob
-    @Column(name = "image_data", columnDefinition = "BLOB")
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
     //todo: foreign key
     @Nullable
-    private Integer driverDetailsId;
+    private Long driverDetailsId;
+
+    public void setImageData(String base64Data) {
+        if (base64Data != null && !base64Data.isEmpty()) {
+            this.imageData = Base64.getDecoder().decode(base64Data);
+        } else {
+            this.imageData = null;
+        }
+    }
+
+    public String getImageData() {
+        if (this.imageData != null) {
+            return Base64.getEncoder().encodeToString(this.imageData);
+        } else {
+            return null;
+        }
+    }
 
 
 }

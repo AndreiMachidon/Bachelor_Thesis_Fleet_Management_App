@@ -1,0 +1,37 @@
+<div class="main-container">
+    <div class="left-container">
+
+    </div>
+    <div class="right-container">
+        <div class="image-container">
+            <img class="vehicle-image" [src]="vehicle.imageData ? 'data:image/jpeg;base64,' + vehicle.imageData : '../../../../../../assets/images/truck-default-image.svg'">
+        </div>     
+        <div class="general-details-container">
+            <h2 class="vehicle-details-title">Vehicle Details</h2>
+            <mat-divider class="details-divider"></mat-divider>
+            <div class="details">
+                <p><strong>Make: </strong>{{vehicle.make}}</p>
+                <p><strong>Model: </strong>{{vehicle.model}}</p>
+                <p><strong>VIN: </strong>{{vehicle.vin}}</p>
+                <p><strong>Lincese Plate: </strong>{{vehicle.lincesePlate}}</p>
+                <p><strong>Milenage: </strong>{{formatMilenage(vehicle.milenage)}} km</p>
+                <p><strong>Fuel Type: </strong>{{vehicle.fuelType | titlecase}}</p>
+                <p><strong>Year of manufacture: </strong>{{vehicle.yearOfManufacture}}</p>
+                <p><strong>Cargo Capacity: </strong>{{vehicle.cargoCapacity}} m<sup>3</sup></p>
+                <p>
+                    <strong>Fuel Capacity: </strong>{{vehicle.fuelCapacity}}
+                    <ng-container *ngIf="vehicle.fuelType === 'ELECTRIC'">kWh</ng-container>
+                    <ng-container *ngIf="vehicle.fuelType !== 'ELECTRIC'">Liters</ng-container>
+                  </p>
+                  
+                  <p>
+                    <strong>Fuel Consumption: </strong>{{vehicle.fuelConsumption}}
+                    <ng-container *ngIf="vehicle.fuelType === 'ELECTRIC'">kWh/100km</ng-container>
+                    <ng-container *ngIf="vehicle.fuelType !== 'ELECTRIC'">L/100km</ng-container>
+                  </p>
+                  
+
+            </div>
+        </div>
+    </div>
+</div>

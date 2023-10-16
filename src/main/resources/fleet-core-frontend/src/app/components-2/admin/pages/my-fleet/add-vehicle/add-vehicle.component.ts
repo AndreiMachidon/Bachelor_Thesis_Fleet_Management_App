@@ -180,8 +180,6 @@ getFuelConsumptionUnit(): string {
 
       if (data && data.startsWith('data:image/jpeg;base64,')) {
           data = data.split('data:image/jpeg;base64,')[1];
-          console.log(data);
-          
       }
 
         const vehicle: Vehicle = {

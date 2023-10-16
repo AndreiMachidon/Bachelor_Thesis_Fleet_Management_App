@@ -137,8 +137,8 @@
     <mat-step [stepControl]="photoFormGroup">
         <form class="photoFormGroup" [formGroup]="photoFormGroup">
             <ng-template matStepLabel>Photo Upload</ng-template>
-            <div class="form-fields">
-                <div class="left-form">
+            <div class="form-fields-photo">
+                <div class="left-form-photo">
                     <div class="image-buttons"> 
                         <div class="file-upload-buttons">
                             <button mat-raised-button color="accent" (click)="fileInput.click()" class="upload-photo-button">Upload a photo</button>
@@ -150,7 +150,7 @@
                         </div>                       
                       </div>        
                 </div>
-                <div class="right-form-tehnical-details">
+                <div class="right-form-photo">
                     <div class="upload-container">
                         <div class="upload-image" [ngStyle]="{'background-image': uploadedImage ? 'url(' + uploadedImage + ')' : 'url(../../../../../../assets/images/truck-default-image.svg)'}"></div>
                       
