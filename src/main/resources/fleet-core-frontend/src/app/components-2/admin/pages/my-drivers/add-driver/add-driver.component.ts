@@ -67,10 +67,6 @@ addDriver() {
   }
 }
 
-
-  
-    
-
   fileTypeValidator(allowedTypes: string[]): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
       const file = control.value;
@@ -125,8 +121,10 @@ addDriver() {
     formatMilenage(milenage: number): string {
       return formatNumber(milenage, 'de', '1.0-0');
     }
-  
 
+    cancelAddDriver(){
+      this.router.navigate(['admin-dashboard/my-drivers']);
+    }
 
-
+    
 }

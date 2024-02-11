@@ -57,3 +57,8 @@ mat-form-field{
 button{
     width: 120px;
 }
+
+.form-actions{
+    display: flex;
+    gap: 1em;
+}

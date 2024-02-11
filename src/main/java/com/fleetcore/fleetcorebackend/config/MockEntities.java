@@ -1,11 +1,14 @@
 package com.fleetcore.fleetcorebackend.config;
 
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
+import com.fleetcore.fleetcorebackend.entities.Maintenance;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
 import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
+import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
 import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
+import com.fleetcore.fleetcorebackend.repository.MaintenanceRepository;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
 import jakarta.annotation.PostConstruct;
@@ -30,6 +33,9 @@ public class MockEntities {
 
     @Autowired
     private DriverDetailsRepository driverDetailsRepository;
+
+    @Autowired
+    private MaintenanceRepository maintenanceRepository;
 
     @PostConstruct
     public void mockUser(){
@@ -95,6 +101,35 @@ public class MockEntities {
         }
 
         vehicleRepository.saveAll(vehicleList);
+
+        //mock maintenance
+
+        //example month
+        Calendar cal = Calendar.getInstance();
+        cal.set(2023, Calendar.JULY, 1);
+        Date date1 = cal.getTime();
+        Maintenance maintenance = new Maintenance(1, MaintenanceType.BASIC_SERVICE, date1, vehicleList.get(0).getMilenage() - 20000, 300, vehicleList.get(0).getId());
+        maintenanceRepository.save(maintenance);
+
+        //example days
+        cal.set(2023, Calendar.MAY,  1);
+        Date date2 = cal.getTime();
+        Maintenance maintenance2 = new Maintenance(2, MaintenanceType.BASIC_SERVICE, date2, vehicleList.get(1).getMilenage() - 20000, 300, vehicleList.get(1).getId());
+        maintenanceRepository.save(maintenance2);
+
+        //example in the future
+        cal.set(2023, Calendar.OCTOBER, 27);
+        Date date3 = cal.getTime();
+        Maintenance maintenance3 = new Maintenance(3, MaintenanceType.BASIC_SERVICE, date3, vehicleList.get(2).getMilenage() - 20000, 300, vehicleList.get(2).getId());
+        maintenanceRepository.save(maintenance3);
+
+        //example today
+        cal = Calendar.getInstance();
+        Date date4 = cal.getTime();
+        Maintenance maintenance4 = new Maintenance(4, MaintenanceType.BASIC_SERVICE, date4, vehicleList.get(3).getMilenage() - 20000, 300, vehicleList.get(3).getId());
+        maintenanceRepository.save(maintenance4);
+
+
     }
 
     @PostConstruct

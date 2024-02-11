@@ -1,6 +1,7 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
+import com.fleetcore.fleetcorebackend.dto.UserDto;
 import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
@@ -117,6 +118,46 @@ public class DriverService {
         emailService.sendSimpleMail(emailDetails);
 
         return createDriverDtoForLogin(user);
+    }
+
+    public String deleteDriver(Long driverId){
+        try {
+            userRepository.deleteByDriverDetailsId(driverId);
+            driverDetailsRepository.deleteById(driverId);
+
+            return "Driver deleted successfully!";
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    public DriverDto getDriverByDriverId(Long driverId){
+        try{
+            DriverDetails driverDetails = driverDetailsRepository.getDriverDetailsById(driverId);
+            User user = userRepository.findUserByDriverDetailsId(driverId);
+
+            DriverDto driverDto = DriverDto.builder()
+                    .id(driverDetails.getId())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .organisationName(user.getOrganisationName())
+                    .phoneNumber(user.getPhoneNumber())
+                    .role(user.getRole())
+                    .ratePerKilometer(driverDetails.getRatePerKilometer())
+                    .licenseExpiryDate(driverDetails.getLicenseExpiryDate())
+                    .yearsOfExperience(driverDetails.getYearsOfExperience())
+                    .totalKilometersDriven(driverDetails.getTotalKilometersDriven())
+                    .build();
+
+            driverDto.setImageData(user.getImageData());
+
+            return driverDto;
+
+
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
     }
 
 }

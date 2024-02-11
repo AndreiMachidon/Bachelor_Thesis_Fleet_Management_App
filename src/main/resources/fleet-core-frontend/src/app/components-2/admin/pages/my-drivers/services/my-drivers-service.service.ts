@@ -25,4 +25,12 @@ export class MyDriversService {
   public registerDriver(adminId: number, driver: Driver): Observable<Driver>{
     return this.http.post<Driver>(`${API_URL}/register/driver?adminId=${adminId}`, driver, { 'headers': this.httpHeaders });
   }
+
+  public deleteDriver(driverId: number): Observable<any>{
+    return this.http.delete(`${API_URL}/drivers/delete/${driverId}`, { 'headers': this.httpHeaders, responseType: 'text' });
+  }
+
+  public getDriverDtoByDriverId(driverId: number): Observable<Driver>{
+    return this.http.get<Driver>(`${API_URL}/drivers/getDriverByDriverId/${driverId}`, {'headers': this.httpHeaders})
+  }
 }

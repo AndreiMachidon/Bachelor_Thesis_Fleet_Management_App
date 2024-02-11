@@ -6,7 +6,7 @@
 
         <form class="register-form" (ngSubmit)="registerUserFormSubmit()">
 
-                <mat-form-field class="organisation-form-field">
+                <mat-form-field class="organisation-form-field" color="accent">
                     <mat-label>Organisation name</mat-label>
                     <input type="text" matInput 
                            [formControl]="registerFormGroup.controls['organisationFormControl']" 
@@ -19,7 +19,7 @@
                   <h1 class="admin-details-header">Admin Details</h1>
       
                   <div class="form-group-1">
-                    <mat-form-field class="first-name-form-field">
+                    <mat-form-field class="first-name-form-field" color="accent">
                         <mat-label>First name</mat-label>
                         <input type="text" matInput 
                                 [formControl]="registerFormGroup.controls['firstNameFormControl']" 
@@ -30,7 +30,7 @@
                     </mat-form-field>
 
 
-                    <mat-form-field class="last-name-form-field">
+                    <mat-form-field class="last-name-form-field" color="accent">
                         <mat-label>Last name</mat-label>
                         <input type="text" matInput 
                             [formControl]="registerFormGroup.controls['lastNameFormControl']" 
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="form-group-2">
-                    <mat-form-field class="phone-number-form-field">
+                    <mat-form-field class="phone-number-form-field" color="accent">
                         <mat-label>Phone number</mat-label>
                         <input type="text" matInput 
                                [formControl]="registerFormGroup.controls['phoneNumberFormControl']" 
@@ -55,7 +55,7 @@
                         </mat-error>
                       </mat-form-field>
 
-                      <mat-form-field class="email-form-field">
+                      <mat-form-field class="email-form-field" color="accent">
                         <mat-label>Email</mat-label>
                         <input type="email" matInput 
                                [formControl]="registerFormGroup.controls['emailFormControl']" 
@@ -72,7 +72,7 @@
 
          
                 <div class="form-group-3">
-                    <mat-form-field>
+                    <mat-form-field color="accent">
                         <mat-label>Password</mat-label>
                         <input matInput 
                                [type]="hidePassword ? 'password' : 'text'"
@@ -85,7 +85,7 @@
                         </button>
                     </mat-form-field>
                     
-                    <mat-form-field>
+                    <mat-form-field color="accent">
                         <mat-label>Confirm Password</mat-label>
                         <input matInput 
                                [type]="hideConfirmPassword ? 'password' : 'text'"

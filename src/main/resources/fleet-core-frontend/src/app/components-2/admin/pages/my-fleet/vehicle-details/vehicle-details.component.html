@@ -1,33 +1,90 @@
 <div class="main-container">
     <div class="left-container">
-
+        <div class="maintanance-container">
+            <div class="maintanance-title">
+                <img src="../../../../../../assets/images/maintenance-vector.svg">
+                <h2>Maintanance</h2>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="maintenance-content">
+                <div class="next-maintenance maintanance-box">
+                    <h2>Next maintenance: </h2>
+                    <div class="maintenance-due" *ngIf="!isMaintenanceScheduled && !isMaintenanceMandatory">
+                        <p>There is no maintenance due</p>
+                        <p>You should schedule the next maintenance in: </p>
+                        <p class="maintanence-in-months">
+                            <strong *ngIf="monthsUntilNextMaintenance != 0">{{monthsUntilNextMaintenance}} months</strong>
+                            <strong *ngIf = "monthsUntilNextMaintenance == 0">{{daysUntilNextMaintenance}} days</strong>
+                            <span> or </span>
+                            <strong>{{formatMilenage(kilometersUntilNextMaintenance)}} km</strong>
+                        </p>
+                    </div>
+                    <div class="maintanance-mandatory" *ngIf="isMaintenanceMandatory">
+                        <p style="color: red;">YOU MUST SCHEDULE A MAINTENANCE NOW</p>
+                        <p>Please select a type of maintenance and schedule this vehicle in service right now</p>
+                    </div>
+                    <div *ngIf="isMaintenanceScheduled && !isMaintenanceToday" class="maintenance-sheduled">
+                        <p>You have a scheduled maintenance: </p>
+                        <div class="scheduled-maintenance-details">
+                            <p style="color: #69F0AE">{{formatScheduledMaintenanceType(nextMaintenance.maintenanceType)}}</p>
+                            <p style="color: #69F0AE">{{formatDate(nextMaintenance.maintananceDate)}}</p>
+                        </div>
+                       
+                    </div>
+                    <div *ngIf="isMaintenanceToday" class="maintenance-today">
+                        The Vehicle is in the service at the moment
+                    </div>
+                </div>
+                <div class="maintenance-history maintanance-box">
+                    <h2>Maintenance History: </h2>
+                    <p>Here you can see the history of all the maintenances for the vehicle</p>
+                    <button mat-raised-button color="accent" style="width: 100%;" (click)="viewMaintenanceHistory()">See History</button>
+                </div>
+                <div class="schedule-maintenance maintanance-box">
+                    <h2>Schedule Maintenance: </h2>
+                    <p>Here you can schedule a maintenance for the vehicle</p>
+                    <button mat-raised-button color="accent" (click)="scheduleMaintenance()" style="width: 100%;">Schedule Maintenance</button>
+                </div>
+               
+            </div>
+        </div>
+        <mat-divider class="prime-divider"></mat-divider>
+        <div class="alerts-container">
+            <div class="alerts-title">
+                <img src="../../../../../../assets/images/alerts-vector.svg">
+                <h2>Alerts</h2>
+            </div>  
+            <mat-divider></mat-divider>        
+        </div>
+        <mat-divider></mat-divider>        
+        <button mat-raised-button color="warn" class="back-button" (click)="returnMain()">Back</button>
     </div>
     <div class="right-container">
         <div class="image-container">
-            <img class="vehicle-image" [src]="vehicle.imageData ? 'data:image/jpeg;base64,' + vehicle.imageData : '../../../../../../assets/images/truck-default-image.svg'">
+            <img class="vehicle-image" [src]="vehicle?.imageData ? 'data:image/jpeg;base64,' + vehicle.imageData : '../../../../../../assets/images/truck-default-image.svg'">
         </div>     
         <div class="general-details-container">
             <h2 class="vehicle-details-title">Vehicle Details</h2>
             <mat-divider class="details-divider"></mat-divider>
             <div class="details">
-                <p><strong>Make: </strong>{{vehicle.make}}</p>
-                <p><strong>Model: </strong>{{vehicle.model}}</p>
-                <p><strong>VIN: </strong>{{vehicle.vin}}</p>
-                <p><strong>Lincese Plate: </strong>{{vehicle.lincesePlate}}</p>
-                <p><strong>Milenage: </strong>{{formatMilenage(vehicle.milenage)}} km</p>
-                <p><strong>Fuel Type: </strong>{{vehicle.fuelType | titlecase}}</p>
-                <p><strong>Year of manufacture: </strong>{{vehicle.yearOfManufacture}}</p>
-                <p><strong>Cargo Capacity: </strong>{{vehicle.cargoCapacity}} m<sup>3</sup></p>
+                <p><strong>Make: </strong>{{vehicle?.make}}</p>
+                <p><strong>Model: </strong>{{vehicle?.model}}</p>
+                <p><strong>VIN: </strong>{{vehicle?.vin}}</p>
+                <p><strong>Lincese Plate: </strong>{{vehicle?.lincesePlate}}</p>
+                <p><strong>Milenage: </strong>{{formatMilenage(vehicle?.milenage)}} km</p>
+                <p><strong>Fuel Type: </strong>{{vehicle?.fuelType | titlecase}}</p>
+                <p><strong>Year of manufacture: </strong>{{vehicle?.yearOfManufacture}}</p>
+                <p><strong>Cargo Capacity: </strong>{{vehicle?.cargoCapacity}} m<sup>3</sup></p>
                 <p>
-                    <strong>Fuel Capacity: </strong>{{vehicle.fuelCapacity}}
-                    <ng-container *ngIf="vehicle.fuelType === 'ELECTRIC'">kWh</ng-container>
-                    <ng-container *ngIf="vehicle.fuelType !== 'ELECTRIC'">Liters</ng-container>
+                    <strong>Fuel Capacity: </strong>{{vehicle?.fuelCapacity}}
+                    <ng-container *ngIf="vehicle?.fuelType === 'ELECTRIC'">kWh</ng-container>
+                    <ng-container *ngIf="vehicle?.fuelType !== 'ELECTRIC'">Liters</ng-container>
                   </p>
                   
                   <p>
-                    <strong>Fuel Consumption: </strong>{{vehicle.fuelConsumption}}
-                    <ng-container *ngIf="vehicle.fuelType === 'ELECTRIC'">kWh/100km</ng-container>
-                    <ng-container *ngIf="vehicle.fuelType !== 'ELECTRIC'">L/100km</ng-container>
+                    <strong>Fuel Consumption: </strong>{{vehicle?.fuelConsumption}}
+                    <ng-container *ngIf="vehicle?.fuelType === 'ELECTRIC'">kWh/100km</ng-container>
+                    <ng-container *ngIf="vehicle?.fuelType !== 'ELECTRIC'">L/100km</ng-container>
                   </p>
                   
 

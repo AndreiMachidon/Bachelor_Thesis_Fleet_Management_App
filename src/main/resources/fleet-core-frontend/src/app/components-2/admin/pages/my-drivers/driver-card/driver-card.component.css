@@ -21,6 +21,10 @@
     padding: 20px;
     color: white;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-image {
@@ -50,4 +54,9 @@ mat-divider{
     background-color: white;
     margin-bottom: 15px;
     margin-top: 2px;
+}
+
+.actions{
+    display: flex;
+    gap: 1em;
 }

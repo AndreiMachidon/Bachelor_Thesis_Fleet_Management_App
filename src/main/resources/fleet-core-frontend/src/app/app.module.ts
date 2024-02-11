@@ -54,7 +54,11 @@ import {MatChipsModule} from '@angular/material/chips';
 import { DriverCardComponent } from './components-2/admin/pages/my-drivers/driver-card/driver-card.component';
 import { AddDriverComponent } from './components-2/admin/pages/my-drivers/add-driver/add-driver.component';
 import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/vehicle-details/vehicle-details.component';
-
+import { AddMaintenanceComponent } from './components-2/admin/pages/my-fleet/vehicle-details/add-maintenance/add-maintenance.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MaintenanceHistoryComponent } from './components-2/admin/pages/my-fleet/vehicle-details/maintenance-history/maintenance-history.component';
+import {MatTableModule} from '@angular/material/table';
+import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/driver-details/driver-details.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +84,9 @@ import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/veh
     DriverCardComponent,
     AddDriverComponent,
     VehicleDetailsComponent,
-    
+    AddMaintenanceComponent,
+    MaintenanceHistoryComponent,
+    DriverDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -104,9 +110,9 @@ import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/veh
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatChipsModule
-    
-
+    MatChipsModule,
+    MatSnackBarModule,
+    MatTableModule
   ],
   
   providers: [DatePipe, 

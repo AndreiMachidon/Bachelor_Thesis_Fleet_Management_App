@@ -33,6 +33,11 @@
     background-color:  #616161;
     border-radius: 20px;
     margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
 }
 
 
@@ -76,4 +81,187 @@
     justify-content: center;
     align-items: center;
 }
+
+p strong{
+    color: #69F0AE;
+}
+
+.maintanance-container{
+    height: 50%;
+    width: 100%;
+    border-radius: 10px 10px 0 0; 
+}
+
+.maintanance-title{
+    display: flex;
+    align-items: center;
+    margin-top: 1;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.maintanance-title img{
+    width: 30px;
+    height: 30px;
+}
+
+.maintanance-title h2{
+    margin-top: 14px;
+    margin-left: 7px;
+}
+
+.alerts-title{
+    display: flex;
+    align-items: center;
+    color: red;
+    margin-left: 20px;
+}
+
+.alerts-container{
+    flex:1;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.alerts-container img{
+    width: 40px;
+    height: 40px;
+}
+
+.alerts-title h2{
+    margin-top: 14px;
+    margin-left: 7px;
+}
+
+.back-button{
+    width: 60px;
+    align-self: flex-start;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+mat-divider{
+    width: 100%;
+    height: 1px;
+    background-color: white;
+}
+
+.prime-divider{
+    height: 2px;
+}
+
+.maintenance-content{
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+}
+
+.maintanance-box {
+    width: 31%;
+    background-color: #424242;
+    height: 70%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer; 
+    padding: 20px;
+    position: relative; 
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.maintanance-box:hover {
+    transform: translateY(-10px); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.maintanance-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+    border-radius: 20px;
+    pointer-events: none;
+
+}
+
+.maintanance-box h2{
+    font-size: 20px;
+    color: #69F0AE;
+}
+
+.maintanance-box p{
+font-size: 14px;
+}
+
+.maintenance-content{
+
+}
+
+.maintenance-due{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+.maintenance-sheduled{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+.maintanance-mandatory{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+    font-size: 16px;
+
+}
+
+.maintenance-today{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+}
+
+
+
+.scheduled-maintenance-details{
+    align-items: center;
+    width: 90%;
+    padding: 9px;
+    padding-top: 12px;
+    margin-top: -5px;
+}
+
+.next-maintenance{
+
+
+}
+
+.maintenance-history{
+
+}
+
+.schedule-maintenance{
+
+}
+
+
 

@@ -30,6 +30,10 @@ public class Route {
     private double cost;
     private String driverNotes;
 
+    private long adminId;
+    private long vehicleId;
+    private long driverId;
+
 
 
 

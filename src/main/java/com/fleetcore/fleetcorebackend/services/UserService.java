@@ -9,7 +9,8 @@ import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.exceptions.AppException;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,23 @@ public class UserService {
 
     private final UserAuthProvider userAuthProvider;
 
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
 
     public UserDto login(SignInDto signInDto) {
-        System.out.println("User email: " + signInDto);
+        logger.info("Sign in user with email: " + signInDto);
+
         User user = userRepository.findByEmail(signInDto.email())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+
         UserDto userDto = new UserDto();
         if (passwordEncoder.matches(CharBuffer.wrap(signInDto.password()), user.getPassword())) {
-            if(user.getRole().equals("admin")){
+            if (user.getRole().equals("admin")) {
+                logger.info("Signing in an user with admin rights");
                 userDto.setToken(userAuthProvider.createTokenForAdmin(user));
                 return userDto;
-            }else{
+            } else {
+                logger.info("Signing in a driver");
                 DriverDto driverDto = driverService.createDriverDtoForLogin(user);
                 userDto.setToken(userAuthProvider.createTokenForDriver(driverDto));
                 return userDto;

@@ -27,7 +27,6 @@ export class MyFleetComponent implements OnInit{
       this.refreshVehicles()
     }
 
-
     refreshVehicles(){
       const idAdmin = this.authService.getUserDetails().id;
       this.vehicleService.getAllVehicles(idAdmin).subscribe((response) => {

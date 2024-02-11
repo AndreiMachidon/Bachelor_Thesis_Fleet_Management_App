@@ -32,4 +32,5 @@ public class VehicleService {
     public Vehicle getVehicleById(Long id){
         return this.vehicleRepository.getVehiclesById(id);
     }
+
 }

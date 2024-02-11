@@ -1,6 +1,5 @@
 package com.fleetcore.fleetcorebackend.entities;
 
-import com.fleetcore.fleetcorebackend.entities.enums.RouteAlertStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +20,7 @@ public class RouteAlert {
     private String alertText;
     private Date alertIssuedDate;
     private Date alertResolvedDate;
-    private RouteAlertStatus alertStatus;
+
+    private long routeId;
 
 }

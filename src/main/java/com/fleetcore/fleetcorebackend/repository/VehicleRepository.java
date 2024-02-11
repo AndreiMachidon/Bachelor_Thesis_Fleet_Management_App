@@ -18,4 +18,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Transactional
     void deleteVehicleById(Long id);
 
+
 }

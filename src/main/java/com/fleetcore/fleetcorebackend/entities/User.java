@@ -48,7 +48,6 @@ public class User {
     @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
-    //todo: foreign key
     @Nullable
     private Long driverDetailsId;
 
@@ -60,7 +59,7 @@ public class User {
         }
     }
 
-    public String getImageData() {
+    public String getImageData(){
         if (this.imageData != null) {
             return Base64.getEncoder().encodeToString(this.imageData);
         } else {

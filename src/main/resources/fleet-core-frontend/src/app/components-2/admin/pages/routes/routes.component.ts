@@ -118,7 +118,7 @@ export class RoutesComponent {
             this.duration = response.routes[0].legs[0].duration.text;
          
          } else {
-            console.error('Directions request failed:', status);
+            alert("Cold not find a route between the two locations.")
          }
       });
    }

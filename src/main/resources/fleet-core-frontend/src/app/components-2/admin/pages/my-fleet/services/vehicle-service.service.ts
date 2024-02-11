@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { Vehicle } from '../../../admin-dashboard/models/vehicle.model';
 import { API_URL } from 'src/app/contants';
 import { Observable } from 'rxjs';
+import { Maintenance } from '../../../admin-dashboard/models/maintanance.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,17 @@ export class VehicleService {
 
   public getVehicleById(vehicleID: number): Observable<Vehicle>{
     return this.http.get<Vehicle>(`${API_URL}/vehicles/getVehicle?id=${vehicleID}`, { 'headers': this.httpHeaders })
+  }
+
+  public saveMaintenance(maintanance: Maintenance): Observable<Maintenance> {
+    return this.http.post<Maintenance>(`${API_URL}/maintenances/save`, maintanance, {headers: this.httpHeaders} )
+  }
+
+  public getLastMaintenance(vehicleId: number) : Observable<Maintenance> {
+    return this.http.get<Maintenance>(`${API_URL}/maintenances/getLastMaintenance?vechileId=${vehicleId}`, {headers: this.httpHeaders})
+  }
+
+  public getAllMaintanancesForVehicle(vehicleId: number): Observable<Maintenance[]> {
+    return this.http.get<Maintenance[]>(`${API_URL}/maintenances/all?vehicleId=${vehicleId}`, {headers: this.httpHeaders})
   }
 }

@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   public register(signUpDto: SignUpDto): Observable<UserDto> {
-     return this.http.post<UserDto>(`${API_URL}/register`, signUpDto);
+     return this.http.post<UserDto>(`${API_URL}/register/admin`, signUpDto);
   }
 
   getAuthToken(): string | null {

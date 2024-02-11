@@ -1,0 +1,58 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: centers;
+}
+
+.options{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.maintanance-option {
+    padding: 40px;
+    background-color: #616161; 
+    border-radius: 10px;
+    text-align: center;
+    margin-right: 20px;
+    font-size: 15px;
+    height: 300px;
+    width: 350px;
+    transition: all 0.5s ease;
+}
+
+.maintanance-option.active {
+    background-color: #83d2866c;
+}
+
+
+.maintanance-option:hover {
+    background-color: #83d2866c; 
+    cursor: pointer;
+}
+
+.maintanance-option p {
+    margin: -2px 0; 
+}
+
+mat-form-field{
+    width: 40%;
+    align-self: center;
+    margin-top: 40px;
+}
+
+.actions-buttons{
+    margin-right: 30px;
+}
+
+.success-snackbar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error-snackbar {
+    background-color: #f44336;
+    color: white;
+}

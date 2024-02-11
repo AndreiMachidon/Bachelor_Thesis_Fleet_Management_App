@@ -1,6 +1,6 @@
 package com.fleetcore.fleetcorebackend.entities;
 
-import com.fleetcore.fleetcorebackend.entities.enums.MaintananceType;
+import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +18,18 @@ public class Maintenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private MaintenanceType maintenanceType;
 
-    private MaintananceType maintananceType;
+
+    //field to showcase when the next Maintenance should be conducted
+    //maintenance should be conducted every 20.000 km or for every 6 months
     private Date maintananceDate;
-    private double maintananceCost;
+    private double currentVehicleMileage;
+
+    private double price;
+
+    //todo: foreign key
+    private Long vehicleId;
+
 
 }

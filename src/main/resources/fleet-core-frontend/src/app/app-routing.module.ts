@@ -13,6 +13,7 @@ import { DashboardComponent } from './components-2/admin/pages/dashboard/dashboa
 import { AddVehicleComponent } from './components-2/admin/pages/my-fleet/add-vehicle/add-vehicle.component';
 import { AddDriverComponent } from './components-2/admin/pages/my-drivers/add-driver/add-driver.component';
 import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/vehicle-details/vehicle-details.component';
+import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/driver-details/driver-details.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -29,7 +30,8 @@ const routes: Routes = [
       { path: 'routes', component: RoutesComponent },
       {path: 'add-vehicle', component: AddVehicleComponent},
       {path: 'add-driver', component: AddDriverComponent},
-      {path: 'vehicle-details/:id', component: VehicleDetailsComponent}
+      {path: 'vehicle-details/:id', component: VehicleDetailsComponent},
+      {path: 'driver-details/:id', component: DriverDetailsComponent}
     ],
   },
 ];
