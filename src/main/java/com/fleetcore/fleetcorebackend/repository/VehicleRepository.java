@@ -11,9 +11,9 @@ import java.util.List;
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
 
-    public List<Vehicle> getVehiclesByAdminId(Long adminId);
+    List<Vehicle> getVehiclesByAdminId(Long adminId);
 
-    public Vehicle getVehiclesById(Long id);
+    Vehicle getVehicleById(Long id);
 
     @Transactional
     void deleteVehicleById(Long id);

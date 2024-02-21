@@ -41,4 +41,9 @@ public class DriverController {
         }
     }
 
+    @GetMapping("available")
+    public ResponseEntity<List<DriverDto>> getAvailableDrivers(@PathVariable("id") Long adminId){
+        return ResponseEntity.ok(null);
+    }
+
 }

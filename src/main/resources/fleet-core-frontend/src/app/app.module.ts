@@ -59,6 +59,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MaintenanceHistoryComponent } from './components-2/admin/pages/my-fleet/vehicle-details/maintenance-history/maintenance-history.component';
 import {MatTableModule} from '@angular/material/table';
 import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/driver-details/driver-details.component';
+import { AssignVehicleDialogComponent } from './components-2/admin/pages/routes/dialogs/assign-vehicle-dialog/assign-vehicle-dialog.component';
+import { AssignDriverDialogComponent } from './components-2/admin/pages/routes/dialogs/assign-driver-dialog/assign-driver-dialog.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +88,9 @@ import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/dr
     VehicleDetailsComponent,
     AddMaintenanceComponent,
     MaintenanceHistoryComponent,
-    DriverDetailsComponent
+    DriverDetailsComponent,
+    AssignVehicleDialogComponent,
+    AssignDriverDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -112,7 +116,8 @@ import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/dr
     MatSelectModule,
     MatChipsModule,
     MatSnackBarModule,
-    MatTableModule
+    MatTableModule,
+    MatDatepickerModule,
   ],
   
   providers: [DatePipe, 

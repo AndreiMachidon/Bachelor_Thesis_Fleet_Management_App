@@ -46,4 +46,8 @@ export class VehicleService {
   public getAllMaintanancesForVehicle(vehicleId: number): Observable<Maintenance[]> {
     return this.http.get<Maintenance[]>(`${API_URL}/maintenances/all?vehicleId=${vehicleId}`, {headers: this.httpHeaders})
   }
+
+  public getAvailableVehicles(adminId: number): Observable<Vehicle[]> {
+    return this.http.get<Vehicle[]>(`${API_URL}/vehicles/available?id=${adminId}`, {headers: this.httpHeaders})
+  }
 }

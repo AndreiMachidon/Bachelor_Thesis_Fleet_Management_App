@@ -2,13 +2,15 @@ package com.fleetcore.fleetcorebackend.entities;
 
 
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -33,8 +35,6 @@ public class Route {
     private long adminId;
     private long vehicleId;
     private long driverId;
-
-
 
 
 }

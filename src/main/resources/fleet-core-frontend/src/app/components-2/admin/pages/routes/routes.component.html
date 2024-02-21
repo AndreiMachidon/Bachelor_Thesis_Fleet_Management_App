@@ -1,41 +1,90 @@
 <div class="main-container">
-    <div class="left-container">
+
+  <div class="left-container">
+    <ng-container *ngIf="showSelectOptions; else addRouteContainer">
+      <div class="option view-all-options">
+        <button mat-raised-button color="accent"
+          (click)="showSelectOptions = false; showAddRoute = true"
+          class="action-button">Add
+          Route</button>
+        <button mat-raised-button color="accent"
+          (click)="showSelectOptions = false; showAddRoute = true"
+          class="action-button">View All Routes</button>
+      </div>
+    </ng-container>
+  </div>
+
+  <ng-template #addRouteContainer>
+    <div class="left-container option-add-route">
+      <ng-container *ngIf="showAddRoute; else showRoutesContainer">
         <mat-form-field class="location-input">
-            <input
-              type="text"
-              placeholder="Starting Point"
-              [(ngModel)]="startingLocation"
-              #startingLocationInput
-              matInput
-              [matAutocomplete]="startingLocationAuto"
-              (input)="startingLocationAutocomplete(startingLocationInput)"
-            />
-            <mat-autocomplete #startingLocationAuto="matAutocomplete">
-              <!-- Autocomplete options go here -->
-            </mat-autocomplete>
-          </mat-form-field>
+          <input type="text" placeholder="Starting Point"
+            [(ngModel)]="startingLocation" #startingLocationInput matInput
+            [matAutocomplete]="startingLocationAuto"
+            (input)="startingLocationAutocomplete(startingLocationInput)" />
+          <mat-autocomplete #startingLocationAuto="matAutocomplete">
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field class="location-input">
+          <input type="text" placeholder="Destination"
+            [(ngModel)]="destinationLocation" #destinationLocationInput matInput
+            [matAutocomplete]="destinationLocationAuto"
+            (input)="destinationLocationAutocomplete(destinationLocationInput)" />
+          <mat-autocomplete #destinationLocationAuto="matAutocomplete">
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="findOptimalRoute()"
+          class="action-button">Find optimal route</button>
+
+        <p style="margin-top: 20px;">Distance: {{distance}}</p>
+        <p>Aprox duration: {{duration}}</p>
+
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="openChoseVehicleDialog()"
+          [disabled]="false"
+          class="action-button route-details-selection">Chose vehicle</button>
+
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="openChoseDriverDialog()"
+          [disabled]="false"
+          class="action-button route-details-selection">Chose driver</button>
           
-          <mat-form-field class="location-input">
-            <input
-              type="text"
-              placeholder="Destination"
-              [(ngModel)]="destinationLocation"
-              #destinationLocationInput
-              matInput
-              [matAutocomplete]="destinationLocationAuto"
-              (input)="destinationLocationAutocomplete(destinationLocationInput)"
-            />
-            <mat-autocomplete #destinationLocationAuto="matAutocomplete">
-              <!-- Autocomplete options go here -->
-            </mat-autocomplete>
-          </mat-form-field>
+          <button
+          mat-raised-button
+          color="primary"
+          (click)="calculateCosts()"
+          [disabled]="!isRouteConfigured"
+          class="action-button route-details-selection total-cost">Calculate total costs</button>
+       
 
-          <button mat-raised-button color="accent" (click)="calculateRoute()">Calculate Route</button>
+        <div class="lower-container">
+         
+          <button mat-raised-button color="warn"
+            class="action-button"
+            (click)="showSelectOptions = true; showAddRoute = false">Back</button>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
 
-          <p style="margin-top: 20px;">DISTANTA: {{distance}}</p>
-          <p>DURATA: {{duration}}</p>
+  <ng-template #showRoutesContainer>
+    <div class="left-container">
+      <ng-container>
+
+      </ng-container>
     </div>
-    <div class="right-container">
-        <div id="map"></div>
-    </div>
+  </ng-template>
+
+  <div class="right-container">
+    <div id="map"></div>
+  </div>
 </div>

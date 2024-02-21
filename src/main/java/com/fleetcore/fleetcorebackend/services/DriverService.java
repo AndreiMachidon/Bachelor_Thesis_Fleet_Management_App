@@ -1,7 +1,6 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
-import com.fleetcore.fleetcorebackend.dto.UserDto;
 import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
@@ -10,17 +9,11 @@ import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import com.fleetcore.fleetcorebackend.util.DriverPasswordGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @RequiredArgsConstructor
 @Service
@@ -158,6 +151,13 @@ public class DriverService {
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
+    }
+
+
+    public List<DriverDto> getAvailableDrivers(Long adminId){
+
+
+        return null;
     }
 
 }

@@ -1,21 +1,13 @@
 package com.fleetcore.fleetcorebackend.controller;
 
-import com.fleetcore.fleetcorebackend.entities.Maintenance;
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
-import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
-import com.fleetcore.fleetcorebackend.repository.MaintenanceRepository;
-import com.fleetcore.fleetcorebackend.services.MaintenanceService;
 import com.fleetcore.fleetcorebackend.services.VehicleService;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/vehicles")
@@ -24,13 +16,11 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
-
-
     @GetMapping(path = "/all")
     public ResponseEntity<List<Vehicle>> getAllVehicles(@RequestParam("id") Long adminId) {
         List<Vehicle> vehicles = vehicleService.getVehiclesByAdminId(adminId);
 
-        if(vehicles.size() != 0){
+        if(!vehicles.isEmpty()){
             return ResponseEntity.ok(vehicles);
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -54,6 +44,12 @@ public class VehicleController {
     public ResponseEntity<Vehicle> getVehicleById(@RequestParam("id") Long vehicleId){
         Vehicle vehicle = vehicleService.getVehicleById(vehicleId);
         return ResponseEntity.ok(vehicle);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<Vehicle>> getAvailableVehicles(@RequestParam("id") Long adminId){
+        List<Vehicle> vehicles = vehicleService.getAllAvailableVehicles(adminId);
+        return ResponseEntity.ok(vehicles);
     }
 
 
