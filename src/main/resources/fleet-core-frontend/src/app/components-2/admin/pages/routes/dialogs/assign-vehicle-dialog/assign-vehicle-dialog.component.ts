@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { VehicleService } from '../../../my-fleet/services/vehicle-service.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { Vehicle } from 'src/app/components-2/admin/admin-dashboard/models/vehicle.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-assign-vehicle-dialog',
@@ -29,23 +29,24 @@ export class AssignVehicleDialogComponent {
 
 
   constructor(private vehicleService: VehicleService,
-              private authService: AuthService,
-              public dialogRef: MatDialogRef<AssignVehicleDialogComponent>) {}
+              public dialogRef: MatDialogRef<AssignVehicleDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {}
 
 
   ngOnInit(){
     this.getAvailableVehicles();
   }
 
-  getAvailableVehicles(){
-    this.vehicleService.getAvailableVehicles(this.authService.getUserDetails().id).subscribe(
-      (response : Vehicle[]) => {
+  getAvailableVehicles() {
+    this.vehicleService.getAvailableVehicles(this.data.adminId, this.data.startTime, this.data.arrivalTime).subscribe(
+      (response: Vehicle[]) => {
         this.dataSource = new MatTableDataSource(response);
       },
       (error) => {
-        alert(error)
+        console.log(error);
+        
       }
-    )
+    );
   }
 
   getFuelConsumptionUnit(row: Vehicle): string {

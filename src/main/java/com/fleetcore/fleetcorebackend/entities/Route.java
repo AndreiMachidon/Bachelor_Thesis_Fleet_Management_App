@@ -25,7 +25,6 @@ public class Route {
     private String startLocation;
     private String endLocation;
     private double distance;
-    private double time;
     private Date startTime;
     private Date arrivalTime;
     private RouteStatus routeStatus;
@@ -35,6 +34,8 @@ public class Route {
     private long adminId;
     private long vehicleId;
     private long driverId;
+
+    private String encodedPolyline;
 
 
 }

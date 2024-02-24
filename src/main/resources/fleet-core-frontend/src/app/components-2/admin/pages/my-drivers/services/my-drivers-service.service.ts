@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Driver } from 'src/app/components-2/auth/dto/Driver';
@@ -33,4 +33,14 @@ export class MyDriversService {
   public getDriverDtoByDriverId(driverId: number): Observable<Driver>{
     return this.http.get<Driver>(`${API_URL}/drivers/getDriverByDriverId/${driverId}`, {'headers': this.httpHeaders})
   }
+
+  public getAvailableDrivers(adminId: number, startTime: Date, arrivalTime: Date): Observable<Driver[]>{ 
+    const params = new HttpParams()
+      .set('id', adminId.toString())
+      .set('startTime', startTime.toISOString())
+      .set('arrivalTime', arrivalTime.toISOString());
+
+    return this.http.get<Driver[]>(`${API_URL}/drivers/available`, {'headers': this.httpHeaders, params});
+  }
+
 }

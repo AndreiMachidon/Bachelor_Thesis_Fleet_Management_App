@@ -1,19 +1,20 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
-import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
 import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
 
 
     public List<Vehicle> getVehiclesByAdminId(Long adminId){
@@ -35,12 +36,12 @@ public class VehicleService {
         return this.vehicleRepository.getVehicleById(id);
     }
 
-    public List<Vehicle> getAllAvailableVehicles(Long adminId){
-        List<Vehicle> vehicles = vehicleRepository.getVehiclesByAdminId(adminId);
-        return vehicles.stream()
-                .filter(vehicle -> vehicle.getVehicleStatus().equals(VehicleStatus.IDLE))
-                .collect(Collectors.toList());
+    public List<Vehicle> getAvailableVehicles(Long adminId, LocalDateTime startTime, LocalDateTime arrivalTime){
+        Date dateStartTime = java.sql.Timestamp.valueOf(startTime);
+        Date dateArrivalTime  = java.sql.Timestamp.valueOf(arrivalTime);
 
+        List<Vehicle> vehicles = vehicleRepository.findAvailableVehicles(adminId, dateStartTime, dateArrivalTime);
+        return vehicles;
     }
 
 }

@@ -4,15 +4,20 @@ import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
+import com.fleetcore.fleetcorebackend.repository.RouteRepository;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import com.fleetcore.fleetcorebackend.util.DriverPasswordGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,12 +32,15 @@ public class DriverService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RouteRepository routeRepository;
 
-    public List<DriverDto> getDriversByAdminId(Long adminId){
-        List<DriverDetails> driverDetails  = driverDetailsRepository.getDriverDetailsByAdminId(adminId);
+
+    public List<DriverDto> getDriversByAdminId(Long adminId) {
+        List<DriverDetails> driverDetails = driverDetailsRepository.getDriverDetailsByAdminId(adminId);
         List<DriverDto> drivers = new ArrayList<>();
 
-        for(DriverDetails details: driverDetails){
+        for (DriverDetails details : driverDetails) {
             User userDetails = userRepository.findUserByDriverDetailsId(details.getId());
             DriverDto driverDto = new DriverDto();
             driverDto.setId(details.getId());
@@ -52,7 +60,7 @@ public class DriverService {
         return drivers;
     }
 
-    public DriverDto createDriverDtoForLogin(User user){
+    public DriverDto createDriverDtoForLogin(User user) {
         DriverDetails driverDetails = driverDetailsRepository.getDriverDetailsById(user.getDriverDetailsId());
 
         DriverDto driverDto = DriverDto.builder()
@@ -74,7 +82,7 @@ public class DriverService {
         return driverDto;
     }
 
-    public DriverDto registerDriver(Long adminId, DriverDto driverDto){
+    public DriverDto registerDriver(Long adminId, DriverDto driverDto) {
 
         DriverDetails driverDetails = DriverDetails.builder()
                 .adminId(adminId)
@@ -83,7 +91,7 @@ public class DriverService {
                 .yearsOfExperience(driverDto.getYearsOfExperience())
                 .build();
 
-        driverDetails  = driverDetailsRepository.save(driverDetails);
+        driverDetails = driverDetailsRepository.save(driverDetails);
 
         User user = User.builder()
                 .firstName(driverDto.getFirstName())
@@ -105,7 +113,7 @@ public class DriverService {
         emailDetails.setRecipient(user.getEmail());
         emailDetails.setSubject("Fleet Core Account Password");
         String messaage = String.format("Hello %s %s!\nWelcome to Fleet Core!\nThe password to your account is: %s.\nYou can log in into your account!",
-                        user.getFirstName(), user.getLastName(), driverPassword);
+                user.getFirstName(), user.getLastName(), driverPassword);
         emailDetails.setMsgBody(messaage);
 
         emailService.sendSimpleMail(emailDetails);
@@ -113,19 +121,19 @@ public class DriverService {
         return createDriverDtoForLogin(user);
     }
 
-    public String deleteDriver(Long driverId){
+    public String deleteDriver(Long driverId) {
         try {
             userRepository.deleteByDriverDetailsId(driverId);
             driverDetailsRepository.deleteById(driverId);
 
             return "Driver deleted successfully!";
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return null;
         }
     }
 
-    public DriverDto getDriverByDriverId(Long driverId){
-        try{
+    public DriverDto getDriverByDriverId(Long driverId) {
+        try {
             DriverDetails driverDetails = driverDetailsRepository.getDriverDetailsById(driverId);
             User user = userRepository.findUserByDriverDetailsId(driverId);
 
@@ -148,16 +156,40 @@ public class DriverService {
             return driverDto;
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
 
-    public List<DriverDto> getAvailableDrivers(Long adminId){
+    public List<DriverDto> getAvailableDrivers(Long adminId, LocalDateTime startTime, LocalDateTime arrivalTime) {
+        Date dateStartTime = java.sql.Timestamp.valueOf(startTime);
+        Date dateArrivalTime = java.sql.Timestamp.valueOf(arrivalTime);
 
+        List<DriverDto> allDrivers = getDriversByAdminId(adminId);
+        List<DriverDto> availableDrivers = new ArrayList<>();
 
-        return null;
+        for (DriverDto driver : allDrivers) {
+            List<Route> driverRoutes = routeRepository.getAllByDriverId(driver.getId());
+
+            boolean isAvailable = true;
+            for (Route route : driverRoutes) {
+                Date routeStart = route.getStartTime();
+                Date routeEnd = route.getArrivalTime();
+
+                if (!(routeEnd.before(dateStartTime) || routeStart.after(dateArrivalTime))) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (isAvailable) {
+                availableDrivers.add(driver);
+            }
+        }
+
+        return availableDrivers;
+
     }
 
 }

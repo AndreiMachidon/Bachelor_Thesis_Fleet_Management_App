@@ -3,9 +3,11 @@ package com.fleetcore.fleetcorebackend.controller;
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -41,9 +43,13 @@ public class DriverController {
         }
     }
 
-    @GetMapping("available")
-    public ResponseEntity<List<DriverDto>> getAvailableDrivers(@PathVariable("id") Long adminId){
-        return ResponseEntity.ok(null);
+    @GetMapping("/available")
+    public ResponseEntity<List<DriverDto>> getAvailableDrivers(@RequestParam("id") Long adminId,
+                                                               @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+                                                               @RequestParam("arrivalTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime arrivalTime){
+
+        List<DriverDto> availableDrivers = driverService.getAvailableDrivers(adminId, startTime, arrivalTime);
+        return ResponseEntity.ok(availableDrivers);
     }
 
 }

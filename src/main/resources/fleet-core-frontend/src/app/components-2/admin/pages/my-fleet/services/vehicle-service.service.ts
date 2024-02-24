@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { Vehicle } from '../../../admin-dashboard/models/vehicle.model';
@@ -47,7 +47,14 @@ export class VehicleService {
     return this.http.get<Maintenance[]>(`${API_URL}/maintenances/all?vehicleId=${vehicleId}`, {headers: this.httpHeaders})
   }
 
-  public getAvailableVehicles(adminId: number): Observable<Vehicle[]> {
-    return this.http.get<Vehicle[]>(`${API_URL}/vehicles/available?id=${adminId}`, {headers: this.httpHeaders})
+  public getAvailableVehicles(adminId: number, startTime: Date, arrivalTime: Date): Observable<Vehicle[]> {
+    const params = new HttpParams()
+      .set('id', adminId.toString())
+      .set('startTime', startTime.toISOString())
+      .set('arrivalTime', arrivalTime.toISOString());
+  
+    return this.http.get<Vehicle[]>(`${API_URL}/vehicles/available`, { headers: this.httpHeaders, params });
   }
+
+  
 }

@@ -1,0 +1,71 @@
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+
+    <ng-container matColumnDef="driverIcon">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <img src="../../../../../../../assets/images/profile-default-icon.png" alt="Driver" class="driver-icon"
+                    style="height: 40px; width: 40px;"/>
+        </td>
+      </ng-container>
+  
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef> First Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef> Last name </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="ratePerKilometer">
+      <th mat-header-cell *matHeaderCellDef> Rate </th>
+      <td mat-cell *matCellDef="let element"> ${{element.ratePerKilometer}}/km</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="licenseExpiryDate">
+      <th mat-header-cell *matHeaderCellDef> License Expiry Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.licenseExpiryDate | date:'dd-MM-yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="yearsOfExperience">
+        <th mat-header-cell *matHeaderCellDef> Experience </th>
+        <td mat-cell *matCellDef="let element"> {{element.yearsOfExperience}} years</td>
+      </ng-container>
+
+      <ng-container matColumnDef="totalKilometersDriven">
+        <th mat-header-cell *matHeaderCellDef> Total Kilometers </th>
+        <td mat-cell *matCellDef="let element"> {{element.totalKilometersDriven | number:'1.0-0'}} km</td>
+      </ng-container>
+
+
+    <ng-container matColumnDef="expand">
+        <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button aria-label="expand row" (click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation()">
+                <mat-icon *ngIf="expandedElement === element; else downIcon">keyboard_arrow_up</mat-icon>
+                <ng-template #downIcon><mat-icon>keyboard_arrow_down</mat-icon></ng-template>
+            </button>
+        </td>
+      </ng-container>
+
+      <!-- Expanded Content Column -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+          <div class="driver-details"
+               [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <button mat-raised-button class="select-driver-button" color="accent" (click)="selectDriver(element)">Select</button>
+          </div>
+        </td>
+      </ng-container>
+    
+  
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+      <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+          class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          (click)="expandedElement = expandedElement === element ? null : element">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+  </table>
