@@ -41,8 +41,8 @@
           (click)="findOptimalRoute()"
           class="action-button">Find optimal route</button>
 
-        <p style="margin-top: 20px;">Distance: {{distance}}</p>
-        <p>Aprox duration: {{duration}}</p>
+        <!-- <p style="margin-top: 20px;">Distance: {{distance}}</p>
+        <p>Aprox duration: {{duration}}</p> -->
 
         <mat-form-field class="date-time-input">
           <input matInput [ngxMatDatetimePicker]="picker"
@@ -67,10 +67,10 @@
           </ngx-mat-datetime-picker>
         </mat-form-field>
 
-        <div *ngIf="startTime != null && arrivalTime != null">
+        <!-- <div *ngIf="startTime != null && arrivalTime != null">
           <p>Start time: {{startTime | date:'yyyy-MM-dd HH:mm'}}</p>
           <p>Arrival time: {{arrivalTime | date:'yyyy-MM-dd HH:mm'}}</p>
-        </div>
+        </div> -->
 
         <button
           mat-raised-button

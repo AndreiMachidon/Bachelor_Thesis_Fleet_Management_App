@@ -98,5 +98,9 @@ mat-divider{
     width: 90%;
 }
 
+.custom-info-window .gm-style-iw {
+    width: 500px !important;
+}
+
 
 
