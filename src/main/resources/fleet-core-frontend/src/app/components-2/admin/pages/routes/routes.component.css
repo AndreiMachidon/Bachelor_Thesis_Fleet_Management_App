@@ -82,6 +82,7 @@ mat-divider{
 
 .action-button{
     width: 90%;
+    margin-bottom: 1.5em;
 }
 
 .option-add-route .route-details-selection{

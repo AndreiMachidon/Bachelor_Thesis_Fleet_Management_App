@@ -1,18 +1,17 @@
 package com.fleetcore.fleetcorebackend.config;
 
-import com.fleetcore.fleetcorebackend.entities.DriverDetails;
-import com.fleetcore.fleetcorebackend.entities.Maintenance;
-import com.fleetcore.fleetcorebackend.entities.User;
-import com.fleetcore.fleetcorebackend.entities.Vehicle;
+import com.fleetcore.fleetcorebackend.entities.*;
 import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
 import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
-import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
-import com.fleetcore.fleetcorebackend.repository.MaintenanceRepository;
-import com.fleetcore.fleetcorebackend.repository.UserRepository;
-import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
+import com.fleetcore.fleetcorebackend.repository.*;
 import jakarta.annotation.PostConstruct;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -35,6 +34,9 @@ public class MockEntities {
 
     @Autowired
     private MaintenanceRepository maintenanceRepository;
+
+    @Autowired
+    private CountryElectricityPriceRepository countryElectricityPriceRepository;
 
     @PostConstruct
     public void mockUser(){
@@ -188,6 +190,35 @@ public class MockEntities {
             user.setImageData(base64ImageData);
         } catch (Exception ex) {
             user.setImageData(null);
+        }
+    }
+
+    @PostConstruct
+    public void loadElectricityPrices() {
+        try {
+
+            InputStream in = new ClassPathResource("static/Median-Electricity-Prices_Europe_Average.xlsx").getInputStream();
+            Workbook workbook = new XSSFWorkbook(in);
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rows = sheet.iterator();
+
+            if (rows.hasNext()) {
+                rows.next();
+            }
+
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+                String country = currentRow.getCell(0).getStringCellValue();
+                double averagePricePerKwh = currentRow.getCell(1).getNumericCellValue();
+
+                CountryElectricityPrice price = new CountryElectricityPrice();
+                price.setCountry(country);
+                price.setAveragePricePerKwh(averagePricePerKwh);
+                countryElectricityPriceRepository.save(price);
+            }
+            workbook.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

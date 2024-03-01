@@ -4,4 +4,5 @@ export interface CustomWaypoint {
     type: string;
     gasStationInfo?: any; //only if the waypoint is a gas station
     evChargeInfo?: any; //only if the waypoint is a charging station
+    electricityPrice?: number; //only if the waypoint is a charging station
   }

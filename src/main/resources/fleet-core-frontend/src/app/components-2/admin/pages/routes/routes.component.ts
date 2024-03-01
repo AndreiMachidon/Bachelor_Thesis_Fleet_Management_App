@@ -2,8 +2,6 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { } from 'googlemaps';
-
-import { CustomMarker } from './util/google.maps.util';
 import { MatDialog } from '@angular/material/dialog';
 import { VehicleService } from '../my-fleet/services/vehicle-service.service';
 import { MyDriversService } from '../my-drivers/services/my-drivers-service.service';
@@ -14,6 +12,8 @@ import { Driver } from 'src/app/components-2/auth/dto/Driver';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { GoogleMapsService } from './services/google-maps.service';
 import { CustomWaypoint } from './util/custom-waypoint.interface';
+import { ElectricityPricesService } from './services/electricity-prices.service';
+import { calculateDistanceAndDurationBetweenWaypoints, calculateDurationInHoursAndMinutes, createCustomMarker, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint, getPointsAlongRoute } from './util/google.maps.util';
 
 
 @Component({
@@ -23,49 +23,47 @@ import { CustomWaypoint } from './util/custom-waypoint.interface';
 })
 export class RoutesComponent {
 
-
-
+  //1. Map, User, DirectionRenderer and DirectionService
   map: google.maps.Map;
   userPosition: google.maps.LatLng;
   directionRenderer: google.maps.DirectionsRenderer = null;
+  directionService: google.maps.DirectionsService = null;
 
+  //2. For starting and destination location
+  startingLocationControl = new FormControl();
+  destinationLocationControl = new FormControl();
   startingLocation: string = '';
   destinationLocation: string = '';
 
-  startingLocationControl = new FormControl();
-  destinationLocationControl = new FormControl();
 
+  //3. Details of the optimal route
   isRouteConfigured: boolean = false;
-
-  distance: string;
-  duration: string;
-  durationInSeconds: number;
+  distance: number;
+  duration: number;
   directionResult: google.maps.DirectionsResult = null;
 
-  //flags for showing the actions
+  //4. Flags for showing the current window
   showSelectOptions: boolean = true;
   showAddRoute: boolean = false;
   showViewRoutes: boolean = true;
 
-  //pentru selectarea datei rutei
+  //5. For selecting the route date
   dateControl = new FormControl();
   minDate: Date = new Date();
-
-
-  //selected date, vehicle and driver
   startTime: Date = null;
   arrivalTime: Date = null;
+
+  //6.Selected Vehicle and driver
   selectedVehicle: Vehicle = null;
   selectedDriver: Driver = null;
 
-  //fuel stations
+  //7. For fuel stations
   showFuelStationsFlag: boolean = false;
   fuelStationsMarkers: google.maps.Marker[] = [];
 
-  //waypoints
+  //8. For custom waypoints
   waypoints: CustomWaypoint[] = [];
   waypointsMarkers: google.maps.Marker[] = [];
-
 
   @ViewChild('startingLocationAuto') startingLocationAuto: MatAutocomplete;
   @ViewChild('destinationLocationAuto') destinationLocationAuto: MatAutocomplete;
@@ -74,34 +72,41 @@ export class RoutesComponent {
     private driversService: MyDriversService,
     public dialog: MatDialog,
     private authService: AuthService,
-    private googleMapsService: GoogleMapsService
-  ) { }
+    private googleMapsService: GoogleMapsService,
+    private electricityPricesService: ElectricityPricesService) {
+  }
 
   ngOnInit(): void {
     this.getUserLocation();
   }
 
   initMap() {
-    console.log('Google maps version:', google.maps.version);
     const mapOptions: any = {
       center: this.userPosition,
       zoom: 15,
       disableDefaultUI: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapId: '1d3279d2082b9187'
+      mapTypeId: google.maps.MapTypeId.HYBRID,
+      mapId: '1d3279d2082b9187',
+      restriction: {
+        latLngBounds: { //europe limits
+          north: 71,
+          south: 34,
+          east: 40,
+          west: -25,
+        },
+        strictBounds: true,
+      },
     };
     this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
     const trafficLayer = new google.maps.TrafficLayer();
     trafficLayer.setMap(this.map);
   }
 
-
   getUserLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
           this.initMap();
         },
         (error) => {
@@ -110,16 +115,21 @@ export class RoutesComponent {
       );
     } else {
       console.error('Geolocation is not supported by this browser.');
-
     }
   }
 
   startingLocationAutocomplete(inputElement: HTMLInputElement) {
-
     const options = {
       fields: ["formatted_address", "geometry", "name"],
-      strictBounds: false,
+      strictBounds: true,
       types: [],
+      bounds: {
+        north: 71,
+        south: 34,
+        east: 40,
+        west: -25,
+      }
+
     };
     const autocomplete = new google.maps.places.Autocomplete(inputElement, options);
 
@@ -132,14 +142,25 @@ export class RoutesComponent {
   destinationLocationAutocomplete(inputElement: HTMLInputElement) {
     const options = {
       fields: ["formatted_address", "geometry", "name"],
-      strictBounds: false,
+      strictBounds: true,
       types: [],
+      bounds: {
+        north: 71,
+        south: 34,
+        east: 40,
+        west: -25,
+      }
     };
-    const autocomplete = new google.maps.places.Autocomplete(inputElement);
+    const autocomplete = new google.maps.places.Autocomplete(inputElement, options);
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       this.destinationLocation = place.formatted_address;
     });
+  }
+
+  onDateSelected() {
+    this.startTime = this.dateControl.value;
+    this.arrivalTime = new Date(this.startTime.getTime() + this.duration * 1000);
   }
 
   openChoseVehicleDialog() {
@@ -174,13 +195,6 @@ export class RoutesComponent {
     });
   }
 
-
-  onDateSelected() {
-    this.startTime = this.dateControl.value;
-    this.arrivalTime = new Date(this.startTime.getTime() + this.durationInSeconds * 1000);
-  }
-
-
   findOptimalRoute(isFuelWaypointAdded: boolean = false) {
 
     if (this.directionRenderer != null) {
@@ -194,9 +208,7 @@ export class RoutesComponent {
       }
     }
 
-
-
-    const directionService = new google.maps.DirectionsService();
+    this.directionService = new google.maps.DirectionsService();
     this.directionRenderer = new google.maps.DirectionsRenderer();
     this.directionRenderer.setOptions({
       suppressMarkers: true,
@@ -215,6 +227,8 @@ export class RoutesComponent {
       }
     });
 
+
+
     let googleMapWaypoints = this.waypoints.map(wp => ({
       location: wp.location,
       stopover: wp.stopover
@@ -229,47 +243,29 @@ export class RoutesComponent {
       optimizeWaypoints: true
     }
 
-    directionService.route(request, (response: google.maps.DirectionsResult, status: google.maps.DirectionsStatus) => {
+    this.directionService.route(request, (response: google.maps.DirectionsResult, status: google.maps.DirectionsStatus) => {
 
       if (status === google.maps.DirectionsStatus.OK) {
         this.directionRenderer.setMap(this.map);
         this.directionRenderer.setDirections(response);
-        this.distance = response.routes[0].legs[0].distance.text;
-        this.duration = response.routes[0].legs[0].duration.text;
-        this.durationInSeconds = response.routes[0].legs[0].duration.value;
+        this.distance = response.routes[0].legs.reduce((acc, leg) => acc + leg.distance.value, 0);
+        this.duration = response.routes[0].legs.reduce((acc, leg) => acc + leg.duration.value, 0);
         this.map.fitBounds(response.routes[0].bounds);
         this.directionResult = response;
         this.isRouteConfigured = true;
 
-
         //marker for start
-        const startMarker = new google.maps.Marker({
-          map: this.map,
-          position: response.routes[0].legs[0].start_location,
-          icon: {
-            url: '../../../assets/markers/start_point.png',
-            scaledSize: new google.maps.Size(40, 40)
-          }
-        });
+        const startMarker = createCustomMarker(this.map, response.routes[0].legs[0].start_location, '../../../assets/markers/start_point.png');
         this.waypointsMarkers.push(startMarker);
 
         // Marker for destination
-        const endMarker = new google.maps.Marker({
-          map: this.map,
-          position: response.routes[0].legs[response.routes[0].legs.length - 1].end_location,
-          icon: {
-            url: '../../../assets/markers/end_point.png',
-            scaledSize: new google.maps.Size(40, 40)
-          }
-        });
-
+        const endMarker = createCustomMarker(this.map, response.routes[0].legs[response.routes[0].legs.length - 1].end_location, '../../../assets/markers/end_point.png');
         this.waypointsMarkers.push(endMarker);
 
         //adding waypoints for rest breaks
-        if(!isFuelWaypointAdded){
-          this.addBreaksWaipoints(response);
+        if (!isFuelWaypointAdded) {
+          this.addRestBreakWaipoints(response);
         }
-        
 
         //placing markers for waypoints
         this.placeWaypointMarkers();
@@ -285,145 +281,8 @@ export class RoutesComponent {
     });
   }
 
-  placeWaypointMarkers() {
-
-    this.waypoints.forEach((waypoint, index) => {
-      if (waypoint.type === "fuelStation") {
-        const marker = new google.maps.Marker({
-          map: this.map,
-          position: waypoint.location,
-          icon: {
-            url: '../../../assets/markers/gas_station_waypoint.png',
-            scaledSize: new google.maps.Size(40, 40)
-          }
-        });
-        this.waypointsMarkers.push(marker);
-
-        let fuelOptionsHtml = waypoint.gasStationInfo.fuelOptions.fuelPrices.map(fuelOption => {
-          let date = new Date(fuelOption.updateTime);
-          let formattedDate = date.toLocaleDateString('ro-RO');
-          return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
-          <span style="font-weight: bold; font-size:15px;">${fuelOption.type}: ${fuelOption.price?.units ?? '00'}.${(fuelOption.price?.nanos?.toString().padStart(9, '0').substring(0, 2) ?? '00')} ${fuelOption.price?.currencyCode ?? 'N/A'}\L</span>
-          <span  font-size:12px;">Last updated: ${formattedDate}</span>
-                  </div>`;
-        }).join('');
-
-        google.maps.event.addListener(marker, 'click', () => {
-          const infoWindowContent = document.createElement('div');
-          infoWindowContent.style.width = '400px';
-          infoWindowContent.innerHTML = `
-            <div style="font-size: 25px; font-weight: bold; color: #333;">${waypoint.gasStationInfo.displayName.text}</div>
-            <div style="margin-top: 10px; font-size: 16px; color: black; font-weight: bold;">Available Fuel types:</div>
-            <div style="margin-top: 20px;">${fuelOptionsHtml}</div>
-          `;
-
-          const infoWindow = new google.maps.InfoWindow({
-            content: infoWindowContent,
-          });
-
-          infoWindow.open(this.map, marker);
-        });
-
-
-
-      } else if (waypoint.type === "electricStation") {
-        const marker = new google.maps.Marker({
-          map: this.map,
-          position: waypoint.location,
-          icon: {
-            url: '../../../assets/markers/gas_station_waypoint.png',
-            scaledSize: new google.maps.Size(40, 40)
-          }
-        });
-        this.waypointsMarkers.push(marker);
-
-        google.maps.event.addListener(marker, 'click', () => {
-          const infoWindowContent = document.createElement('div');
-          infoWindowContent.style.width = '500px';
-
-          // Adăugarea titlului stației
-          const stationName = document.createElement('div');
-          stationName.style.fontSize = '25px';
-          stationName.style.fontWeight = 'bold';
-          stationName.style.color = '#333';
-          stationName.textContent = waypoint.evChargeInfo.displayName.text;
-          infoWindowContent.appendChild(stationName);
-
-
-          // Verificăm dacă există opțiuni de încărcare electrică
-          let chargeOptionsHtml = '';
-          if (waypoint.evChargeInfo.evChargeOptions && waypoint.evChargeInfo.evChargeOptions.connectorAggregation) {
-            chargeOptionsHtml = waypoint.evChargeInfo.evChargeOptions.connectorAggregation.map(connector => {
-              return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
-                      <span style="font-weight: bold; font-size:14px;">${connector.type}: Max charge rate ${connector.maxChargeRateKw} kW</span>
-                      <span style="font-size:13px;">Connectors available: ${connector.count}</span>
-                    </div>`;
-            }).join('');
-          } else {
-            chargeOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional charging information available.</div>`;
-          }
-
-          // Adăugăm opțiunile de încărcare la infowindow
-          const chargeOptionsDiv = document.createElement('div');
-          chargeOptionsDiv.innerHTML = chargeOptionsHtml;
-          infoWindowContent.appendChild(chargeOptionsDiv);
-
-          const infoWindow = new google.maps.InfoWindow({
-            content: infoWindowContent,
-          });
-
-          infoWindow.open(this.map, marker);
-        });
-      } else if (waypoint.type === "restBreak") {
-        const marker = new google.maps.Marker({
-          map: this.map,
-          position: waypoint.location,
-          icon: {
-            url: '../../../assets/markers/end_point.png', //todo: de schimbat iconita NEAPARAT
-            scaledSize: new google.maps.Size(40, 40)
-          },
-          title: `Pauza ${index + 1}`
-        });
-        this.waypointsMarkers.push(marker);
-
-        // Crearea conținutului pentru InfoWindow
-        const infoWindowContent = document.createElement('div');
-        infoWindowContent.style.width = '300px';
-        infoWindowContent.style.padding = '10px';
-        infoWindowContent.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
-
-        // Adăugarea titlului
-        const title = document.createElement('div');
-        title.style.fontSize = '18px';
-        title.style.color = '#333';
-        title.style.marginBottom = '5px';
-        title.style.fontWeight = 'bold';
-        title.textContent = `Rest Break number ${index + 1}`;
-        infoWindowContent.appendChild(title);
-
-        // Adăugarea descrierii
-        const description = document.createElement('div');
-        description.style.fontSize = '14px';
-        description.style.color = '#555';
-        description.textContent = 'Rest break for 45 minutes.';
-        infoWindowContent.appendChild(description);
-
-        // Crearea InfoWindow-ului și adăugarea conținutului personalizat
-        const infoWindow = new google.maps.InfoWindow({
-          content: infoWindowContent
-        });
-
-        marker.addListener('click', () => {
-          infoWindow.open(this.map, marker);
-        });
-
-      }
-    });
-  }
-
-  addBreaksWaipoints(directionResult) {
+  addRestBreakWaipoints(directionResult: google.maps.DirectionsResult) {
     const maxDrivingTime = 4.5 * 3600; // 4.5 hours in seconds
-
     let totalDrivenTime = 0;
     let breakpoints = [];
 
@@ -431,7 +290,6 @@ export class RoutesComponent {
       leg.steps.forEach((step) => {
         totalDrivenTime += step.duration.value;
         if (totalDrivenTime >= maxDrivingTime) {
-          // Resetăm contorul de timp și marcăm locația pentru pauză
           totalDrivenTime = 0;
           breakpoints.push(step.end_location);
         }
@@ -442,37 +300,52 @@ export class RoutesComponent {
       let waypoint: CustomWaypoint = {
         location: breakpoint,
         stopover: true,
-        type: "restBreak"
+        type: "restBreak",
       };
-
-
       this.waypoints.push(waypoint);
     });
 
+  }
 
+  placeWaypointMarkers() {
+    this.waypoints.forEach((waypoint, index) => {
+      if (waypoint.type === "fuelStation") {
+        const marker = createCustomMarker(this.map, waypoint.location, '../../../assets/markers/gas_station_waypoint.png');
+        this.waypointsMarkers.push(marker);
+        createInfoWindowForGasStationsMarkerWaypoint(this.map, waypoint, marker);
+
+      } else if (waypoint.type === "electricStation") {
+        const marker = createCustomMarker(this.map, waypoint.location, '../../../assets/markers/electric_station_waypoint.png');
+        this.waypointsMarkers.push(marker);
+        createInfoWindowForElectricStationsMarkerWaypoint(this.map, waypoint, marker);
+
+      } else if (waypoint.type === "restBreak") {
+        const marker = createCustomMarker(this.map, waypoint.location, '../../../assets/markers/rest_break_point.png');
+        this.waypointsMarkers.push(marker);
+        createInfoWindowForRestBreaksMarkerWaypoint(this.map, waypoint, marker, index);
+      }
+    });
   }
 
   showFuelStations() {
     this.showFuelStationsFlag = !this.showFuelStationsFlag;
     if (this.showFuelStationsFlag && this.fuelStationsMarkers.length === 0) {
-      this.findStationsAlongRoute(this.map, this.directionResult);
+      this.findStationsAlongRoute(this.directionResult);
     } else if (this.showFuelStationsFlag && this.fuelStationsMarkers.length > 0) {
       this.fuelStationsMarkers.forEach(marker => marker.setMap(this.map));
-    } else {
+    } else if (!this.showFuelStationsFlag) {
       this.fuelStationsMarkers.forEach(marker => marker.setMap(null));
     }
   }
 
-
-  findStationsAlongRoute(map, directionResult) {
-    const points = this.getPointsAlongRoute(directionResult);
+  findStationsAlongRoute(directionResult: google.maps.DirectionsResult) {
+    const points = getPointsAlongRoute(directionResult);
     points.forEach((point) => {
-      this.findStations(map, point);
+      this.findStations(point);
     });
   }
 
-
-  findStations(map, location) {
+  findStations(location: google.maps.LatLng) {
 
     let stationType = "";
     if (this.selectedVehicle.fuelType === "ELECTRIC") {
@@ -489,43 +362,37 @@ export class RoutesComponent {
             latitude: location.lat(),
             longitude: location.lng()
           },
-          radius: 20000.0 //cautam in raza a 2 kilometrii
+          radius: 2000.0 //cautam in raza a 2 kilometrii
         }
       },
-      maxResultCount: 1
+      maxResultCount: 1,
+      languageCode: "en"
     }
-
 
     if (this.selectedVehicle.fuelType === "ELECTRIC") {
       this.googleMapsService.getNearbyChargingStations(request).subscribe((response: any) => {
-        response.places.forEach((place) => {
-          this.createMarkerForElectricStation(place);
-        })
+        if(response.places !== undefined){
+          response.places.forEach((place) => {
+            this.createMarkerForElectricStation(place);
+          })
+        }
       });
-
     } else {
       this.googleMapsService.getNearbyGasStations(request).subscribe((response: any) => {
-        response.places.forEach((place) => {
-          if (place.fuelOptions) {
-            this.createMarkerForFuelStation(place);
-          }
-        });
+        if(response.places !== undefined){
+          response.places.forEach((place) => {
+            if (place.fuelOptions) {
+              this.createMarkerForFuelStation(place);
+            }
+          });
+        }
       });
     }
   }
 
   createMarkerForFuelStation(place) {
 
-    const marker = new google.maps.Marker({
-      map: this.map,
-      position: new google.maps.LatLng(place.location.latitude, place.location.longitude),
-      animation: google.maps.Animation.DROP,
-      icon: {
-        url: '../../../assets/markers/gas_station_point.png',
-        scaledSize: new google.maps.Size(40, 40)
-      },
-    });
-
+    const marker = createCustomMarker(this.map, new google.maps.LatLng(place.location.latitude, place.location.longitude), '../../../assets/markers/gas_station_point.png');
     this.fuelStationsMarkers.push(marker);
 
     let fuelOptionsHtml = place.fuelOptions.fuelPrices.map(fuelOption => {
@@ -559,7 +426,7 @@ export class RoutesComponent {
       addToRouteButton.style.cursor = 'pointer';
       addToRouteButton.style.fontWeight = 'bold';
       addToRouteButton.onclick = () => {
-        this.addStationToRoute(place);
+        this.addStationWaypointToRoute(place);
       };
 
       // Adăugarea butonului la contentul InfoWindow
@@ -599,6 +466,9 @@ export class RoutesComponent {
       stationName.textContent = place.displayName.text;
       infoWindowContent.appendChild(stationName);
 
+      //getting the country for the place
+      const country = this.electricityPricesService.getCountryFromPlace(place);
+      const averagePrice = this.electricityPricesService.getAveragePriceByCountry(country);
 
       // Verificăm dacă există opțiuni de încărcare electrică
       let chargeOptionsHtml = '';
@@ -618,6 +488,15 @@ export class RoutesComponent {
       chargeOptionsDiv.innerHTML = chargeOptionsHtml;
       infoWindowContent.appendChild(chargeOptionsDiv);
 
+      //Daugam pretul mediu la electricitate
+      if (averagePrice) {
+        const averagePriceHtml = document.createElement('div');
+        averagePriceHtml.innerHTML = `<div style="margin-top: 10px; font-size:14px; color:black;">
+                                          Average electricity price: ${averagePrice} €/kWh
+                                      </div>`;
+        infoWindowContent.appendChild(averagePriceHtml);
+      }
+
       // Crearea și adăugarea butonului de adăugare la rută
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
@@ -632,7 +511,7 @@ export class RoutesComponent {
         fontWeight: 'bold',
       });
       addToRouteButton.onclick = () => {
-        this.addStationToRoute(place, 'electric');
+        this.addStationWaypointToRoute(place, 'electric', averagePrice);
       };
       infoWindowContent.appendChild(addToRouteButton);
 
@@ -644,7 +523,7 @@ export class RoutesComponent {
     });
   }
 
-  addStationToRoute(place, type: string = 'fuel') {
+  addStationWaypointToRoute(place, type: string = 'fuel', price: number = 0) {
     const lat = place.location.latitude;
     const long = place.location.longitude;
 
@@ -654,7 +533,8 @@ export class RoutesComponent {
         location: new google.maps.LatLng(lat, long),
         stopover: true,
         type: "electricStation",
-        evChargeInfo: place
+        evChargeInfo: place,
+        electricityPrice: price
       };
     } else {
       waypoint = {
@@ -665,7 +545,6 @@ export class RoutesComponent {
       };
     }
     this.waypoints.push(waypoint);
-
 
     const index = this.fuelStationsMarkers.findIndex(marker =>
       marker.getPosition().lat() === lat && marker.getPosition().lng() === long
@@ -679,78 +558,30 @@ export class RoutesComponent {
     this.findOptimalRoute(true);
   }
 
-  /**
- * Here we will select the points along the route where we will search for fuel stations
- * In order to limit the number of requests to the Google Places API, we will select just some points along the route in order to search for fuel stations alongise it
- */
-  getPointsAlongRoute(directionResult) {
-    let points = [];
-    const legs = directionResult.routes[0].legs;
+  showFinalDetails() {
 
-    //total route distance in meters
-    const totalDistance = directionResult.routes[0].legs.reduce((total, leg) => total + leg.distance.value, 0);
+    //1. Durata calatoriei
+    const routeDuration = this.duration;
 
-    //the interval in kilometers in which we will select the points along the route to search for fuel stations
-    let interval = 150 * 1000; //we will search for fuel stations every 300 km
+    // Calculăm durata totală a pauzelor în secunde
+    const restBreaksDuration = this.waypoints.filter(wp => wp.type === "restBreak").length * 2700;
 
-    //accumulated distance between 2 points along the route in which we will search for fuel stations
-    let accumulatedDistance = 0;
+    // Calculăm durata totală a călătoriei
+    const totalRouteDuration = routeDuration + restBreaksDuration;
 
-    //1. Case 1: If the total distance is shorter then the interval, we will search for fuel stations at the midpoint of the route
-    if (totalDistance < interval) {
-      const midpoint = this.calculateMidpoint(directionResult);
-      points.push(midpoint);
-    } else {
-      //2. Case 2: If the total distance is greater then the interval, we will search for fuel stations at the start and end of the route and at the points along the route
-      legs.forEach((leg) => {
-        leg.steps.forEach((step) => {
-          accumulatedDistance += step.distance.value;
-          if (accumulatedDistance >= interval) { //if the accumulated distance is greater then the interval, it shows that we need to search for fuel stations at that point
-            points.push(step.start_location); //we push it into the array the points we are going to search fuel stations for
-            accumulatedDistance -= interval; // we substract the interval from the acummulated distance, in order to keep an accurate distance between the current point and the next one
-          }
-        });
-      });
-    }
+    // Calculam durata în format ore și minute
+    const routeDurationFormatted = calculateDurationInHoursAndMinutes(routeDuration);
+    const restBreaksDurationFormatted = calculateDurationInHoursAndMinutes(restBreaksDuration);
+    const totalRouteDurationFormatted = calculateDurationInHoursAndMinutes(totalRouteDuration);
 
-    return points;
-  }
+    //2. Distanta totala parcursa
+    const totalDistance = this.distance / 1000;
 
-  calculateMidpoint(directionResult) {
-    const totalDistance = directionResult.routes[0].legs.reduce((acc, leg) => acc + leg.distance.value, 0);
+    //3. Distanta si durata pentru fiecare etapa a calatoriei
+    const waypointsInfo = calculateDistanceAndDurationBetweenWaypoints(this.directionResult, this.waypoints);
 
-    // Jumătatea distanței totale
-    let halfDistance = totalDistance / 2;
-
-    // Variabile pentru stocarea informațiilor despre mijlocul rutei
-    let midPoint = null;
-    let accumulatedDistance = 0;
-
-    // Iterăm prin fiecare leg al rutei
-    for (let leg of directionResult.routes[0].legs) {
-      // Iterăm prin fiecare step al leg-ului
-      for (let step of leg.steps) {
-        accumulatedDistance += step.distance.value;
-
-        // Verificăm dacă am depășit jumătatea distanței
-        if (accumulatedDistance >= halfDistance) {
-          // Salvăm locația de start a step-ului curent ca fiind mijlocul rutei
-          midPoint = step.start_location;
-          break;
-        }
-      }
-
-      if (midPoint) break; // Dacă am găsit mijlocul, ieșim din buclă
-    }
-
-    // Returnăm mijlocul rutei ca obiect LatLng
-    return midPoint ? new google.maps.LatLng(midPoint.lat(), midPoint.lng()) : null;
+    //4. Costurile de carburant
 
   }
-
-  calculateCosts() {
-
-  }
-
 }
 

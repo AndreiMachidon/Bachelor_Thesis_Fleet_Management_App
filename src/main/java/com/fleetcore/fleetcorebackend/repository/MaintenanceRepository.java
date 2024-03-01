@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> {
 
-    public List<Maintenance> getAllByVehicleId(Long vehicleId);
+    List<Maintenance> getAllByVehicleId(Long vehicleId);
 
 }
