@@ -250,15 +250,6 @@ function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.ma
   return result;
 }
 
-function mapToJson(map) {
-  const json = {};
-  map.forEach((value, key) => {
-    json[key] = value;
-  });
-  return json;
-}
-
-
 
 export {
   createCustomMarker,

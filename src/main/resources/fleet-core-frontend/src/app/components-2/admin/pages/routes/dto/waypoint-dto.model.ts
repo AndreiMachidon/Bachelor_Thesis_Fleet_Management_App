@@ -1,12 +1,12 @@
 export class WaypointDto{
     id: number;
-    address: string; //d
-    latitude: number; //d
-    longitude: number; //d
-    type: string; //d
-    gasolinePrice: number; //d
-    diselPrice: number; //d
-    electricityPrice: number; //d
-    connectors: Record<string, number>; //d
-    duration: number; //d
+    address: string;
+    latitude: number;
+    longitude: number; 
+    type: string;
+    gasolinePrice: number;
+    diselPrice: number;
+    electricityPrice: number;
+    connectors: Record<string, number>;
+    duration: number;
 }

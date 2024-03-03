@@ -196,11 +196,11 @@ export class RoutesComponent {
     });
   }
 
-  findOptimalRoute(isFuelWaypointAdded: boolean = false) {
+  findOptimalRoute(isFuelWaypointAdded: boolean = false, areBreaksWaypointsAdded: boolean = false) {
 
     if (this.directionRenderer != null) {
       this.directionRenderer.setMap(null);
-      if (!isFuelWaypointAdded) {
+      if (!isFuelWaypointAdded && !areBreaksWaypointsAdded) {
         this.fuelStationsMarkers.forEach(marker => marker.setMap(null));
         this.fuelStationsMarkers = [];
         this.waypointsMarkers.forEach(marker => marker.setMap(null));
@@ -264,7 +264,7 @@ export class RoutesComponent {
         this.waypointsMarkers.push(endMarker);
 
         //adding waypoints for rest breaks
-        if (!isFuelWaypointAdded) {
+        if (!isFuelWaypointAdded && !areBreaksWaypointsAdded) {
           this.addRestBreakWaipoints(response);
         }
 
@@ -306,6 +306,8 @@ export class RoutesComponent {
       };
       this.waypoints.push(waypoint);
     });
+
+    this.findOptimalRoute(false, true);
 
   }
 

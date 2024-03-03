@@ -9,8 +9,6 @@ export class RouteWaypointsStepperComponent {
   @Input() waypointsInfo: any[];
 
   ngOnInit(){
-    console.log(this.waypointsInfo);
-    
   }
   
   getWaypointType(waypointType: string) {
