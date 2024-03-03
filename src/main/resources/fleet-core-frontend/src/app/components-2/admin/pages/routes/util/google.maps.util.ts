@@ -1,5 +1,7 @@
 import { } from 'googlemaps';
 import { CustomWaypoint } from './custom-waypoint.interface';
+import { FuelPricesService } from '../services/fuel-prices.service';
+import { RouteDto } from '../dto/route-dto.model';
 
 function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, iconUrl: string) {
   return new google.maps.Marker({
@@ -12,24 +14,33 @@ function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, 
   });
 }
 
-function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker) {
-  let fuelOptionsHtml = waypoint.gasStationInfo.fuelOptions.fuelPrices.map(fuelOption => {
-    let date = new Date(fuelOption.updateTime);
-    let formattedDate = date.toLocaleDateString('ro-RO');
-    return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
-    <span style="font-weight: bold; font-size:15px;">${fuelOption.type}: ${fuelOption.price?.units ?? '00'}.${(fuelOption.price?.nanos?.toString().padStart(9, '0').substring(0, 2) ?? '00')} ${fuelOption.price?.currencyCode ?? 'N/A'}\L</span>
-    <span style="font-size: 12px;">Last updated: ${formattedDate}</span>
-            </div>`;
-  }).join('');
-
+function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker, fuelPriceService: FuelPricesService) {
   google.maps.event.addListener(marker, 'click', () => {
     const infoWindowContent = document.createElement('div');
-    infoWindowContent.style.width = '400px';
-    infoWindowContent.innerHTML = `
-      <div style="font-size: 25px; font-weight: bold; color: #333;">${waypoint.gasStationInfo.displayName.text}</div>
-      <div style="margin-top: 10px; font-size: 16px; color: black; font-weight: bold;">Available Fuel types:</div>
-      <div style="margin-top: 20px;">${fuelOptionsHtml}</div>
-    `;
+    infoWindowContent.style.width = '500px';
+
+    // Adăugarea titlului stației
+    const stationName = document.createElement('div');
+    stationName.style.fontSize = '25px';
+    stationName.style.fontWeight = 'bold';
+    stationName.style.color = '#333';
+    stationName.textContent = waypoint.gasStationInfo.displayName.text;
+    infoWindowContent.appendChild(stationName);
+
+    //getting the country for the place
+    const country = fuelPriceService.getCountryFromPlace(waypoint.gasStationInfo);
+    const averageGasolinePrice = fuelPriceService.getGasolinePrice(country);
+    const averageDieselPrice = fuelPriceService.getDieselPrice(country);
+
+    // Adăugăm opțiunile de combustibil la infowindow
+    const fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
+        <strong>Gasoline:</strong> ${averageGasolinePrice} €/L<br>
+        <strong>Diesel:</strong> ${averageDieselPrice} €/L
+      </div>`;
+    const fuelOptionsDiv = document.createElement('div');
+    fuelOptionsDiv.innerHTML = fuelOptionsHtml;
+    infoWindowContent.appendChild(fuelOptionsDiv);
+  
 
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
@@ -39,13 +50,13 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
   });
 }
 
-function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker) {
+function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker, fuelPriceService: FuelPricesService) {
 
   google.maps.event.addListener(marker, 'click', () => {
     const infoWindowContent = document.createElement('div');
     infoWindowContent.style.width = '500px';
 
-    // Adding the title of the electric station
+    // Adăugarea titlului stației
     const stationName = document.createElement('div');
     stationName.style.fontSize = '25px';
     stationName.style.fontWeight = 'bold';
@@ -53,8 +64,11 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
     stationName.textContent = waypoint.evChargeInfo.displayName.text;
     infoWindowContent.appendChild(stationName);
 
+    //getting the country for the place
+    const country = fuelPriceService.getCountryFromPlace(waypoint.evChargeInfo);
+    const averagePrice = fuelPriceService.getElectricityPrice(country);
 
-    // We verify if there is are available options for charging stations
+    // Verificăm dacă există opțiuni de încărcare electrică
     let chargeOptionsHtml = '';
     if (waypoint.evChargeInfo.evChargeOptions && waypoint.evChargeInfo.evChargeOptions.connectorAggregation) {
       chargeOptionsHtml = waypoint.evChargeInfo.evChargeOptions.connectorAggregation.map(connector => {
@@ -67,10 +81,19 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       chargeOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional charging information available.</div>`;
     }
 
-    // We add the charging options to the info window
+    // Adăugăm opțiunile de încărcare la infowindow
     const chargeOptionsDiv = document.createElement('div');
     chargeOptionsDiv.innerHTML = chargeOptionsHtml;
     infoWindowContent.appendChild(chargeOptionsDiv);
+
+    //Daugam pretul mediu la electricitate
+    if (averagePrice) {
+      const averagePriceHtml = document.createElement('div');
+      averagePriceHtml.innerHTML = `<div style="margin-top: 10px; font-size:14px; color:black;">
+                                        Average electricity price: ${averagePrice} €/kWh
+                                    </div>`;
+      infoWindowContent.appendChild(averagePriceHtml);
+    }
 
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
@@ -126,7 +149,7 @@ function getPointsAlongRoute(directionResult: google.maps.DirectionsResult) {
   const totalDistance = directionResult.routes[0].legs.reduce((total, leg) => total + leg.distance.value, 0);
 
   //the interval in kilometers in which we will select the points along the route to search for fuel stations
-  let interval = 100 * 1000; //we will search for fuel stations every 300 km
+  let interval = 250 * 1000; //we will search for fuel stations every 300 km
 
   //accumulated distance between 2 points along the route in which we will search for fuel stations
   let accumulatedDistance = 0;
@@ -193,29 +216,49 @@ function calculateDurationInHoursAndMinutes(durationInSeconds: number) {
 function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.maps.DirectionsResult, customWaypoints: CustomWaypoint[]) {
   let result = [];
   const legs = directionResult.routes[0].legs;
-  customWaypoints.forEach(waypoint => console.log(waypoint.location.lat() + " " + waypoint.location.lng()));
-  console.log("Legs: ");
-
-  legs.forEach(leg => console.log(leg.end_location.lat() + " " + leg.end_location.lng()));
   legs.forEach((leg, index) => {
     const duration = leg.duration.text;
     const distance = leg.distance.text;
     const startAddress = leg.start_address;
     const endAddress = leg.end_address;
-    const type = customWaypoints.find(waypoint =>
+    const customWaypoint = customWaypoints.find(waypoint =>
       Math.abs(waypoint.location.lat() - leg.end_location.lat()) < 0.01 &&
       Math.abs(waypoint.location.lng() - leg.end_location.lng()) < 0.01
-    )?.type ?? "destination";
+    );;
+
+    const type = customWaypoint?.type ?? "destination";
+
+    const startLocation = leg.start_location;
+    const endLocation = leg.end_location;
 
     result.push(
       { 'duration': duration,
         'distance': distance,
         'type': type,
         'startAddress': startAddress,
-        'endAddress': endAddress });
+        'endAddress': endAddress,
+        'startLocation': startLocation,
+        'endLocation': endLocation,
+        'gasolinePrice': customWaypoint?.gasolinePrice,
+        'diselPrice': customWaypoint?.diselPrice,
+        'electricityPrice': customWaypoint?.electricityPrice,
+        'restBreakDuration': customWaypoint?.restBreakDuration,
+        'evChargeInfo': customWaypoint?.evChargeInfo,
+        'gasStationInfo': customWaypoint?.gasStationInfo
+       });
   });
   return result;
 }
+
+function mapToJson(map) {
+  const json = {};
+  map.forEach((value, key) => {
+    json[key] = value;
+  });
+  return json;
+}
+
+
 
 export {
   createCustomMarker,

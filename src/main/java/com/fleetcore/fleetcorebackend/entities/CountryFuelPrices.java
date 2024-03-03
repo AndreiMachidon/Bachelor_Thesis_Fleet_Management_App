@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CountryElectricityPrice {
+public class CountryFuelPrices {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String country;
-    private double averagePricePerKwh;
+    private double gasolinePrice;
+    private double dieselPrice;
+    private double electricityPrice;
 
 }

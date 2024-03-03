@@ -4,7 +4,7 @@ import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
-import com.fleetcore.fleetcorebackend.entities.Route;
+import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.RouteRepository;

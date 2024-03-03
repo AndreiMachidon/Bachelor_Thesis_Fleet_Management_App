@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CountryElectricityPrice } from '../util/country-electricity-price.interface';
+import { CountryFuelPrices } from '../util/country-fuel-prices.interface';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API_URL } from 'src/app/contants';
@@ -8,12 +8,12 @@ import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ElectricityPricesService {
+export class FuelPricesService {
 
   httpHeaders: HttpHeaders;
 
-   //electricity prices for EU countries
-   prices: CountryElectricityPrice[] = [];
+   //fuel prices for each country
+   prices: CountryFuelPrices[] = [];
 
   constructor(private http: HttpClient, private authService: AuthService) { 
       const token = this.authService.getAuthToken();
@@ -25,8 +25,8 @@ export class ElectricityPricesService {
       });
   }
 
-  getAllCountryElectricityPrices(): Observable<CountryElectricityPrice[]> {
-    return this.http.get<CountryElectricityPrice[]>(`${API_URL}/electricity/prices`,{ 'headers': this.httpHeaders });
+  getAllCountryElectricityPrices(): Observable<CountryFuelPrices[]> {
+    return this.http.get<CountryFuelPrices[]>(`${API_URL}/fuel/prices`,{ 'headers': this.httpHeaders });
   }
 
   getCountryFromPlace(place): string {
@@ -35,8 +35,18 @@ export class ElectricityPricesService {
     return countryComponent ? countryComponent.longText : null;
   }
 
-  getAveragePriceByCountry(country: string): number | null {
+  getGasolinePrice(country: string): number | null {
     const priceInfo = this.prices.find(price => price.country === country);
-    return priceInfo ? priceInfo.averagePricePerKwh : null;
+    return priceInfo ? priceInfo.gasolinePrice : null;
+  }
+
+  getDieselPrice(country: string): number | null {
+    const priceInfo = this.prices.find(price => price.country === country);
+    return priceInfo ? priceInfo.dieselPrice : null;
+  }
+
+  getElectricityPrice(country: string): number | null { 
+    const priceInfo = this.prices.find(price => price.country === country);
+    return priceInfo ? priceInfo.electricityPrice : null;
   }
 }

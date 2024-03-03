@@ -1,0 +1,36 @@
+<div class="wrapper">
+    <ol class="c-timeline">
+      <!-- Adaugă un li pentru start -->
+      <li class="c-timeline__item" *ngIf="waypointsInfo && waypointsInfo.length > 0">
+        <div class="c-timeline__content">
+            <div class="c-timeline__icon--start"></div>
+          <h3 class="c-timeline__title">Start</h3>
+          <p class="c-timeline__desc">{{ waypointsInfo[0].startAddress }}</p>     
+          <div class="waypoint-details">
+            <div>Distance: {{ waypointsInfo[0].distance }}</div>
+            <div>Duration: {{ waypointsInfo[0].duration }}</div>
+          </div>
+        </div>
+        
+      </li>
+
+      <!-- Iterează prin fiecare waypoint -->
+      <li class="c-timeline__item" *ngFor="let waypoint of waypointsInfo; let i = index">
+        <div class="c-timeline__content">
+            <div [ngClass]="{
+                'c-timeline__icon--fuelStation': waypoint.type === 'fuelStation',
+                'c-timeline__icon--restBreak': waypoint.type === 'restBreak',
+                'c-timeline__icon--destination': waypoint.type === 'destination',
+                'c-timeline__icon--electricStation': waypoint.type === 'electricStation',
+              }"></div>
+        
+          <h3 class="c-timeline__title">{{ getWaypointType(waypoint.type) }}</h3>
+          <p class="c-timeline__desc">{{ waypoint.endAddress }}</p>
+          <div *ngIf="i < waypointsInfo.length - 1" class="waypoint-details">
+            <div>Distance: {{ waypointsInfo[i + 1].distance }}</div>
+            <div>Duration: {{ waypointsInfo[i + 1].duration }}</div>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>

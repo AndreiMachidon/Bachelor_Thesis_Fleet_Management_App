@@ -1,0 +1,134 @@
+.c-timeline__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .c-timeline__item .c-timeline__content {
+    flex: 1;
+    padding: 0 1.5rem;
+    padding-bottom: 2rem;
+  }
+  
+  .c-timeline__content:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: -2rem; /* Aceasta ar trebui să fie aceeași valoare ca și margin-bottom de la .c-timeline__item */
+    width: 2px;
+    background-color: lightgrey;
+    z-index: 0;
+
+  }
+  
+  .c-timeline__content:after {
+    content: "";
+    position: absolute;
+    left: -9px; /* Centrarea cercului */
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    z-index: 1;
+    border: 2px solid lightgrey;
+    border-radius: 50%;
+
+  }
+  
+  .c-timeline__item:last-child .c-timeline__content:before {
+    display: none;
+  }
+  
+  .c-timeline__title {
+    font-weight: bold;
+    color: white;
+    font-size: 22px;
+  }
+  
+  .c-timeline__desc {
+    color: rgb(123, 121, 121);
+    margin-top: -1rem;
+  }
+  
+  .waypoint-details {
+    text-align: start;
+    color: white;
+  }
+  
+  .wrapper {
+    max-width: 600px;
+    margin: 2rem auto;
+  }
+
+  .c-timeline__icon--destination {
+    position: absolute;
+    left: 2px;
+    top: 11px;
+    bottom: 0;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    background-size: cover; 
+    width: 26px;
+    height: 26px;
+    background-repeat: no-repeat;
+    background-image: url('../../../../../../../assets/stepper-icons/destination_stepper_icon.png'); 
+  }
+
+  .c-timeline__icon--start{
+    position: absolute;
+    left: 2px;
+    top: 11px;
+    bottom: 0;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    background-size: cover; 
+    width: 26px;
+    height: 26px;
+    background-repeat: no-repeat;
+    background-image: url('../../../../../../../assets/stepper-icons/start_stepper_icon.png');
+  }
+
+  .c-timeline__icon--fuelStation{
+    position: absolute;
+    left: 2px;
+    top: 11px;
+    bottom: 0;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    background-size: cover; 
+    width: 26px;
+    height: 26px;
+    background-repeat: no-repeat;
+    background-image: url('../../../../../../../assets/stepper-icons/fuel_station_stepper_icon.png');
+  }
+
+  .c-timeline__icon--restBreak{
+    position: absolute;
+    left: 2px;
+    top: 11px;
+    bottom: 0;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    background-size: cover; 
+    width: 26px;
+    height: 26px;
+    background-repeat: no-repeat;
+    background-image: url('../../../../../../../assets/stepper-icons/rest_break_stepper_icon.png');
+  }
+
+  .c-timeline__icon--electricStation{
+    position: absolute;
+    left: 2px;
+    top: 11px;
+    bottom: 0;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    background-size: cover; 
+    width: 26px;
+    height: 26px;
+    background-repeat: no-repeat;
+    background-image: url('../../../../../../../assets/stepper-icons/electric_station_stepper_icon.png');
+  }

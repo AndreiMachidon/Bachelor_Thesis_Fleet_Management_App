@@ -12,8 +12,9 @@ import { Driver } from 'src/app/components-2/auth/dto/Driver';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { GoogleMapsService } from './services/google-maps.service';
 import { CustomWaypoint } from './util/custom-waypoint.interface';
-import { ElectricityPricesService } from './services/electricity-prices.service';
+import {FuelPricesService } from './services/fuel-prices.service';
 import { calculateDistanceAndDurationBetweenWaypoints, calculateDurationInHoursAndMinutes, createCustomMarker, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint, getPointsAlongRoute } from './util/google.maps.util';
+import { SaveFinalRouteDialogComponent } from './dialogs/save-final-route-dialog/save-final-route-dialog.component';
 
 
 @Component({
@@ -73,7 +74,7 @@ export class RoutesComponent {
     public dialog: MatDialog,
     private authService: AuthService,
     private googleMapsService: GoogleMapsService,
-    private electricityPricesService: ElectricityPricesService) {
+    private fuelPriceService: FuelPricesService) {
   }
 
   ngOnInit(): void {
@@ -301,6 +302,7 @@ export class RoutesComponent {
         location: breakpoint,
         stopover: true,
         type: "restBreak",
+        restBreakDuration: 45 
       };
       this.waypoints.push(waypoint);
     });
@@ -312,12 +314,12 @@ export class RoutesComponent {
       if (waypoint.type === "fuelStation") {
         const marker = createCustomMarker(this.map, waypoint.location, '../../../assets/markers/gas_station_waypoint.png');
         this.waypointsMarkers.push(marker);
-        createInfoWindowForGasStationsMarkerWaypoint(this.map, waypoint, marker);
+        createInfoWindowForGasStationsMarkerWaypoint(this.map, waypoint, marker, this.fuelPriceService);
 
       } else if (waypoint.type === "electricStation") {
         const marker = createCustomMarker(this.map, waypoint.location, '../../../assets/markers/electric_station_waypoint.png');
         this.waypointsMarkers.push(marker);
-        createInfoWindowForElectricStationsMarkerWaypoint(this.map, waypoint, marker);
+        createInfoWindowForElectricStationsMarkerWaypoint(this.map, waypoint, marker, this.fuelPriceService);
 
       } else if (waypoint.type === "restBreak") {
         const marker = createCustomMarker(this.map, waypoint.location, '../../../assets/markers/rest_break_point.png');
@@ -381,9 +383,7 @@ export class RoutesComponent {
       this.googleMapsService.getNearbyGasStations(request).subscribe((response: any) => {
         if(response.places !== undefined){
           response.places.forEach((place) => {
-            if (place.fuelOptions) {
-              this.createMarkerForFuelStation(place);
-            }
+            this.createMarkerForFuelStation(place);
           });
         }
       });
@@ -391,54 +391,75 @@ export class RoutesComponent {
   }
 
   createMarkerForFuelStation(place) {
-
-    const marker = createCustomMarker(this.map, new google.maps.LatLng(place.location.latitude, place.location.longitude), '../../../assets/markers/gas_station_point.png');
+    const marker = new google.maps.Marker({
+      map: this.map,
+      position: new google.maps.LatLng(place.location.latitude, place.location.longitude),
+      animation: google.maps.Animation.DROP,
+      icon: {
+        url: '../../../assets/markers/gas_station_point.png',
+        scaledSize: new google.maps.Size(40, 40)
+      },
+    });
+  
     this.fuelStationsMarkers.push(marker);
-
-    let fuelOptionsHtml = place.fuelOptions.fuelPrices.map(fuelOption => {
-      let date = new Date(fuelOption.updateTime);
-      let formattedDate = date.toLocaleDateString('ro-RO');
-      return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
-                <span style="font-weight: bold; font-size:15px;">${fuelOption.type}: ${fuelOption.price.units}.${(fuelOption.price.nanos?.toString().padStart(9, '0').substring(0, 2) ?? '00')} ${fuelOption.price.currencyCode}</span>
-                <span  font-size:12px;">Last updated: ${formattedDate}</span>
-              </div>`;
-    }).join('');
-
+  
     google.maps.event.addListener(marker, 'click', () => {
       const infoWindowContent = document.createElement('div');
-      infoWindowContent.style.width = '400px';
-      infoWindowContent.innerHTML = `
-        <div style="font-size: 25px; font-weight: bold; color: #333;">${place.displayName.text}</div>
-        <div style="margin-top: 10px; font-size: 16px; color: black; font-weight: bold;">Available Fuel types:</div>
-        <div style="margin-top: 20px;">${fuelOptionsHtml}</div>
-      `;
-
-      // Crearea și configurarea butonului
+      infoWindowContent.style.width = '500px';
+  
+      // Adăugarea titlului stației
+      const stationName = document.createElement('div');
+      stationName.style.fontSize = '25px';
+      stationName.style.fontWeight = 'bold';
+      stationName.style.color = '#333';
+      stationName.textContent = place.displayName.text;
+      infoWindowContent.appendChild(stationName);
+  
+      //getting the country for the place
+      const country = this.fuelPriceService.getCountryFromPlace(place);
+      const averageGasolinePrice = this.fuelPriceService.getGasolinePrice(country);
+      const averageDieselPrice = this.fuelPriceService.getDieselPrice(country);
+  
+      // Adăugăm opțiunile de combustibil la infowindow
+      const fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
+          <strong>Gasoline:</strong> ${averageGasolinePrice} €/L<br>
+          <strong>Diesel:</strong> ${averageDieselPrice} €/L
+        </div>`;
+      const fuelOptionsDiv = document.createElement('div');
+      fuelOptionsDiv.innerHTML = fuelOptionsHtml;
+      infoWindowContent.appendChild(fuelOptionsDiv);
+  
+      // Crearea și adăugarea butonului de adăugare la rută
       const addToRouteButton = document.createElement('button');
-      addToRouteButton.title = 'Add to route';
       addToRouteButton.textContent = 'Add to route';
-      addToRouteButton.style.marginTop = '12px';
-      addToRouteButton.style.backgroundColor = '#4CAF50';
-      addToRouteButton.style.color = 'white';
-      addToRouteButton.style.padding = '8px 16px';
-      addToRouteButton.style.border = 'none';
-      addToRouteButton.style.borderRadius = '4px';
-      addToRouteButton.style.cursor = 'pointer';
-      addToRouteButton.style.fontWeight = 'bold';
-      addToRouteButton.onclick = () => {
-        this.addStationWaypointToRoute(place);
-      };
-
-      // Adăugarea butonului la contentul InfoWindow
+      Object.assign(addToRouteButton.style, {
+        marginTop: '12px',
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        padding: '8px 16px',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontWeight: 'bold',
+      });
+      if(this.selectedVehicle.fuelType === "GASOLINE"){
+        addToRouteButton.onclick = () => {
+          this.addStationWaypointToRoute(place, 'gasoline', averageGasolinePrice, averageDieselPrice, null);
+        };
+      }else{
+        addToRouteButton.onclick = () => {
+          this.addStationWaypointToRoute(place, 'diesel', averageGasolinePrice, averageDieselPrice, null);
+        };
+      }
+      
       infoWindowContent.appendChild(addToRouteButton);
-
+  
       const infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent,
       });
-
+  
       infoWindow.open(this.map, marker);
     });
-
   }
 
   createMarkerForElectricStation(place) {
@@ -467,8 +488,8 @@ export class RoutesComponent {
       infoWindowContent.appendChild(stationName);
 
       //getting the country for the place
-      const country = this.electricityPricesService.getCountryFromPlace(place);
-      const averagePrice = this.electricityPricesService.getAveragePriceByCountry(country);
+      const country = this.fuelPriceService.getCountryFromPlace(place);
+      const averagePrice = this.fuelPriceService.getElectricityPrice(country);
 
       // Verificăm dacă există opțiuni de încărcare electrică
       let chargeOptionsHtml = '';
@@ -511,7 +532,7 @@ export class RoutesComponent {
         fontWeight: 'bold',
       });
       addToRouteButton.onclick = () => {
-        this.addStationWaypointToRoute(place, 'electric', averagePrice);
+        this.addStationWaypointToRoute(place, 'electric', null, null, averagePrice);
       };
       infoWindowContent.appendChild(addToRouteButton);
 
@@ -523,7 +544,7 @@ export class RoutesComponent {
     });
   }
 
-  addStationWaypointToRoute(place, type: string = 'fuel', price: number = 0) {
+  addStationWaypointToRoute(place, type: string, gasolinePrice : number, dieselPrice: number, electricPrice: number) {
     const lat = place.location.latitude;
     const long = place.location.longitude;
 
@@ -534,14 +555,32 @@ export class RoutesComponent {
         stopover: true,
         type: "electricStation",
         evChargeInfo: place,
-        electricityPrice: price
+        fuelType: "electric",
+        gasolinePrice: gasolinePrice,
+        diselPrice: dieselPrice,
+        electricityPrice: electricPrice
       };
-    } else {
+    } else if(type === 'gasoline'){
       waypoint = {
         location: new google.maps.LatLng(lat, long),
         stopover: true,
         type: "fuelStation",
-        gasStationInfo: place
+        gasStationInfo: place,
+        fuelType: "gasoline",
+        gasolinePrice: gasolinePrice,
+        diselPrice: dieselPrice,
+        electricityPrice: electricPrice
+      };
+    } else{
+      waypoint = {
+        location: new google.maps.LatLng(lat, long),
+        stopover: true,
+        type: "fuelStation",
+        gasStationInfo: place,
+        fuelType: "diesel",
+        gasolinePrice: gasolinePrice,
+        diselPrice: dieselPrice,
+        electricityPrice: electricPrice
       };
     }
     this.waypoints.push(waypoint);
@@ -574,14 +613,114 @@ export class RoutesComponent {
     const restBreaksDurationFormatted = calculateDurationInHoursAndMinutes(restBreaksDuration);
     const totalRouteDurationFormatted = calculateDurationInHoursAndMinutes(totalRouteDuration);
 
+    //Calculam arrivel time
+    this.arrivalTime = new Date(this.startTime.getTime() + (routeDuration + restBreaksDuration) * 1000);
+
     //2. Distanta totala parcursa
     const totalDistance = this.distance / 1000;
 
     //3. Distanta si durata pentru fiecare etapa a calatoriei
     const waypointsInfo = calculateDistanceAndDurationBetweenWaypoints(this.directionResult, this.waypoints);
 
+    //calculam pretul mediu la carburant pentru toate statiile de alimentare/incarcare de pe toata ruta
+    let averageFuelPrice = 0;
+    let numberOfFuelStations = 0;
+ 
     //4. Costurile de carburant
+    this.waypoints.forEach((waypoint) => {
+      if(waypoint.type !== "restBreak"){
+        if(this.selectedVehicle.fuelType === "GASOLINE" && waypoint.fuelType === 'gasoline'){
+          averageFuelPrice += waypoint.gasolinePrice;
+          numberOfFuelStations++;
+        }else if (this.selectedVehicle.fuelType === "DIESEL" && waypoint.fuelType === 'diesel'){
+          averageFuelPrice += waypoint.diselPrice;
+          numberOfFuelStations++;
+        }else if(this.selectedVehicle.fuelType === "ELECTRIC" && waypoint.fuelType === 'electric'){
+          averageFuelPrice += waypoint.electricityPrice;
+          numberOfFuelStations++;
+        }
+    }
+    });
+    if(numberOfFuelStations > 0){
+      averageFuelPrice = averageFuelPrice / numberOfFuelStations;
+    }else{
+      switch(this.selectedVehicle.fuelType){
+        case "GASOLINE":
+          averageFuelPrice = this.fuelPriceService.getGasolinePrice("Europe");
+          break;
+        case "DIESEL":
+          averageFuelPrice = this.fuelPriceService.getDieselPrice("Europe");
+          break;
+        case "ELECTRIC":
+          averageFuelPrice = this.fuelPriceService.getElectricityPrice("Europe");
+          break;
+      }
+    }
 
+    // Costul total al carburantului pentru ruta este: Cost = (Distanta totala / 100) * (Consumul mediu / 100) * (Pretul mediu la carburant)
+    const totalDistanceInKm = totalDistance;
+    const fuelConsumptionPer100Km = this.selectedVehicle.fuelConsumption;
+    const totalFuelCost = (totalDistanceInKm / 100) * fuelConsumptionPer100Km * averageFuelPrice;
+
+    //5. Costurile pentru sofer
+    const driverRatePerKilometer = this.selectedDriver.ratePerKilometer; // tariful pe kilometru pentru șoferul selectat
+    
+    const totalDriverCost = totalDistanceInKm * driverRatePerKilometer;
+
+    const routeFinalDetails = {
+        adminId: this.authService.getUserDetails().id,
+        vehicle: this.selectedVehicle,
+        driver: this.selectedDriver,
+        routeStartDate: this.startTime,
+        routeEndDate: this.arrivalTime,
+        routeDuration: routeDuration,
+        restBreaksDuration: restBreaksDuration,
+        totalRouteDuration: totalRouteDuration,
+        totalDistance: totalDistance,
+        waypointsInfo: waypointsInfo,
+        averageFuelPrice: averageFuelPrice,
+        totalFuelCost: totalFuelCost,
+        totalDriverCost: totalDriverCost,
+        totalCosts: totalFuelCost + totalDriverCost,
+        googleMapsDirectionResult: this.directionResult,
+    }
+
+    const dialogRef = this.dialog.open(SaveFinalRouteDialogComponent, {
+      width: '90vw',
+      height: '90vh',
+      data: { routeFinalDetails: routeFinalDetails}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'Saved') {
+        console.log("Route saved successfully!");
+        alert("Route saved successfully!");
+        this.resetMapConfiguration();
+      }else if(result === 'NotSaved'){
+        console.log("There was an error while saving the route!");
+        alert("There was an error while saving the route!");
+      }
+    });
+ 
+  }
+
+  resetMapConfiguration(){
+    this.directionRenderer.setMap(null);
+    this.fuelStationsMarkers.forEach(marker => marker.setMap(null));
+    this.fuelStationsMarkers = [];
+    this.waypointsMarkers.forEach(marker => marker.setMap(null));
+    this.waypointsMarkers = [];
+    this.waypoints = [];
+    this.isRouteConfigured = false;
+    this.showFuelStationsFlag = false;
+    this.arrivalTime = null;
+    this.startTime = null;
+    this.selectedVehicle = null;
+    this.selectedDriver = null;
+    this.startingLocation = '';
+    this.destinationLocation = '';
+    this.dateControl.reset();
+    this.showFuelStationsFlag = false;
   }
 }
 

@@ -62,6 +62,8 @@ import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/dr
 import { AssignVehicleDialogComponent } from './components-2/admin/pages/routes/dialogs/assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { AssignDriverDialogComponent } from './components-2/admin/pages/routes/dialogs/assign-driver-dialog/assign-driver-dialog.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { SaveFinalRouteDialogComponent } from './components-2/admin/pages/routes/dialogs/save-final-route-dialog/save-final-route-dialog.component';
+import { RouteWaypointsStepperComponent } from './components-2/admin/pages/routes/components/route-waypoints-stepper/route-waypoints-stepper.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,9 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
     MaintenanceHistoryComponent,
     DriverDetailsComponent,
     AssignVehicleDialogComponent,
-    AssignDriverDialogComponent
+    AssignDriverDialogComponent,
+    SaveFinalRouteDialogComponent,
+    RouteWaypointsStepperComponent
   ],
   imports: [
     BrowserModule,

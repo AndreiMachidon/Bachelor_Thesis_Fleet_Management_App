@@ -40,10 +40,7 @@
           color="accent"
           (click)="findOptimalRoute()"
           class="action-button">Find optimal route</button>
-
-        <!-- <p style="margin-top: 20px;">Distance: {{distance}}</p>
-        <p>Aprox duration: {{duration}}</p> -->
-
+          
         <mat-form-field class="date-time-input">
           <input matInput [ngxMatDatetimePicker]="picker"
             placeholder="Choose a date and time for the route"
@@ -66,11 +63,6 @@
             (closed)="onDateSelected()">
           </ngx-mat-datetime-picker>
         </mat-form-field>
-
-        <!-- <div *ngIf="startTime != null && arrivalTime != null">
-          <p>Start time: {{startTime | date:'yyyy-MM-dd HH:mm'}}</p>
-          <p>Arrival time: {{arrivalTime | date:'yyyy-MM-dd HH:mm'}}</p>
-        </div> -->
 
         <button
           mat-raised-button
@@ -103,7 +95,7 @@
           mat-raised-button
           color="primary"
           (click)="showFinalDetails()"
-          [disabled]="!isRouteConfigured"
+          [disabled]="!isRouteConfigured || selectedVehicle ==null || selectedDriver == null"
           class="action-button route-details-selection total-cost">See details and costs</button>
 
        

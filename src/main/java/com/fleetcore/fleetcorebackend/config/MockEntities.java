@@ -36,7 +36,7 @@ public class MockEntities {
     private MaintenanceRepository maintenanceRepository;
 
     @Autowired
-    private CountryElectricityPriceRepository countryElectricityPriceRepository;
+    private CountryFuelPricesRepository countryFuelPricesRepository;
 
     @PostConstruct
     public void mockUser(){
@@ -197,7 +197,7 @@ public class MockEntities {
     public void loadElectricityPrices() {
         try {
 
-            InputStream in = new ClassPathResource("static/Median-Electricity-Prices_Europe_Average.xlsx").getInputStream();
+            InputStream in = new ClassPathResource("static/Fuel_Prices_Europe.xlsx").getInputStream();
             Workbook workbook = new XSSFWorkbook(in);
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
@@ -209,12 +209,16 @@ public class MockEntities {
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
                 String country = currentRow.getCell(0).getStringCellValue();
-                double averagePricePerKwh = currentRow.getCell(1).getNumericCellValue();
+                double electricityPrice = currentRow.getCell(1).getNumericCellValue();
+                double gasolinePrice = currentRow.getCell(2).getNumericCellValue();
+                double dieselPrice = currentRow.getCell(3).getNumericCellValue();
 
-                CountryElectricityPrice price = new CountryElectricityPrice();
+                CountryFuelPrices price = new CountryFuelPrices();
                 price.setCountry(country);
-                price.setAveragePricePerKwh(averagePricePerKwh);
-                countryElectricityPriceRepository.save(price);
+                price.setElectricityPrice(electricityPrice);
+                price.setGasolinePrice(gasolinePrice);
+                price.setDieselPrice(dieselPrice);
+                countryFuelPricesRepository.save(price);
             }
             workbook.close();
         } catch (Exception e) {
