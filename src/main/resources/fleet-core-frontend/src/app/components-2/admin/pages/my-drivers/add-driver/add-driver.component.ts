@@ -55,6 +55,8 @@ addDriver() {
           imageData: data,
           organisationName: this.authService.getUserDetails().organisationName
       };
+      console.log(driver);
+      
 
       const adminId: number = this.authService.getUserDetails().id;
 

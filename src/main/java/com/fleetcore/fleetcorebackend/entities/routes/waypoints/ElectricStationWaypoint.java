@@ -14,6 +14,7 @@ import java.util.Map;
 @NoArgsConstructor
 public class ElectricStationWaypoint extends Waypoint {
 
+    private String electricStationName;
     private double electricityPrice;
     @ElementCollection
     @CollectionTable(name = "waypoint_connectors", joinColumns = @JoinColumn(name = "waypoint_id"))

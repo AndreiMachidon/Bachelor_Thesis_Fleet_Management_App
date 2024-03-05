@@ -5,7 +5,6 @@ import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
 import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
 import com.fleetcore.fleetcorebackend.repository.*;
-import jakarta.annotation.PostConstruct;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -26,6 +25,7 @@ public class MockEntities {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private VehicleRepository vehicleRepository;
 
@@ -38,13 +38,20 @@ public class MockEntities {
     @Autowired
     private CountryFuelPricesRepository countryFuelPricesRepository;
 
-    @PostConstruct
+//    @PostConstruct
+    public void mockEntities() throws Exception {
+        this.mockUser();
+        this.mockVehicles();
+        this.mockDrivers();
+        this.loadElectricityPrices();
+
+    }
+
     public void mockUser(){
         userRepository.save(
                 new User(1L, "Deloitte", "Andrei", "Machidon", "0747019239", "andreimachidon@gmail.com", "admin", "$2a$10$bCqJKbjaqAl8kW5PUni59OPDJs7wU2UzfeTOsuyWGZ2mbu1NhO5qG", null, null));
     }
 
-    @PostConstruct
     public void mockVehicles() throws Exception {
         List<Vehicle> vehicleList = new ArrayList<>();
 
@@ -133,7 +140,6 @@ public class MockEntities {
 
     }
 
-    @PostConstruct
     public void mockDrivers() throws Exception {
 
         Calendar cal = Calendar.getInstance();
@@ -193,7 +199,6 @@ public class MockEntities {
         }
     }
 
-    @PostConstruct
     public void loadElectricityPrices() {
         try {
 

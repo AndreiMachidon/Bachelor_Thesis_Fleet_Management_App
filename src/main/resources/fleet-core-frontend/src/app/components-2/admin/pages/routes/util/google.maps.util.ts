@@ -2,6 +2,7 @@ import { } from 'googlemaps';
 import { CustomWaypoint } from './custom-waypoint.interface';
 import { FuelPricesService } from '../services/fuel-prices.service';
 import { RouteDto } from '../dto/route-dto.model';
+import { WaypointDto } from '../dto/waypoint-dto.model';
 
 function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, iconUrl: string) {
   return new google.maps.Marker({
@@ -14,7 +15,7 @@ function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, 
   });
 }
 
-function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker, fuelPriceService: FuelPricesService) {
+function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker, fuelPriceService: FuelPricesService, isForDisplayRoute: boolean = false) {
   google.maps.event.addListener(marker, 'click', () => {
     const infoWindowContent = document.createElement('div');
     infoWindowContent.style.width = '500px';
@@ -27,20 +28,24 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     stationName.textContent = waypoint.gasStationInfo.displayName.text;
     infoWindowContent.appendChild(stationName);
 
-    //getting the country for the place
-    const country = fuelPriceService.getCountryFromPlace(waypoint.gasStationInfo);
-    const averageGasolinePrice = fuelPriceService.getGasolinePrice(country);
-    const averageDieselPrice = fuelPriceService.getDieselPrice(country);
-
     // Adăugăm opțiunile de combustibil la infowindow
-    const fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
-        <strong>Gasoline:</strong> ${averageGasolinePrice} €/L<br>
-        <strong>Diesel:</strong> ${averageDieselPrice} €/L
+    let fuelOptionsHtml = '';
+
+    if (waypoint.gasolinePrice && waypoint.diselPrice) {
+      fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
+      <strong>Gasoline:</strong> ${waypoint.gasolinePrice} €/L<br>
+      <strong>Diesel:</strong> ${waypoint.diselPrice} €/L
       </div>`;
+    }else{
+      fuelOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional fuel information available.</div>`;
+    }
+
     const fuelOptionsDiv = document.createElement('div');
     fuelOptionsDiv.innerHTML = fuelOptionsHtml;
     infoWindowContent.appendChild(fuelOptionsDiv);
-  
+
+
+
 
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
@@ -64,9 +69,6 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
     stationName.textContent = waypoint.evChargeInfo.displayName.text;
     infoWindowContent.appendChild(stationName);
 
-    //getting the country for the place
-    const country = fuelPriceService.getCountryFromPlace(waypoint.evChargeInfo);
-    const averagePrice = fuelPriceService.getElectricityPrice(country);
 
     // Verificăm dacă există opțiuni de încărcare electrică
     let chargeOptionsHtml = '';
@@ -74,7 +76,6 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       chargeOptionsHtml = waypoint.evChargeInfo.evChargeOptions.connectorAggregation.map(connector => {
         return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
                 <span style="font-weight: bold; font-size:14px;">${connector.type}: Max charge rate ${connector.maxChargeRateKw} kW</span>
-                <span style="font-size:13px;">Connectors available: ${connector.count}</span>
               </div>`;
       }).join('');
     } else {
@@ -87,13 +88,11 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
     infoWindowContent.appendChild(chargeOptionsDiv);
 
     //Daugam pretul mediu la electricitate
-    if (averagePrice) {
-      const averagePriceHtml = document.createElement('div');
-      averagePriceHtml.innerHTML = `<div style="margin-top: 10px; font-size:14px; color:black;">
-                                        Average electricity price: ${averagePrice} €/kWh
+    const averagePriceHtml = document.createElement('div');
+    averagePriceHtml.innerHTML = `<div style="margin-top: 10px; font-size:14px; color:black;">
+                                        Average electricity price: ${waypoint.electricityPrice} €/kWh
                                     </div>`;
-      infoWindowContent.appendChild(averagePriceHtml);
-    }
+    infoWindowContent.appendChild(averagePriceHtml);
 
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
@@ -232,7 +231,8 @@ function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.ma
     const endLocation = leg.end_location;
 
     result.push(
-      { 'duration': duration,
+      {
+        'duration': duration,
         'distance': distance,
         'type': type,
         'startAddress': startAddress,
@@ -245,9 +245,44 @@ function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.ma
         'restBreakDuration': customWaypoint?.restBreakDuration,
         'evChargeInfo': customWaypoint?.evChargeInfo,
         'gasStationInfo': customWaypoint?.gasStationInfo
-       });
+      });
   });
   return result;
+}
+
+function convertWaypointDtoToCustomWaypoint(waypoint): CustomWaypoint {
+  const location = new google.maps.LatLng(waypoint.latitude, waypoint.longitude);
+
+  let connectorAggregation = waypoint.connectors ? Object.entries(waypoint.connectors).map(([type, maxChargeRateKw]) => {
+    return { type, maxChargeRateKw };
+  }) : undefined;
+
+  let evChargeInfo = undefined;
+  if (connectorAggregation) {
+    evChargeInfo = {
+      displayName: { text: waypoint.electricStationName },
+      evChargeOptions: {
+        connectorAggregation
+      }
+    };
+  }
+
+  let gasStationInfo = {
+    displayName: { text: waypoint.fuelStationName }
+  };
+
+
+  return {
+    location,
+    stopover: true,
+    type: waypoint.waypointType,
+    gasStationInfo: gasStationInfo,
+    evChargeInfo,
+    gasolinePrice: waypoint.gasolinePrice,
+    diselPrice: waypoint.dieselPrice,
+    electricityPrice: waypoint.electricityPrice,
+    restBreakDuration: waypoint.duration
+  };
 }
 
 
@@ -259,6 +294,7 @@ export {
   getPointsAlongRoute,
   calculateMidpoint,
   calculateDurationInHoursAndMinutes,
-  calculateDistanceAndDurationBetweenWaypoints
+  calculateDistanceAndDurationBetweenWaypoints,
+  convertWaypointDtoToCustomWaypoint
 };
 

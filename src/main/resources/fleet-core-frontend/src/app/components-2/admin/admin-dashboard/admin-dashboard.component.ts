@@ -23,7 +23,7 @@ export class AdminDashboardComponent {
     this.observer
       .observe(['(max-width: 800px)'])
       .pipe(delay(1), untilDestroyed(this))
-      .subscribe((res: MyBreakpointState) => { // Specify the type here
+      .subscribe((res: MyBreakpointState) => {
         if (res.matches) {
           this.sidenav.mode = 'over';
           this.sidenav.close();

@@ -5,8 +5,10 @@ export class WaypointDto{
     longitude: number; 
     type: string;
     gasolinePrice: number;
-    diselPrice: number;
+    dieselPrice: number;
     electricityPrice: number;
     connectors: Record<string, number>;
     duration: number;
+    electricStationName: string;
+    fuelStationName: string;
 }

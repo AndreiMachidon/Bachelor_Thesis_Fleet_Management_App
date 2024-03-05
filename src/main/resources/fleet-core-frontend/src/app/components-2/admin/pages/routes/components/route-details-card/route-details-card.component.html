@@ -1,0 +1,30 @@
+<div class="route-card">
+    <div class="card-header">
+        <div class="start-location-info">
+            <img src="../../../../../../../assets/markers/start_point.png" class="location-icon"/>
+            <p>{{startLocationAddress}}</p>
+            <p>{{route.startTime | date:'yyyy-MM-dd HH:mm'}}</p>
+        </div>
+        <div class="route-arrow">
+        </div>
+        <div class="end-location-info">
+            <img src="../../../../../../../assets/markers/end_point.png" class="location-icon"/>
+            <p>{{endLocationAddress}}</p>
+            <p>{{route.arrivalTime | date:'yyyy-MM-dd HH:mm'}}</p>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="route-status-info">
+            Route status: {{route.routeStatus}}
+        </div>
+        <div class="route-details-info">
+            <div class="left-details">
+                <p>Total costs: {{totalCosts.toFixed(2)}} €</p>
+                <p>Total distance: {{route.distance.toFixed(2)}} km</p>
+            </div>
+            <div class="right-details">
+                <button mat-raised-button color="accent" (click)="displayRoute()">Display route</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,6 +14,7 @@ import { AddVehicleComponent } from './components-2/admin/pages/my-fleet/add-veh
 import { AddDriverComponent } from './components-2/admin/pages/my-drivers/add-driver/add-driver.component';
 import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/vehicle-details/vehicle-details.component';
 import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/driver-details/driver-details.component';
+import { DriverHomeComponent } from './components-2/driver/driver-home/driver-home.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -34,6 +35,10 @@ const routes: Routes = [
       {path: 'driver-details/:id', component: DriverDetailsComponent}
     ],
   },
+  {
+    path: 'driver-screen',
+    component: DriverHomeComponent,
+  }
 ];
 
 @NgModule({

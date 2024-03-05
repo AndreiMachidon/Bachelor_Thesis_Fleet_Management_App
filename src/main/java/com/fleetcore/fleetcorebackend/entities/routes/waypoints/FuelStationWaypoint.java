@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FuelStationWaypoint extends Waypoint {
 
+    private String fuelStationName;
     private Double gasolinePrice;
     private Double dieselPrice;
 }

@@ -62,7 +62,7 @@ export class SaveFinalRouteDialogComponent {
     startingPoint.longitude = this.routeFinalDetails.waypointsInfo[0].startLocation.lng();
     startingPoint.type = 'Start';
     startingPoint.gasolinePrice = null;
-    startingPoint.diselPrice = null;
+    startingPoint.dieselPrice = null;
     startingPoint.electricityPrice = null;
     startingPoint.connectors = null;
     startingPoint.duration = null;
@@ -71,8 +71,6 @@ export class SaveFinalRouteDialogComponent {
 
     //Adding the rest of the waypoints
     this.routeFinalDetails.waypointsInfo.forEach((waypoint: any) => {
-      console.log(waypoint);
-      
       let waypointDto = new WaypointDto();
       waypointDto.address = waypoint.endAddress;
       waypointDto.latitude = waypoint.endLocation.lat();
@@ -85,16 +83,20 @@ export class SaveFinalRouteDialogComponent {
         case 'fuelStation':
           waypointDto.type = 'FuelStation';
           waypointDto.gasolinePrice = waypoint.gasolinePrice;
-          waypointDto.diselPrice = waypoint.diselPrice;
+          waypointDto.dieselPrice = waypoint.diselPrice;
+          waypointDto.fuelStationName = waypoint.gasStationInfo.displayName.text;
           break;
         case 'electricStation':
           waypointDto.type = 'ElectricStation';
           waypointDto.electricityPrice = waypoint.electricityPrice;
           const connectors: Record<string, number> = {};
+          if(waypoint.evChargeInfo.evChargeOptions.connectorAggregation !== undefined){
           waypoint.evChargeInfo.evChargeOptions.connectorAggregation.forEach(connector => {
             connectors[connector.type] = connector.maxChargeRateKw;
           });
+        }
           waypointDto.connectors = connectors;
+          waypointDto.electricStationName = waypoint.evChargeInfo.displayName.text;
            break;
         case 'destination':
           waypointDto.type = 'Destination';
@@ -105,7 +107,6 @@ export class SaveFinalRouteDialogComponent {
     
     this.routesService.saveRoute(route).subscribe(
       (response: RouteDto) => {
-      console.log(response);
       this.dialogRef.close("Saved");
     },
     (error) => {

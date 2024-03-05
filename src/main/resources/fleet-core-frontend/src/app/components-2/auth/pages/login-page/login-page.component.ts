@@ -30,14 +30,16 @@ export class LoginPageComponent {
 
       signInDto.email = this.loginFormGroup.value.emailFormControl;
       signInDto.password = this.loginFormGroup.value.passwordFormControl;
-        console.log(signInDto);
-        
       this.authService.login(signInDto)
       .subscribe((response: UserDto) => {
         if (response) {
           console.log('Login successful:', response);
           this.authService.setAuthToken(response.token);
-          this.router.navigate(['admin-dashboard']);
+          const role = this.authService.getUserDetails().role;
+          if(role === 'admin'){
+            this.router.navigate(['admin-dashboard']);
+          }else if(role === 'driver')
+            this.router.navigate(['driver-screen']);
         } else {
           console.log('Login failed.');
           this.loginFormGroup.reset();

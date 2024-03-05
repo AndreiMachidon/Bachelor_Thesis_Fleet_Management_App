@@ -17,12 +17,14 @@ public class WaypointService {
                 FuelStationWaypoint fuelStation = new FuelStationWaypoint();
                 fuelStation.setGasolinePrice(dto.getGasolinePrice());
                 fuelStation.setDieselPrice(dto.getDieselPrice());
+                fuelStation.setFuelStationName(dto.getFuelStationName());
                 waypoint = fuelStation;
                 break;
             case "ElectricStation":
                 ElectricStationWaypoint electricStation = new ElectricStationWaypoint();
                 electricStation.setElectricityPrice(dto.getElectricityPrice());
                 electricStation.setConnectors(dto.getConnectors());
+                electricStation.setElectricStationName(dto.getElectricStationName());
                 waypoint = electricStation;
                 break;
             case "RestBreak":

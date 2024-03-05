@@ -1,0 +1,97 @@
+.route-card {
+    background-color: whitesmoke;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    color: black;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.start-location-info, .end-location-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 7rem;
+    text-align: center;
+}
+
+.location-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.route-arrow {
+    flex-grow: 1;
+    position: relative;
+}
+
+.route-arrow::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: black;
+    z-index: 1;
+}
+
+.route-arrow::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    right: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid black;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.card-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
+.route-status-info{
+    font-weight: bold;
+    align-self: center;
+    margin-bottom: 1.5rem;
+
+}
+
+.route-details-info{
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.left-details{
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.right-details{
+    align-items: end;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+}

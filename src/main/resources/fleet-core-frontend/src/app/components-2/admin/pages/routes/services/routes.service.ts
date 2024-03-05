@@ -22,5 +22,9 @@ export class RoutesService {
     return this.http.post<RouteDto>(`${API_URL}/routes/save`, route, { 'headers': this.httpHeaders });
   }
 
+  public getAll(adminId: number): Observable<RouteDto[]>{
+    return this.http.get<RouteDto[]>(`${API_URL}/routes/all?adminId=${adminId}`, { 'headers': this.httpHeaders });
+  }
+
 
 }

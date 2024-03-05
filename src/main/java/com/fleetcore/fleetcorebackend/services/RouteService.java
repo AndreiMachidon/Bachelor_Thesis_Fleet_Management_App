@@ -29,6 +29,10 @@ public class RouteService {
         return routeRepository.save(route);
     }
 
+    public List<Route> getAllByAdminId(Long adminId){
+        return routeRepository.getAllByAdminId(adminId);
+    }
+
     public Route convertDtoToEntity(RouteDto routeDto){
         Route route = new Route();
         route.setDistance(routeDto.getDistance());
@@ -43,6 +47,8 @@ public class RouteService {
         route.setEncodedPolyline(routeDto.getEncodedPolyline());
         return route;
     }
+
+
 
 
 }

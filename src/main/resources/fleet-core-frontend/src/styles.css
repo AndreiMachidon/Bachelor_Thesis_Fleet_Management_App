@@ -3,3 +3,18 @@
 @import '@angular/material/prebuilt-themes/purple-green.css';
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;   overflow: hidden; }
+
+/* Ascunde scrollbar-ul pentru toate elementele care folosesc overflow:auto; sau overflow:scroll; */
+::-webkit-scrollbar {
+    display: none; /* Pentru Chrome, Safari și Opera */
+}
+
+/* Pentru Firefox */
+element {
+    scrollbar-width: none; /* Ascunde scrollbar-ul */
+}
+
+/* Pentru IE și Edge */
+element {
+    -ms-overflow-style: none; /* Ascunde scrollbar-ul */
+}

@@ -23,4 +23,7 @@ public class WaypointDto {
     private Map<String, Double> connectors;
 
     private Integer duration;
+
+    private String fuelStationName;
+    private String electricStationName;
 }

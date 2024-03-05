@@ -15,6 +15,9 @@ import { CustomWaypoint } from './util/custom-waypoint.interface';
 import {FuelPricesService } from './services/fuel-prices.service';
 import { calculateDistanceAndDurationBetweenWaypoints, calculateDurationInHoursAndMinutes, createCustomMarker, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint, getPointsAlongRoute } from './util/google.maps.util';
 import { SaveFinalRouteDialogComponent } from './dialogs/save-final-route-dialog/save-final-route-dialog.component';
+import { RoutesService } from './services/routes.service';
+import { RouteDto } from './dto/route-dto.model';
+import * as e from 'express';
 
 
 @Component({
@@ -23,6 +26,9 @@ import { SaveFinalRouteDialogComponent } from './dialogs/save-final-route-dialog
   styleUrls: ['./routes.component.css']
 })
 export class RoutesComponent {
+
+
+  //I. ADD ROUTE WINDOW
 
   //1. Map, User, DirectionRenderer and DirectionService
   map: google.maps.Map;
@@ -69,12 +75,15 @@ export class RoutesComponent {
   @ViewChild('startingLocationAuto') startingLocationAuto: MatAutocomplete;
   @ViewChild('destinationLocationAuto') destinationLocationAuto: MatAutocomplete;
 
-  constructor(private vehicleService: VehicleService,
-    private driversService: MyDriversService,
+  //II. VIEW ROUTES WINDOW
+  routesList: RouteDto[] = [];
+
+  constructor(
     public dialog: MatDialog,
     private authService: AuthService,
     private googleMapsService: GoogleMapsService,
-    private fuelPriceService: FuelPricesService) {
+    private fuelPriceService: FuelPricesService,
+    private routesService: RoutesService) {
   }
 
   ngOnInit(): void {
@@ -423,10 +432,16 @@ export class RoutesComponent {
       const averageDieselPrice = this.fuelPriceService.getDieselPrice(country);
   
       // Adăugăm opțiunile de combustibil la infowindow
-      const fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
-          <strong>Gasoline:</strong> ${averageGasolinePrice} €/L<br>
-          <strong>Diesel:</strong> ${averageDieselPrice} €/L
+      let fuelOptionsHtml = '';
+
+      if (averageGasolinePrice && averageDieselPrice) {
+        fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
+        <strong>Gasoline:</strong> ${averageGasolinePrice} €/L<br>
+        <strong>Diesel:</strong> ${averageDieselPrice} €/L
         </div>`;
+      }else{
+        fuelOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional fuel information available.</div>`;
+      }
       const fuelOptionsDiv = document.createElement('div');
       fuelOptionsDiv.innerHTML = fuelOptionsHtml;
       infoWindowContent.appendChild(fuelOptionsDiv);
@@ -547,6 +562,8 @@ export class RoutesComponent {
   }
 
   addStationWaypointToRoute(place, type: string, gasolinePrice : number, dieselPrice: number, electricPrice: number) {
+    console.log(gasolinePrice, dieselPrice, electricPrice);
+    
     const lat = place.location.latitude;
     const long = place.location.longitude;
 
@@ -723,6 +740,20 @@ export class RoutesComponent {
     this.destinationLocation = '';
     this.dateControl.reset();
     this.showFuelStationsFlag = false;
+  }
+
+  //View Routes Window
+  getSavedRoutes(){
+    this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
+      (routes) => {
+      this.routesList = routes;
+      
+    },
+    (error) => {
+      console.log(error)
+      alert("There was an error while fetching the routes from the server!");
+    }
+    );
   }
 }
 
