@@ -56,7 +56,6 @@ export class AuthService {
             imageData: decodedToken.imageData,
             organisationName: decodedToken.organisationName
           }
-          
           return admin;
 
       }else{

@@ -1,0 +1,97 @@
+.navigation-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.actions-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #c8d7eb;
+  }
+
+.action-button{
+    width: 90%;
+}
+
+@-webkit-keyframes MOVE-BG {
+	from {
+		-webkit-transform: translateX(0);
+	}
+	to { 
+		-webkit-transform: translateX(46px);
+	}
+}
+
+@keyframes MOVE-BG {
+	from {
+		transform: translateX(0);
+	}
+	to { 
+		transform: translateX(46px);
+	}
+}
+
+.route-in-progress-container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.progress-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.8rem;
+}
+
+.bg{
+    position: absolute;
+    left: -46px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+	
+    background: -webkit-repeating-linear-gradient(
+      145deg,
+      #dbe8f8 1px, /* Nuanță mai deschisă de albastru */
+      #e1efff 2px, /* Albastru deschis */
+      #e1efff 11px,
+      #c8d7eb 12px, /* Albastru mediu */
+      #c8d7eb 20px
+    );
+    background: repeating-linear-gradient(
+      -55deg,
+      #dbe8f8 1px, /* Nuanță mai deschisă de albastru */
+      #e1efff 2px, /* Albastru deschis */
+      #e1efff 11px,
+      #c8d7eb 12px, /* Albastru mediu */
+      #c8d7eb 20px
+    );
+    
+    -webkit-animation-name: MOVE-BG;
+	-webkit-animation-duration: .6s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	
+    animation-name: MOVE-BG;
+	animation-duration: .6s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+
+  

@@ -26,5 +26,8 @@ export class RoutesService {
     return this.http.get<RouteDto[]>(`${API_URL}/routes/all?adminId=${adminId}`, { 'headers': this.httpHeaders });
   }
 
+  public getByRouteId(routeId: number): Observable<any>{
+    return this.http.get(`${API_URL}/routes/findById?routeId=${routeId}`, { 'headers': this.httpHeaders });
+  }
 
 }

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { createCustomMarker, convertWaypointDtoToCustomWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint} from '../util/google.maps.util';
-import { FuelPricesService } from './fuel-prices.service';
-import { WaypointDto } from '../dto/waypoint-dto.model';
+import { WaypointDto } from '../../admin/pages/routes/dto/waypoint-dto.model';
+import { convertWaypointDtoToCustomWaypoint, createCustomMarker, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint } from '../../admin/pages/routes/util/google.maps.util';
+import { FuelPricesService } from '../../admin/pages/routes/services/fuel-prices.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PolylineService {
+export class NavigationService {
+
   private polylineSubject = new BehaviorSubject<google.maps.Polyline | null>(null);
   private waypointsMarkersSubject = new BehaviorSubject<google.maps.Marker[]>([]);
 
@@ -27,10 +28,8 @@ export class PolylineService {
   setWaypoints(waypoints: WaypointDto[], map: google.maps.Map, fuelPriceService: FuelPricesService) {
     this.waypointsMarkersSubject.getValue().forEach(marker => marker.setMap(null));
     const markers = waypoints.map((waypointDto, index) => {
-        // Convertim WaypointDto la CustomWaypoint
         const customWaypoint = convertWaypointDtoToCustomWaypoint(waypointDto);
         let marker = null;
-        // Creează markerul corespunzător tipului de waypoint
         if(customWaypoint.type === 'START') {
           marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/start_point.png'); // Sau altă imagine pentru DESTINATION
         } else if(customWaypoint.type === 'FUEL_STATION') {
@@ -55,6 +54,4 @@ export class PolylineService {
   getWaypointsMarkers(): Observable<google.maps.Marker[]> {
     return this.waypointsMarkersSubject.asObservable();
   }
-
 }
-

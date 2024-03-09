@@ -375,7 +375,7 @@ export class RoutesComponent {
             latitude: location.lat(),
             longitude: location.lng()
           },
-          radius: 2000.0 //cautam in raza a 2 kilometrii
+          radius: 2000.0
         }
       },
       maxResultCount: 1,
@@ -747,6 +747,8 @@ export class RoutesComponent {
     this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
       (routes) => {
       this.routesList = routes;
+      console.log(this.routesList);
+      
       
     },
     (error) => {

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { } from 'googlemaps';
 import { PolylineService } from '../../services/polyline.service';
 import { FuelPricesService } from '../../services/fuel-prices.service';
+import { RouteDto } from '../../dto/route-dto.model';
 
 @Component({
   selector: 'app-route-details-card',
@@ -10,9 +11,10 @@ import { FuelPricesService } from '../../services/fuel-prices.service';
 })
 export class RouteDetailsCardComponent {
 
-  @Input() route;
+  @Input() route: RouteDto;
 
   @Input() map: google.maps.Map;
+  
   //1. Start and end location for the route
   startLocationAddress: string;
   endLocationAddress: string;
@@ -32,8 +34,8 @@ export class RouteDetailsCardComponent {
   }
 
   getStartAndDestinationInformation() {
-    this.startLocationAddress = this.route.waypoints.filter(waypoint => waypoint.waypointType === 'START')[0].address;
-    this.endLocationAddress = this.route.waypoints.filter(waypoint => waypoint.waypointType === 'DESTINATION')[0].address;
+    this.startLocationAddress = this.route.waypoints.filter(waypoint => waypoint.type === 'START')[0].address;
+    this.endLocationAddress = this.route.waypoints.filter(waypoint => waypoint.type === 'DESTINATION')[0].address;
     this.totalCosts = this.route.fuelCost + this.route.driverCost;
   }
 

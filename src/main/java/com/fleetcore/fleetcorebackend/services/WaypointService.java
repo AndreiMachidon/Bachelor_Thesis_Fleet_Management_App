@@ -51,6 +51,35 @@ public class WaypointService {
         return waypoint;
     }
 
+    public WaypointDto convertEntityToDto(Waypoint waypoint) {
+        WaypointDto dto = new WaypointDto();
+        dto.setId(waypoint.getId());
+        dto.setAddress(waypoint.getAddress());
+        dto.setLatitude(waypoint.getLatitude());
+        dto.setLongitude(waypoint.getLongitude());
+        dto.setType(waypoint.getWaypointType().toString());
+
+        if (waypoint instanceof FuelStationWaypoint) {
+            FuelStationWaypoint fuelStation = (FuelStationWaypoint) waypoint;
+            dto.setGasolinePrice(fuelStation.getGasolinePrice());
+            dto.setDieselPrice(fuelStation.getDieselPrice());
+            dto.setFuelStationName(fuelStation.getFuelStationName());
+
+        } else if (waypoint instanceof ElectricStationWaypoint) {
+            ElectricStationWaypoint electricStation = (ElectricStationWaypoint) waypoint;
+            dto.setElectricityPrice(electricStation.getElectricityPrice());
+            dto.setConnectors(electricStation.getConnectors());
+            dto.setElectricStationName(electricStation.getElectricStationName());
+
+        } else if (waypoint instanceof RestBreakWaypoint) {
+            RestBreakWaypoint restBreak = (RestBreakWaypoint) waypoint;
+            dto.setDuration(restBreak.getDuration());
+
+        }
+
+        return dto;
+    }
+
     public List<Waypoint> convertDtoToEntities(List<WaypointDto> dtoList, Route route){
         List<Waypoint> waypointList = new ArrayList<>();
         for(WaypointDto dto: dtoList){
@@ -58,6 +87,16 @@ public class WaypointService {
             waypointList.add(waypoint);
         }
         return waypointList;
+    }
+
+    public List<WaypointDto> convertEntitiesToDtos(List<Waypoint> waypointList){
+        List<WaypointDto> waypointDtos = new ArrayList<>();
+        for(Waypoint waypoint : waypointList){
+            WaypointDto waypointDto = convertEntityToDto(waypoint);
+            waypointDtos.add(waypointDto);
+        }
+
+        return waypointDtos;
     }
 
 }

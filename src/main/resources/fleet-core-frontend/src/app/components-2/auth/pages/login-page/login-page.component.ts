@@ -39,7 +39,7 @@ export class LoginPageComponent {
           if(role === 'admin'){
             this.router.navigate(['admin-dashboard']);
           }else if(role === 'driver')
-            this.router.navigate(['driver-screen']);
+            this.router.navigate(['driver-home']);
         } else {
           console.log('Login failed.');
           this.loginFormGroup.reset();

@@ -250,7 +250,7 @@ function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.ma
   return result;
 }
 
-function convertWaypointDtoToCustomWaypoint(waypoint): CustomWaypoint {
+function convertWaypointDtoToCustomWaypoint(waypoint: WaypointDto): CustomWaypoint {
   const location = new google.maps.LatLng(waypoint.latitude, waypoint.longitude);
 
   let connectorAggregation = waypoint.connectors ? Object.entries(waypoint.connectors).map(([type, maxChargeRateKw]) => {
@@ -275,7 +275,7 @@ function convertWaypointDtoToCustomWaypoint(waypoint): CustomWaypoint {
   return {
     location,
     stopover: true,
-    type: waypoint.waypointType,
+    type: waypoint.type,
     gasStationInfo: gasStationInfo,
     evChargeInfo,
     gasolinePrice: waypoint.gasolinePrice,

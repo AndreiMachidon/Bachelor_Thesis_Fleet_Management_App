@@ -1,17 +1,18 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
+import com.fleetcore.fleetcorebackend.dto.RouteDto;
+import com.fleetcore.fleetcorebackend.dto.WaypointDto;
 import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.entities.User;
+import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.RouteRepository;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import com.fleetcore.fleetcorebackend.util.DriverPasswordGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,11 @@ public class DriverService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RouteRepository routeRepository;
+    private final RouteRepository routeRepository;
+
+    private final RouteService routeService;
+
+    private final WaypointService waypointService;
 
 
     public List<DriverDto> getDriversByAdminId(Long adminId) {
@@ -190,6 +194,20 @@ public class DriverService {
 
         return availableDrivers;
 
+    }
+
+    public List<RouteDto> getAllUpcomingRoutesForDriver(Long driverId){
+        List<Route> driverRoutes = routeRepository.getAllByDriverId(driverId);
+
+        List<RouteDto> routeDtoList = new ArrayList<>();
+        for(Route route: driverRoutes){
+            RouteDto routeDto = routeService.convertEntityToDto(route);
+            List<WaypointDto> waypointDtoList = waypointService.convertEntitiesToDtos(route.getWaypoints());
+            routeDto.setWaypoints(waypointDtoList);
+            routeDtoList.add(routeDto);
+        }
+
+        return routeDtoList;
     }
 
 }

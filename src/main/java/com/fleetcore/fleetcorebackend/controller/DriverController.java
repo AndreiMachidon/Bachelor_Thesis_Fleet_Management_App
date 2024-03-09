@@ -1,6 +1,7 @@
 package com.fleetcore.fleetcorebackend.controller;
 
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
+import com.fleetcore.fleetcorebackend.dto.RouteDto;
 import com.fleetcore.fleetcorebackend.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,5 +52,16 @@ public class DriverController {
         List<DriverDto> availableDrivers = driverService.getAvailableDrivers(adminId, startTime, arrivalTime);
         return ResponseEntity.ok(availableDrivers);
     }
+
+    @GetMapping("/upcomingRoutes")
+    public ResponseEntity<List<RouteDto>> getUpcomingRoutes(@RequestParam("driverId") Long driverId){
+        try{
+            List<RouteDto> upcomingRoutes = driverService.getAllUpcomingRoutesForDriver(driverId);
+            return ResponseEntity.ok(upcomingRoutes);
+        }catch (Error error){
+            return ResponseEntity.status(400).build();
+        }
+    }
+
 
 }

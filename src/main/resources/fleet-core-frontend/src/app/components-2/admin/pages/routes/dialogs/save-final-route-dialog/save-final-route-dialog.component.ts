@@ -90,7 +90,7 @@ export class SaveFinalRouteDialogComponent {
           waypointDto.type = 'ElectricStation';
           waypointDto.electricityPrice = waypoint.electricityPrice;
           const connectors: Record<string, number> = {};
-          if(waypoint.evChargeInfo.evChargeOptions.connectorAggregation !== undefined){
+          if(waypoint.evChargeInfo.evChargeOptions !== undefined){
           waypoint.evChargeInfo.evChargeOptions.connectorAggregation.forEach(connector => {
             connectors[connector.type] = connector.maxChargeRateKw;
           });

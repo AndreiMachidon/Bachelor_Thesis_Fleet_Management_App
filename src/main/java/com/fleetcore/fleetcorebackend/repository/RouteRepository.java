@@ -11,4 +11,7 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
     List<Route> getAllByDriverId(Long driverId);
 
     List<Route> getAllByAdminId(Long adminId);
+
+    Route getById(Long routeId);
+
 }

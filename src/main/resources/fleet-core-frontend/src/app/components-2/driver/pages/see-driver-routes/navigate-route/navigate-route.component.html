@@ -1,0 +1,25 @@
+<div class="navigation-container">
+
+    <div class="actions-container" *ngIf="!isRouteStarted">
+        <button mat-raised-button color="accent" (click)="startRoute()"
+            class="action-button">Start Route</button>
+    </div>
+    <div *ngIf="isRouteStarted" class="route-in-progress-container">
+        <div class="progress-title">
+            <p style="font-size: 2rem; font-weight: bold;">Route in progress</p>
+            <p style="font-size: 1rem; font-weight: bold;">Your location is now shared with the organisation admin</p>
+        </div>
+        <div *ngIf="isRouteStarted" class="bg"></div>
+        <button mat-raised-button color="primary"
+            (click)="showNavigation()" class="action-button">Show
+            Navigation</button>
+        <button mat-raised-button color="accent" (click)="sendAlertToAdmin()"
+            class="action-button">Send
+            Alert to Admin</button>
+        <button mat-raised-button color="warn" (click)="endRoute()"
+            class="action-button">End
+            Route</button>
+    </div>
+    
+    
+</div>

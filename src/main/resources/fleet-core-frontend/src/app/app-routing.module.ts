@@ -15,6 +15,8 @@ import { AddDriverComponent } from './components-2/admin/pages/my-drivers/add-dr
 import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/vehicle-details/vehicle-details.component';
 import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/driver-details/driver-details.component';
 import { DriverHomeComponent } from './components-2/driver/driver-home/driver-home.component';
+import { SeeDriverRoutesComponent } from './components-2/driver/pages/see-driver-routes/see-driver-routes.component';
+import { NavigateRouteComponent } from './components-2/driver/pages/see-driver-routes/navigate-route/navigate-route.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -36,8 +38,12 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'driver-screen',
+    path: 'driver-home',
     component: DriverHomeComponent,
+    children: [
+      { path: 'routes', component: SeeDriverRoutesComponent },
+      {path: 'route-navigation/:id', component: NavigateRouteComponent}
+    ],
   }
 ];
 

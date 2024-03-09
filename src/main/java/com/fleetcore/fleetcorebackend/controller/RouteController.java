@@ -28,12 +28,23 @@ public class RouteController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Route>> getAllRoutesByAdminId(@RequestParam Long adminId){
+    public ResponseEntity<List<RouteDto>> getAllRoutesByAdminId(@RequestParam("adminId") Long adminId){
         try{
-            List<Route> routeList = routeService.getAllByAdminId(adminId);
+            List<RouteDto> routeList = routeService.getAllByAdminId(adminId);
             return ResponseEntity.status(HttpStatus.OK).body(routeList);
         }catch (Exception ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @GetMapping("/findById")
+    public ResponseEntity<RouteDto> getRouteById(@RequestParam("routeId") Long routeId){
+        try{
+            RouteDto foundRoute = routeService.getRouteById(routeId);
+            return ResponseEntity.status(HttpStatus.OK).body(foundRoute);
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 }

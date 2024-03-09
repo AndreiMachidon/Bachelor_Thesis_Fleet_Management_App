@@ -1,6 +1,7 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.dto.RouteDto;
+import com.fleetcore.fleetcorebackend.dto.WaypointDto;
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.entities.routes.waypoints.Waypoint;
@@ -9,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,8 +31,17 @@ public class RouteService {
         return routeRepository.save(route);
     }
 
-    public List<Route> getAllByAdminId(Long adminId){
-        return routeRepository.getAllByAdminId(adminId);
+    public List<RouteDto> getAllByAdminId(Long adminId){
+        List<Route> foundRoutes = routeRepository.getAllByAdminId(adminId);
+        List<RouteDto> routeDtoList = new ArrayList<>();
+        for(Route route: foundRoutes){
+            RouteDto routeDto = convertEntityToDto(route);
+            List<WaypointDto> waypointDtoList = waypointService.convertEntitiesToDtos(route.getWaypoints());
+            routeDto.setWaypoints(waypointDtoList);
+            routeDtoList.add(routeDto);
+        }
+
+        return routeDtoList;
     }
 
     public Route convertDtoToEntity(RouteDto routeDto){
@@ -46,6 +57,33 @@ public class RouteService {
         route.setDriverId(routeDto.getDriverId());
         route.setEncodedPolyline(routeDto.getEncodedPolyline());
         return route;
+    }
+
+    public RouteDto convertEntityToDto(Route route){
+        RouteDto routeDto = new RouteDto();
+        routeDto.setId(route.getId());
+        routeDto.setDistance(route.getDistance());
+        routeDto.setStartTime(route.getStartTime());
+        routeDto.setArrivalTime(route.getArrivalTime());
+        routeDto.setFuelCost(route.getFuelCost());
+        routeDto.setDriverCost(route.getDriverCost());
+        routeDto.setEncodedPolyline(route.getEncodedPolyline());
+        routeDto.setRouteStatus(route.getRouteStatus().toString());
+        routeDto.setDriverNotes(route.getDriverNotes());
+        routeDto.setAdminId(route.getAdminId());
+        routeDto.setVehicleId(route.getVehicleId());
+        routeDto.setDriverId(route.getDriverId());
+        return routeDto;
+
+    }
+
+
+    public RouteDto getRouteById(Long routeId){
+        Route route = routeRepository.getById(routeId);
+        RouteDto routeDto = convertEntityToDto(route);
+        List<WaypointDto> waypointDtoList = waypointService.convertEntitiesToDtos(route.getWaypoints());
+        routeDto.setWaypoints(waypointDtoList);
+        return routeDto;
     }
 
 
