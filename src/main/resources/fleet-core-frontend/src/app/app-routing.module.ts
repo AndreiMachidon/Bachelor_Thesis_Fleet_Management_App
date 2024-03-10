@@ -16,7 +16,7 @@ import { VehicleDetailsComponent } from './components-2/admin/pages/my-fleet/veh
 import { DriverDetailsComponent } from './components-2/admin/pages/my-drivers/driver-details/driver-details.component';
 import { DriverHomeComponent } from './components-2/driver/driver-home/driver-home.component';
 import { SeeDriverRoutesComponent } from './components-2/driver/pages/see-driver-routes/see-driver-routes.component';
-import { NavigateRouteComponent } from './components-2/driver/pages/see-driver-routes/navigate-route/navigate-route.component';
+import { NavigateRouteComponent } from './components-2/driver/pages/navigate-route/navigate-route.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent },

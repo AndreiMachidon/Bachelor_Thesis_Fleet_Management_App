@@ -47,6 +47,7 @@ public class WaypointService {
         waypoint.setAddress(dto.getAddress());
         waypoint.setLatitude(dto.getLatitude());
         waypoint.setLongitude(dto.getLongitude());
+        waypoint.setPlaceId(dto.getPlaceId());
         waypoint.setRoute(route);
         return waypoint;
     }
@@ -58,6 +59,7 @@ public class WaypointService {
         dto.setLatitude(waypoint.getLatitude());
         dto.setLongitude(waypoint.getLongitude());
         dto.setType(waypoint.getWaypointType().toString());
+        dto.setPlaceId(waypoint.getPlaceId());
 
         if (waypoint instanceof FuelStationWaypoint) {
             FuelStationWaypoint fuelStation = (FuelStationWaypoint) waypoint;

@@ -95,3 +95,15 @@
     align-items: flex-end;
     justify-content: center;
 }
+
+.status-upcoming {
+    color: rgb(177, 177, 45);
+}
+
+.status-in-progress {
+    color: green;
+}
+
+.status-finished {
+    color: red;
+}

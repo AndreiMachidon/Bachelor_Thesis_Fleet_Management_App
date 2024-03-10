@@ -86,6 +86,16 @@ public class RouteService {
         return routeDto;
     }
 
+    public void updateRouteStatus(Long routeId, String routeStatus){
+        try{
+            Route foundRoute = routeRepository.findById(routeId).orElseThrow();
+            foundRoute.setRouteStatus(RouteStatus.valueOf(routeStatus));
+            routeRepository.save(foundRoute);
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
 
 
 

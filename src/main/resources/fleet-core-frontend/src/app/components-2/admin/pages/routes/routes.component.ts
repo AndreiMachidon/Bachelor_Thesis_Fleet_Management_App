@@ -311,7 +311,8 @@ export class RoutesComponent {
         location: breakpoint,
         stopover: true,
         type: "restBreak",
-        restBreakDuration: 45 
+        restBreakDuration: 45 ,
+        placeId: null
       };
       this.waypoints.push(waypoint);
     });
@@ -562,8 +563,6 @@ export class RoutesComponent {
   }
 
   addStationWaypointToRoute(place, type: string, gasolinePrice : number, dieselPrice: number, electricPrice: number) {
-    console.log(gasolinePrice, dieselPrice, electricPrice);
-    
     const lat = place.location.latitude;
     const long = place.location.longitude;
 
@@ -577,7 +576,8 @@ export class RoutesComponent {
         fuelType: "electric",
         gasolinePrice: gasolinePrice,
         diselPrice: dieselPrice,
-        electricityPrice: electricPrice
+        electricityPrice: electricPrice,
+        placeId: place.id
       };
     } else if(type === 'gasoline'){
       waypoint = {
@@ -588,7 +588,8 @@ export class RoutesComponent {
         fuelType: "gasoline",
         gasolinePrice: gasolinePrice,
         diselPrice: dieselPrice,
-        electricityPrice: electricPrice
+        electricityPrice: electricPrice,
+        placeId: place.id
       };
     } else{
       waypoint = {
@@ -599,9 +600,11 @@ export class RoutesComponent {
         fuelType: "diesel",
         gasolinePrice: gasolinePrice,
         diselPrice: dieselPrice,
-        electricityPrice: electricPrice
+        electricityPrice: electricPrice,
+        placeId: place.id
       };
     }
+    
     this.waypoints.push(waypoint);
 
     const index = this.fuelStationsMarkers.findIndex(marker =>

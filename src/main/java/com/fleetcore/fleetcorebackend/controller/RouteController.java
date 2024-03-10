@@ -47,4 +47,14 @@ public class RouteController {
         }
     }
 
+    @PatchMapping("/updateStatus")
+    public ResponseEntity<String> updateRouteStatus(@RequestParam("routeId") Long routeId, @RequestParam("status") String routeStatus){
+            try{
+                routeService.updateRouteStatus(routeId, routeStatus);
+                return ResponseEntity.ok("Route status updating succesfully to: " + routeStatus);
+            }catch (Exception ex){
+                return ResponseEntity.status(400).body("There was an error while updating the route status");
+            }
+    }
+
 }

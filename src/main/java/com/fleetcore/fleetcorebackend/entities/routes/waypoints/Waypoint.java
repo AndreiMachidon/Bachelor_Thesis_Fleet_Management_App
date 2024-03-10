@@ -3,6 +3,7 @@ package com.fleetcore.fleetcorebackend.entities.routes.waypoints;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fleetcore.fleetcorebackend.entities.enums.WaypointType;
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,9 @@ public abstract class Waypoint {
     private String address;
     private Double latitude;
     private Double longitude;
+
+    @Nullable
+    private String placeId;
 
     @ManyToOne
     @JoinColumn(name = "route_id")

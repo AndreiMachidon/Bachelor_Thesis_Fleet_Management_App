@@ -30,4 +30,10 @@ export class RoutesService {
     return this.http.get(`${API_URL}/routes/findById?routeId=${routeId}`, { 'headers': this.httpHeaders });
   }
 
+  public updateRouteStatus(routeId: number, routeStatus: string): Observable<any>{
+    return this.http.patch(`${API_URL}/routes/updateStatus?routeId=${routeId}&status=${routeStatus}`, null, { 'headers': this.httpHeaders, responseType: 'text' });
+  }
+
+  
+
 }

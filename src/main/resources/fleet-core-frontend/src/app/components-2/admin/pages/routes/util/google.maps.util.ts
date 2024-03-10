@@ -244,7 +244,8 @@ function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.ma
         'electricityPrice': customWaypoint?.electricityPrice,
         'restBreakDuration': customWaypoint?.restBreakDuration,
         'evChargeInfo': customWaypoint?.evChargeInfo,
-        'gasStationInfo': customWaypoint?.gasStationInfo
+        'gasStationInfo': customWaypoint?.gasStationInfo,
+        'placeId': customWaypoint?.placeId
       });
   });
   return result;
@@ -281,7 +282,8 @@ function convertWaypointDtoToCustomWaypoint(waypoint: WaypointDto): CustomWaypoi
     gasolinePrice: waypoint.gasolinePrice,
     diselPrice: waypoint.dieselPrice,
     electricityPrice: waypoint.electricityPrice,
-    restBreakDuration: waypoint.duration
+    restBreakDuration: waypoint.duration,
+    placeId: waypoint.placeId
   };
 }
 

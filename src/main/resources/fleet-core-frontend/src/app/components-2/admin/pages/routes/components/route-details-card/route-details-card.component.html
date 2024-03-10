@@ -14,8 +14,8 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="route-status-info">
-            Route status: {{route.routeStatus}}
+        <div class="route-status-info" [ngClass]="{'status-upcoming': route.routeStatus === 'UPCOMING', 'status-in-progress': route.routeStatus === 'IN_PROGRESS', 'status-finished': route.routeStatus === 'FINISHED'}">
+            Route status: {{formatRouteStatus(route.routeStatus)}}
         </div>
         <div class="route-details-info">
             <div class="left-details">
@@ -23,8 +23,10 @@
                 <p>Total distance: {{route.distance.toFixed(2)}} km</p>
             </div>
             <div class="right-details">
-                <button mat-raised-button color="accent" (click)="displayRoute()">Display route</button>
-            </div>
+                <button mat-raised-button color="accent" (click)="route.routeStatus === 'IN_PROGRESS' ? viewLiveRouteStatus() : displayRoute()">
+                  {{ route.routeStatus === 'IN_PROGRESS' ? 'View Live Status' : 'Display Route' }}
+                </button>
+              </div>
         </div>
     </div>
 </div>

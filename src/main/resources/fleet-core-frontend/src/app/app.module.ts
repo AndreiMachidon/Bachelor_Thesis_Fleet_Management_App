@@ -69,7 +69,7 @@ import { DriverHomeComponent } from './components-2/driver/driver-home/driver-ho
 import { DriverHeaderComponent } from './components-2/driver/components/driver-header/driver-header.component';
 import { SeeDriverRoutesComponent } from './components-2/driver/pages/see-driver-routes/see-driver-routes.component';
 import { UpcomingRouteCardComponent } from './components-2/driver/components/upcoming-route-card/upcoming-route-card.component';
-import { NavigateRouteComponent } from './components-2/driver/pages/see-driver-routes/navigate-route/navigate-route.component';
+import { NavigateRouteComponent } from './components-2/driver/pages/navigate-route/navigate-route.component';
 
 @NgModule({
   declarations: [

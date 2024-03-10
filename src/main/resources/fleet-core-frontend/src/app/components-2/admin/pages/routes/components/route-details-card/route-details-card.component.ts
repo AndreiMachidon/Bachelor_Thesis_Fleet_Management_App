@@ -52,6 +52,10 @@ export class RouteDetailsCardComponent {
     this.polylineService.setWaypoints(this.route.waypoints, this.map, this.fuelPricesService);
   }
 
+  viewLiveRouteStatus(){
+    
+  }
+
   createPolyline(decodedPath: google.maps.LatLng[]) {
     return new google.maps.Polyline({
       path: decodedPath,
@@ -79,6 +83,19 @@ export class RouteDetailsCardComponent {
     });
 
     return bounds;
+  }
+
+  formatRouteStatus(status: string): string {
+    switch(status) {
+      case 'UPCOMING':
+        return 'Upcoming';
+      case 'IN_PROGRESS':
+        return 'In Progress';
+      case 'FINISHED':
+        return 'Finished';
+      default:
+        return status;
+    }
   }
 }
 

@@ -75,6 +75,7 @@ export class SaveFinalRouteDialogComponent {
       waypointDto.address = waypoint.endAddress;
       waypointDto.latitude = waypoint.endLocation.lat();
       waypointDto.longitude = waypoint.endLocation.lng();
+      waypointDto.placeId = waypoint.placeId;
       switch(waypoint.type){
         case 'restBreak':
           waypointDto.type = 'RestBreak';
@@ -116,8 +117,4 @@ export class SaveFinalRouteDialogComponent {
     );
 
   }
-
-  
-
-
 }

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouteDto } from 'src/app/components-2/admin/pages/routes/dto/route-dto.model';
 import { PolylineService } from 'src/app/components-2/admin/pages/routes/services/polyline.service';
 import { RoutesService } from 'src/app/components-2/admin/pages/routes/services/routes.service';
-import { NavigationService } from '../../../services/navigation.service';
+import { NavigationService } from '../../services/navigation.service';
 import { FuelPricesService } from 'src/app/components-2/admin/pages/routes/services/fuel-prices.service';
 
 @Component({
@@ -41,7 +41,6 @@ export class NavigateRouteComponent {
     )
   }
 
-
   getUserLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -60,6 +59,7 @@ export class NavigateRouteComponent {
   startRoute() {
     this.isRouteStarted = true;
     this.monitorUserLocation();
+    this.updateRouteStatus('IN_PROGRESS');
   }
 
   monitorUserLocation(): void {
@@ -103,6 +103,18 @@ export class NavigateRouteComponent {
 
   endRoute() {
     this.isRouteStarted = false;
+  }
+
+  updateRouteStatus(newStatus: string){
+    this.routeService.updateRouteStatus(this.route.id, newStatus).subscribe(
+      (response) => {
+        console.log(response);
+        
+      },
+      (error) => {
+        alert('There was an error updating the route status')
+      }
+    )
   }
 
 }
