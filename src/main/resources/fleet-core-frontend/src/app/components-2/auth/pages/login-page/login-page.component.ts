@@ -4,6 +4,7 @@ import { SignInDto } from '../../dto/SignInDto';
 import { AuthService } from '../../services/auth.service';
 import { UserDto } from '../../dto/UserDto';
 import { Router } from '@angular/router';
+import { WebSocketsService } from 'src/app/components-2/global-services/web-sockets.service';
 
 @Component({
   selector: 'app-email-page',
@@ -16,7 +17,9 @@ export class LoginPageComponent {
   emailNotFound: boolean = false;
   incorrectPassword: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router){}
+  constructor(private authService: AuthService, 
+              private router: Router,
+              private webSocketService: WebSocketsService){}
 
   loginFormGroup = new FormGroup({
       emailFormControl: new FormControl('', [Validators.required, Validators.email]),
@@ -35,6 +38,9 @@ export class LoginPageComponent {
         if (response) {
           console.log('Login successful:', response);
           this.authService.setAuthToken(response.token);
+
+          this.webSocketService.initializeWebSocketConnection(response.token);
+
           const role = this.authService.getUserDetails().role;
           if(role === 'admin'){
             this.router.navigate(['admin-dashboard']);

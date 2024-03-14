@@ -750,9 +750,6 @@ export class RoutesComponent {
     this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
       (routes) => {
       this.routesList = routes;
-      console.log(this.routesList);
-      
-      
     },
     (error) => {
       console.log(error)

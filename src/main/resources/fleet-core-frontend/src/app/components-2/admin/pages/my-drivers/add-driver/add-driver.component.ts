@@ -55,14 +55,10 @@ addDriver() {
           imageData: data,
           organisationName: this.authService.getUserDetails().organisationName
       };
-      console.log(driver);
-      
-
+  
       const adminId: number = this.authService.getUserDetails().id;
 
       this.driverSerice.registerDriver(adminId, driver).subscribe((response) => {
-        console.log(response);
-        
         this.router.navigate(['admin-dashboard/my-drivers']);
       });
     })

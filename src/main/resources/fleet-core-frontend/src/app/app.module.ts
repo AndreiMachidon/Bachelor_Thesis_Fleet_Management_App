@@ -70,6 +70,8 @@ import { DriverHeaderComponent } from './components-2/driver/components/driver-h
 import { SeeDriverRoutesComponent } from './components-2/driver/pages/see-driver-routes/see-driver-routes.component';
 import { UpcomingRouteCardComponent } from './components-2/driver/components/upcoming-route-card/upcoming-route-card.component';
 import { NavigateRouteComponent } from './components-2/driver/pages/navigate-route/navigate-route.component';
+import { SendAlertDialogComponent } from './components-2/driver/pages/navigate-route/send-alert-dialog/send-alert-dialog.component';
+import { EndRouteDialogComponent } from './components-2/driver/pages/navigate-route/end-route-dialog/end-route-dialog.component';
 
 @NgModule({
   declarations: [
@@ -108,6 +110,8 @@ import { NavigateRouteComponent } from './components-2/driver/pages/navigate-rou
     SeeDriverRoutesComponent,
     UpcomingRouteCardComponent,
     NavigateRouteComponent,
+    SendAlertDialogComponent,
+    EndRouteDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,27 @@
+<div class="main-container">
+    <form class="send-alert-form" [formGroup]="sendAlertFormGroup">
+        <mat-form-field>
+            <mat-label>Choose one</mat-label>
+            <mat-select formControlName="alertTypeFormControl">
+                <mat-option *ngFor="let type of alertTypes" [value]="type.value">{{ type.viewValue }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="sendAlertFormGroup.get('alertTypeFormControl').hasError('required')">
+            Alert type is <strong>required</strong>
+           </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Please write additional info about the alert</mat-label>
+            <textarea matInput placeholder="Detailed info..." formControlName="alertDescriptionFormControl"></textarea>
+            <mat-error *ngIf="sendAlertFormGroup.get('alertDescriptionFormControl').hasError('required')">
+              Alert description is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+  
+        <div class="form-actions">
+            <button mat-raised-button color="warn" (click)="cancelSendAlert()">
+              Cancel</button>
+            <button mat-raised-button color="accent" (click)="sendAlert()"
+              type="submit">Send Alert</button>
+          </div>
+    </form>
+  </div>

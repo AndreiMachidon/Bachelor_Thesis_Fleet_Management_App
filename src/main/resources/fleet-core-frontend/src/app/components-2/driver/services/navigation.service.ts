@@ -31,7 +31,7 @@ export class NavigationService {
         const customWaypoint = convertWaypointDtoToCustomWaypoint(waypointDto);
         let marker = null;
         if(customWaypoint.type === 'START') {
-          marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/start_point.png'); // Sau altă imagine pentru DESTINATION
+          marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/start_point.png');
         } else if(customWaypoint.type === 'FUEL_STATION') {
           marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/gas_station_waypoint.png');
           createInfoWindowForGasStationsMarkerWaypoint(map, customWaypoint, marker, fuelPriceService);

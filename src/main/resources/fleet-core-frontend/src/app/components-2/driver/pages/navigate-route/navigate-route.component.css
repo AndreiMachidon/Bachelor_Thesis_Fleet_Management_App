@@ -93,5 +93,17 @@
 	animation-iteration-count: infinite;
 }
 
+.alert-active {
+  background: repeating-linear-gradient(
+    -55deg,
+    #f8d7da 1px,
+    #ffe2e6 2px,
+    #ffe2e6 11px,
+    #f8d7da 12px,
+    #f8d7da 20px
+  );
+  animation: none;
+}
+
 
   

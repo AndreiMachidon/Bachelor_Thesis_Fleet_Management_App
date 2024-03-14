@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>End Route</h1>
+<div mat-dialog-content>
+  <p>Are you sure you want to end this route?</p>
+  <p>This will notify the admin that you arrived at the destination and the route is completed!</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>End Route</button>
+</div>
