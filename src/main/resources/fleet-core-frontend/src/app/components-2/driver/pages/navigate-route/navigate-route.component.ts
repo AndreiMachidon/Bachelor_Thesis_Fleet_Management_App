@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { RouteDto } from 'src/app/components-2/admin/pages/routes/dto/route-dto.model';
 import { PolylineService } from 'src/app/components-2/admin/pages/routes/services/polyline.service';
 import { RoutesService } from 'src/app/components-2/admin/pages/routes/services/routes.service';
-import { NavigationService } from '../../services/navigation.service';
 import { FuelPricesService } from 'src/app/components-2/admin/pages/routes/services/fuel-prices.service';
 import { WebSocketsService } from 'src/app/components-2/global-services/web-sockets.service';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
@@ -14,6 +13,8 @@ import { response } from 'express';
 import * as e from 'express';
 import { RouteAlertDto } from 'src/app/components-2/admin/pages/routes/dto/route-alert-dto.model';
 import { EndRouteDialogComponent } from './end-route-dialog/end-route-dialog.component';
+import { StartRouteDialogComponent } from './start-route-dialog/start-route-dialog.component';
+import { MonitorLocationService } from '../../services/monitor-location.service';
 
 @Component({
   selector: 'app-navigate-route',
@@ -33,23 +34,18 @@ export class NavigateRouteComponent {
   isAlertActiveUnresolved: boolean = false;
   activeRouteAlert: RouteAlertDto;
 
-  //4. Id for subscribing and unsubscribing for real-time location update
-  watchId: number = null;
-
-  //For driver movement mocking
-  mockMovementIntervalId: any = null;
 
   constructor(private activePath: ActivatedRoute,
     private routeService: RoutesService,
     private webSocketService: WebSocketsService,
     private authService: AuthService,
     public dialog: MatDialog,
-    public routeAlertService: RouteAlertService) { }
+    public routeAlertService: RouteAlertService,
+    private monitorLocationService: MonitorLocationService) { }
 
   ngOnInit(): void {
     this.getUserLocation();
     this.getNavigableRoute();
-
   }
 
 
@@ -57,18 +53,16 @@ export class NavigateRouteComponent {
     const routeId: number = Number.parseInt(this.activePath.snapshot.paramMap.get('id'));
 
     this.routeService.getByRouteId(routeId).subscribe(
-      (response: RouteDto) => {
+      async (response: RouteDto) => {
         this.route = response;
-        if(this.route.routeStatus === 'IN_PROGRESS'){
+        if (this.route.routeStatus === 'IN_PROGRESS') {
           this.isRouteStarted = true;
-          this.startRoute();
-          this.mockDriverMovement();
+          await this.startRoute();
         }
 
         this.routeAlertService.getCurrentUnresolvedRouteAlert(this.route.id).subscribe(
           (response: RouteAlertDto) => {
-            if(response){
-              console.log(response);
+            if (response) {
               this.isAlertActiveUnresolved = true;
               this.activeRouteAlert = response;
             }
@@ -104,18 +98,40 @@ export class NavigateRouteComponent {
     }
   }
 
+  acknowledgeUserAgreementForLocation() {
+    const dialogRef = this.dialog.open(StartRouteDialogComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result) {
+        await this.startRoute();
+      }
+    }
+    );
+  }
+
+
   async startRoute() {
     this.isRouteStarted = true;
     await this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken());
-    //this.monitorUserLocation();
+
+    if (this.monitorLocationService.getWatchLocationId() == null) {
+      this.monitorUserLocation();
+    }
+    //   if(this.monitorLocationService.getMockLocationId() == null){
+    //     this.mockDriverMovement();
+    //  }
+
     this.updateRouteStatus('IN_PROGRESS');
-    this.mockDriverMovement();
+
+
+
   }
 
   monitorUserLocation(): void {
     const tryToGetLocation = (attemptsLeft = 5) => {
       if (navigator.geolocation) {
-        this.watchId = navigator.geolocation.watchPosition(
+        const watchId = navigator.geolocation.watchPosition(
           (position) => {
             this.userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             this.webSocketService.sendLocation(
@@ -134,19 +150,20 @@ export class NavigateRouteComponent {
           },
           { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
         );
+        this.monitorLocationService.setWatchLocationId(watchId);
       } else {
         console.error('Geolocation is not supported by this browser.');
       }
     };
-  
+
     tryToGetLocation();
   }
 
-  showNavigation(){
+  showNavigation() {
     this.openGoogleMapsNavigation();
   }
 
-  openGoogleMapsNavigation(){
+  openGoogleMapsNavigation() {
     const origin = `${this.userPosition.lat()},${this.userPosition.lng()}`;
     const destination = this.route.waypoints.find(wp => wp.type === 'DESTINATION');
     const destinationCoords = `${destination.latitude},${destination.longitude}`;
@@ -163,19 +180,17 @@ export class NavigateRouteComponent {
 
   sendAlertToAdmin() {
     const dialogRef = this.dialog.open(SendAlertDialogComponent, {
-      width: '90vw',
-      height: '90vh',
-      data: { latitude: this.userPosition.lat(), longitude: this.userPosition.lng(), routeId: this.route.id}
+      data: { latitude: this.userPosition.lat(), longitude: this.userPosition.lng(), routeId: this.route.id }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){ 
+      if (result) {
         this.routeAlertService.saveRouteAlert(result).subscribe(
           (response) => {
             this.webSocketService.sendAlert(this.route.id, result);
             this.routeAlertService.getCurrentUnresolvedRouteAlert(this.route.id).subscribe(
               (response: RouteAlertDto) => {
-                if(response){
+                if (response) {
                   this.isAlertActiveUnresolved = true;
                   this.activeRouteAlert = response;
                 }
@@ -197,37 +212,25 @@ export class NavigateRouteComponent {
 
   endRoute() {
     const dialogRef = this.dialog.open(EndRouteDialogComponent, {
-      data: { latitude: this.userPosition.lat(), longitude: this.userPosition.lng(), routeId: this.route.id}
     });
 
     dialogRef.afterClosed().subscribe(response => {
-      if(response === true){
+      if (response === true) {
         this.isRouteStarted = false;
         this.webSocketService.disconnectWebSocketConnection();
-        if(this.watchId){
-          navigator.geolocation.clearWatch(this.watchId);
+        if (this.monitorLocationService.getWatchLocationId() != null) {
+          this.monitorLocationService.resetWatchLocationId();
         }
-        if(this.mockMovementIntervalId){
-          clearInterval(this.mockMovementIntervalId);
+        if (this.monitorLocationService.getMockLocationId() != null) {
+          clearInterval(this.monitorLocationService.getMockLocationId());
         }
         this.updateRouteStatus('UPCOMING'); //todo: change to COMPLETED
       }
     })
-   
+
   }
 
-  ngOnDestroy(){
-    if(this.watchId){
-      navigator.geolocation.clearWatch(this.watchId);
-    }
-
-    if (this.mockMovementIntervalId) {
-      clearInterval(this.mockMovementIntervalId);
-    }
-   
-  }
-
-  updateRouteStatus(newStatus: string){
+  updateRouteStatus(newStatus: string) {
     this.routeService.updateRouteStatus(this.route.id, newStatus).subscribe(
       (response) => {
         console.log(response);
@@ -239,25 +242,25 @@ export class NavigateRouteComponent {
   }
 
   mockDriverMovement() {
-    if (this.mockMovementIntervalId) {
-      clearInterval(this.mockMovementIntervalId);
-    }
-    this.mockMovementIntervalId = setInterval(() => {
+    const mockMovementIntervalId = setInterval(() => {
       this.userPosition = new google.maps.LatLng(
         this.userPosition.lat() + 0.0001,
         this.userPosition.lng() + 0.0001
       );
-  
+
       this.webSocketService.sendLocation(
         this.route.id,
         this.route.driverId,
         this.userPosition.lat(),
         this.userPosition.lng()
       );
-    }, 2000);
+    }, 2000) as unknown as number;
+
+    this.monitorLocationService.setMockLocationId(mockMovementIntervalId);
+
   }
 
-  markAlertAsResolved(){
+  markAlertAsResolved() {
     this.routeAlertService.markRouteAlertAsResolved(this.activeRouteAlert.id).subscribe(
       (response) => {
         this.webSocketService.sendAlert(this.route.id, this.activeRouteAlert);
@@ -270,6 +273,6 @@ export class NavigateRouteComponent {
       }
     )
   }
-   
+
 
 }

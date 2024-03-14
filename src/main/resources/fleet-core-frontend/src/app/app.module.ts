@@ -72,6 +72,7 @@ import { UpcomingRouteCardComponent } from './components-2/driver/components/upc
 import { NavigateRouteComponent } from './components-2/driver/pages/navigate-route/navigate-route.component';
 import { SendAlertDialogComponent } from './components-2/driver/pages/navigate-route/send-alert-dialog/send-alert-dialog.component';
 import { EndRouteDialogComponent } from './components-2/driver/pages/navigate-route/end-route-dialog/end-route-dialog.component';
+import { StartRouteDialogComponent } from './components-2/driver/pages/navigate-route/start-route-dialog/start-route-dialog.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +113,7 @@ import { EndRouteDialogComponent } from './components-2/driver/pages/navigate-ro
     NavigateRouteComponent,
     SendAlertDialogComponent,
     EndRouteDialogComponent,
+    StartRouteDialogComponent,
   ],
   imports: [
     BrowserModule,
