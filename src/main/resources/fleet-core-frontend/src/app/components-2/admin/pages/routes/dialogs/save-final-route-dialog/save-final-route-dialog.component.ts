@@ -47,7 +47,6 @@ export class SaveFinalRouteDialogComponent {
     route.driverCost = this.routeFinalDetails.totalDriverCost;
     route.encodedPolyline = this.routeFinalDetails.googleMapsDirectionResult.routes[0].overview_polyline;
     route.routeStatus = null;
-    route.driverNotes = null;
     route.adminId = this.authService.getUserDetails().id
     route.vehicleId = this.routeFinalDetails.vehicle.id;
     route.driverId = this.routeFinalDetails.driver.id;

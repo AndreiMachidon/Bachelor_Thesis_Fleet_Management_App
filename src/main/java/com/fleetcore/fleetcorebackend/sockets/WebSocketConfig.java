@@ -26,7 +26,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-location").setAllowedOrigins("https://localhost:4200", "https://fleet-core-frontend.azurewebsites.net").withSockJS();
+        registry
+                .addEndpoint("/navigation")
+                .setAllowedOrigins("https://localhost:4200",
+                                   "https://fleet-core-frontend.azurewebsites.net",
+                                   "https://192.168.100.7:4200"
+                )
+                .withSockJS();
     }
 
     @Override

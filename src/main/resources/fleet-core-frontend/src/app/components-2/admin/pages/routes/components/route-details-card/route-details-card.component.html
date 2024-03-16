@@ -14,18 +14,29 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="route-status-info" [ngClass]="{'status-upcoming': route.routeStatus === 'UPCOMING', 'status-in-progress': route.routeStatus === 'IN_PROGRESS', 'status-finished': route.routeStatus === 'FINISHED'}">
+        <div class="route-status-info" [ngClass]="{
+            'status-upcoming': route.routeStatus === 'UPCOMING', 
+            'status-in-progress': route.routeStatus === 'IN_PROGRESS',
+            'status-finished': route.routeStatus === 'COMPLETED',
+            'status-alert-active': route.routeStatus === 'ALERT_ACTIVE'
+          }">
             Route status: {{formatRouteStatus(route.routeStatus)}}
-        </div>
+          </div>
         <div class="route-details-info">
             <div class="left-details">
                 <p>Total costs: {{totalCosts.toFixed(2)}} €</p>
                 <p>Total distance: {{route.distance.toFixed(2)}} km</p>
             </div>
             <div class="right-details">
-                <button mat-raised-button color="accent" (click)="route.routeStatus === 'IN_PROGRESS' ? viewLiveRouteStatus() : displayRoute()">
-                  {{ route.routeStatus === 'IN_PROGRESS' ? 'View Live Status' : 'Display Route' }}
-                </button>
+                <button *ngIf="route.routeStatus === 'IN_PROGRESS' || route.routeStatus === 'ALERT_ACTIVE'" mat-raised-button color="accent" (click)="viewLiveRouteStatus()">
+                    View Live Status
+                  </button>
+                  <button *ngIf="route.routeStatus !== 'IN_PROGRESS' && route.routeStatus !== 'COMPLETED'  && route.routeStatus !== 'ALERT_ACTIVE'" mat-raised-button color="accent" (click)="displayRoute()">
+                    Display Route
+                  </button>
+                  <button *ngIf="route.routeStatus === 'COMPLETED'" mat-raised-button color="accent" (click)="displayCompletedRoute()">
+                    Display Completed Route
+                  </button>
               </div>
         </div>
     </div>

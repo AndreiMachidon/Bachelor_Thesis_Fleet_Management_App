@@ -1,6 +1,7 @@
 package com.fleetcore.fleetcorebackend.controller;
 
 import com.fleetcore.fleetcorebackend.dto.RouteAlertDto;
+import com.fleetcore.fleetcorebackend.dto.RouteAlertUpdateDto;
 import com.fleetcore.fleetcorebackend.services.RouteAlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,9 +49,10 @@ public class RouteAlertController {
     }
 
     @PatchMapping("/markResolved")
-    public ResponseEntity<String> markRouteAlertAsResoled(@RequestParam("routeAlertId") Long routeAlertId){
+    public ResponseEntity<String> markRouteAlertAsResoled(@RequestParam("routeAlertId") Long routeAlertId,
+                                                          @RequestBody RouteAlertUpdateDto updateDto){
         try {
-            routeAlertService.markRouteAlertAsResolved(routeAlertId);
+            routeAlertService.markRouteAlertAsResolved(routeAlertId, updateDto.getCost());
             return ResponseEntity.ok("Route Alert is marked as resolved");
         } catch (Exception ex){
             return ResponseEntity.status(400).build();

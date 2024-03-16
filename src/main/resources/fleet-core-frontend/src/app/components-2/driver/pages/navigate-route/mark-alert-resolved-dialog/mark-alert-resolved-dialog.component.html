@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Mark Alert Resolved</h1>
+<div mat-dialog-content [formGroup]="form">
+  <p>Is the current alert resolved? <strong>{{data.alert.alertType}}</strong></p>
+  <p>Additional Costs (€). If there are none please write 0 (€)</p>
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Additional Costs</mat-label>
+    <input matInput type="number" formControlName="costs">
+    <mat-icon matSuffix>€</mat-icon>
+    <mat-error *ngIf="form.get('costs').hasError('required')">Costs are required</mat-error>
+    <mat-error *ngIf="form.get('costs').hasError('min')">Costs cannot be negative</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="confirm()" cdkFocusInitial>Mark as Resolved</button>
+</div>

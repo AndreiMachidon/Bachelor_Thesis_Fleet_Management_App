@@ -2,10 +2,15 @@ package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.dto.RouteDto;
 import com.fleetcore.fleetcorebackend.dto.WaypointDto;
+import com.fleetcore.fleetcorebackend.entities.DriverDetails;
+import com.fleetcore.fleetcorebackend.entities.Vehicle;
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
+import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.entities.routes.waypoints.Waypoint;
+import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.RouteRepository;
+import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +26,12 @@ public class RouteService {
 
     @Autowired
     private WaypointService waypointService;
+
+    @Autowired
+    private DriverDetailsRepository driverDetailsRepository;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
 
     @Transactional
@@ -69,7 +80,6 @@ public class RouteService {
         routeDto.setDriverCost(route.getDriverCost());
         routeDto.setEncodedPolyline(route.getEncodedPolyline());
         routeDto.setRouteStatus(route.getRouteStatus().toString());
-        routeDto.setDriverNotes(route.getDriverNotes());
         routeDto.setAdminId(route.getAdminId());
         routeDto.setVehicleId(route.getVehicleId());
         routeDto.setDriverId(route.getDriverId());
@@ -90,6 +100,20 @@ public class RouteService {
         try{
             Route foundRoute = routeRepository.findById(routeId).orElseThrow();
             foundRoute.setRouteStatus(RouteStatus.valueOf(routeStatus));
+            if(RouteStatus.IN_PROGRESS.equals(routeStatus)){
+                Vehicle vehicle = vehicleRepository.getVehicleById(foundRoute.getVehicleId());
+                vehicle.setVehicleStatus(VehicleStatus.ON_ROUTE);
+            }
+            if(RouteStatus.COMPLETED.name().equals(routeStatus)){
+                DriverDetails driverDetails = driverDetailsRepository.getDriverDetailsById(foundRoute.getDriverId());
+                driverDetails.setTotalKilometersDriven(driverDetails.getTotalKilometersDriven() + foundRoute.getDistance());
+                driverDetailsRepository.save(driverDetails);
+
+                Vehicle vehicle = vehicleRepository.getVehicleById(foundRoute.getVehicleId());
+                vehicle.setMilenage(vehicle.getMilenage() + foundRoute.getDistance());
+                vehicle.setVehicleStatus(VehicleStatus.IDLE);
+                vehicleRepository.save(vehicle);
+            }
             routeRepository.save(foundRoute);
         }catch (Exception ex){
             throw new RuntimeException(ex);

@@ -33,8 +33,6 @@ public class Route {
 
     private RouteStatus routeStatus;
 
-    private String driverNotes;
-
     private long adminId;
     private long vehicleId;
     private long driverId;

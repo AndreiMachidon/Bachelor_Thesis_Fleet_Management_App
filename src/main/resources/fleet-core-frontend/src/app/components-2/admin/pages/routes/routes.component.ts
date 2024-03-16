@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { } from 'googlemaps';
@@ -18,6 +18,7 @@ import { SaveFinalRouteDialogComponent } from './dialogs/save-final-route-dialog
 import { RoutesService } from './services/routes.service';
 import { RouteDto } from './dto/route-dto.model';
 import * as e from 'express';
+import { WebSocketsService } from 'src/app/components-2/global-services/web-sockets.service';
 
 
 @Component({
@@ -83,11 +84,19 @@ export class RoutesComponent {
     private authService: AuthService,
     private googleMapsService: GoogleMapsService,
     private fuelPriceService: FuelPricesService,
-    private routesService: RoutesService) {
+    private routesService: RoutesService,
+    private webSocketService: WebSocketsService,
+    private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     this.getUserLocation();
+    this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken()).then(() => {
+      this.webSocketService.subscribeToRouteStatuses((routeStatus) => {
+        console.log("New route status received:", routeStatus);
+        this.updateRoutesList();
+      });   
+    });
   }
 
   initMap() {
@@ -756,6 +765,23 @@ export class RoutesComponent {
       alert("There was an error while fetching the routes from the server!");
     }
     );
+  }
+
+  updateRoutesList() {
+    this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
+        (routes) => {
+            this.routesList = routes;
+            this.cdRef.detectChanges();
+        },
+        (error) => {
+            console.error("Error fetching routes", error);
+        }
+    );
+}
+
+  ngOnDestroy(){
+    this.webSocketService.unsubscribeFromRouteStatuses();
+    this.webSocketService.disconnectWebSocketConnection();
   }
 }
 

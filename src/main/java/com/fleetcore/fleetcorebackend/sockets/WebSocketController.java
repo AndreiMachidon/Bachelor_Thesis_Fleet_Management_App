@@ -8,7 +8,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class DriverLocationController {
+public class WebSocketController {
 
     @MessageMapping("/updateLocation/{routeId}")
     @SendTo("/topic/driverLocation/{routeId}")
@@ -20,6 +20,12 @@ public class DriverLocationController {
     @SendTo("/topic/routeAlerts/{routeId}")
     public RouteAlertDto sendRouteAlert(@DestinationVariable Long routeId, RouteAlertDto dto){
         return dto;
+    }
+
+    @MessageMapping("/updateRouteStatus")
+    @SendTo("/topic/routeStatuses")
+    public String sendNewRouteStatus(String newRouteStatus){
+        return newRouteStatus;
     }
 
 }

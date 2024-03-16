@@ -18,5 +18,6 @@ public class RouteAlertDto {
     private double longitude;
     private double latitude;
     private String alertStatus;
+    private double costs;
     private long routeId;
 }

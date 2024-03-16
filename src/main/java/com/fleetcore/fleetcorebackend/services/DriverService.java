@@ -7,6 +7,7 @@ import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
 import com.fleetcore.fleetcorebackend.entities.User;
+import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.RouteRepository;
@@ -197,7 +198,9 @@ public class DriverService {
     }
 
     public List<RouteDto> getAllUpcomingRoutesForDriver(Long driverId){
-        List<Route> driverRoutes = routeRepository.getAllByDriverId(driverId);
+        List<Route> driverRoutes = routeRepository.getAllByDriverId(driverId).stream()
+                .filter(route -> route.getRouteStatus().equals(RouteStatus.UPCOMING) || route.getRouteStatus().equals(RouteStatus.IN_PROGRESS))
+                .toList();
 
         List<RouteDto> routeDtoList = new ArrayList<>();
         for(Route route: driverRoutes){

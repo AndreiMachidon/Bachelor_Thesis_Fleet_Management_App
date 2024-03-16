@@ -19,7 +19,6 @@ public class RouteDto {
     private double driverCost;
     private String encodedPolyline;
     private String routeStatus;
-    private String driverNotes;
     private long adminId;
     private long vehicleId;
     private long driverId;

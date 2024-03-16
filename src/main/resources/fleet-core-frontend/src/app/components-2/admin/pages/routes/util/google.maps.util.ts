@@ -3,6 +3,7 @@ import { CustomWaypoint } from './custom-waypoint.interface';
 import { FuelPricesService } from '../services/fuel-prices.service';
 import { RouteDto } from '../dto/route-dto.model';
 import { WaypointDto } from '../dto/waypoint-dto.model';
+import { RouteAlertDto } from '../dto/route-alert-dto.model';
 
 function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, iconUrl: string) {
   return new google.maps.Marker({
@@ -36,7 +37,7 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
       <strong>Gasoline:</strong> ${waypoint.gasolinePrice} €/L<br>
       <strong>Diesel:</strong> ${waypoint.diselPrice} €/L
       </div>`;
-    }else{
+    } else {
       fuelOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional fuel information available.</div>`;
     }
 
@@ -134,6 +135,42 @@ function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypo
     infoWindow.open(map, marker);
   });
 
+}
+
+function createInfoWindowForAlertsMarker(map: google.maps.Map, alert: RouteAlertDto, marker: google.maps.Marker) {
+  const alertTypeDescriptions = {
+    VEHICLE_BREAKDOWN: "Vehicle Breakdown",
+    TRAFFIC_JAM: "Traffic Jam",
+    ACCIDENT_REPORT: "Accident Report",
+    HAZARDOUS_CONDITIONS: "Hazardous Conditions",
+    SECURITY_THREAT: "Security Threat"
+  };
+
+  const statusColor = alert.alertStatus === 'RESOLVED' ? 'green' : 'red';
+  let infoWindowContent = `
+  <div style="font-size: 14px; color: #333;">
+    <h2 style="margin: 0; padding-bottom: 5px; border-bottom: 1px solid #ccc;">Alert Details</h2>
+    <p style="margin: 5px 0;"><strong>Type:</strong> ${alert.alertType}</p>
+    <p style="margin: 5px 0;"><strong>Description:</strong> ${alert.alertDescription}</p>
+    <p style="margin: 5px 0; font-size: 14px; color: ${statusColor};"><strong>Status:</strong> ${alert.alertStatus}</p>
+    <p style="margin: 5px 0;"><strong>Issued:</strong> ${new Date(alert.alertIssuedDate).toLocaleString()}</p>
+    
+  </div>`;
+
+  if (alert.alertStatus === "RESOLVED" && alert.alertResolvedDate) {
+    infoWindowContent += `<p style="margin: 5px 0; font-size: 14px; color: black;"><strong>Resolved:</strong> ${new Date(alert.alertResolvedDate).toLocaleString()}</p>
+                          <p style="margin: 5px 0; font-size: 14px; color: black;"><strong>Costs: </strong> ${alert.costs} €</p>`;
+  }
+
+  infoWindowContent += `</div>`;
+
+  const infoWindow = new google.maps.InfoWindow({
+    content: infoWindowContent,
+  });
+
+  marker.addListener("click", () => {
+    infoWindow.open(map, marker);
+  });
 }
 
 /**
@@ -293,6 +330,7 @@ export {
   createInfoWindowForGasStationsMarkerWaypoint,
   createInfoWindowForElectricStationsMarkerWaypoint,
   createInfoWindowForRestBreaksMarkerWaypoint,
+  createInfoWindowForAlertsMarker,
   getPointsAlongRoute,
   calculateMidpoint,
   calculateDurationInHoursAndMinutes,

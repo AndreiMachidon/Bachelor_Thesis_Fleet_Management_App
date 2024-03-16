@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import { SOCKET_ALERTS_SUBSCRIBE_URL, SOCKET_ALERTS_UPDATE_URL, SOCKET_LIVE_LOCATION_SUSBSCRIBE_URL, SOCKET_LIVE_LOCATION_UPDATE_URL, SOCKET_LIVE_LOCATION_URL } from 'src/app/contants';
+import { SOCKET_ALERTS_SUBSCRIBE_URL, SOCKET_ALERTS_UPDATE_URL, SOCKET_LIVE_LOCATION_SUSBSCRIBE_URL, SOCKET_LIVE_LOCATION_UPDATE_URL, SOCKET_LIVE_LOCATION_URL, SOCKET_ROUTE_STATUS_SUBSCRIBE_URL, SOCKET_ROUTE_STATUS_UPDATE_URL } from 'src/app/contants';
 import { DriverLocationDto } from '../admin/pages/routes/dto/driver-location-dto.model';
 import { RouteAlertDto } from '../admin/pages/routes/dto/route-alert-dto.model';
 
@@ -13,6 +13,7 @@ export class WebSocketsService {
   private stompClient: any = null;
   private locationSubscription: any = null;
   private alertsSubscription: any = null;
+  private routeStatusesSubscription: any = null;
 
   constructor() { }
 
@@ -78,6 +79,25 @@ export class WebSocketsService {
       this.alertsSubscription.unsubscribe();
       this.alertsSubscription = null;
       console.log('Unsubscribed from route alerts updates.');
+    }
+  }
+
+  sendRouteStatusUpdate(newStatus: string){
+    this.stompClient.send(SOCKET_ROUTE_STATUS_UPDATE_URL, {}, newStatus);
+  }
+
+  subscribeToRouteStatuses(callback: (newStatus: string) => void){
+    this.routeStatusesSubscription = this.stompClient.subscribe(SOCKET_ROUTE_STATUS_SUBSCRIBE_URL, message => {
+      const newStatus: string = message.body;
+      callback(newStatus);
+    });
+  }
+
+  unsubscribeFromRouteStatuses() {
+    if (this.routeStatusesSubscription) {
+      this.routeStatusesSubscription.unsubscribe();
+      this.routeStatusesSubscription = null;
+      console.log('Unsubscribed from route status updates.');
     }
   }
 

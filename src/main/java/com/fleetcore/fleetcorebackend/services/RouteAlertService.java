@@ -40,11 +40,12 @@ public class RouteAlertService {
         return null;
     }
 
-    public void markRouteAlertAsResolved(Long routeAlertId){
+    public void markRouteAlertAsResolved(Long routeAlertId, Double cost){
         RouteAlert routeAlert = routeAlertRepository.findById(routeAlertId).orElse(null);
         if(routeAlert != null){
             routeAlert.setAlertStatus(AlertStatus.RESOLVED);
             routeAlert.setAlertResolvedDate(new Date());
+            routeAlert.setCosts(cost);
             routeAlertRepository.save(routeAlert);
         }
     }
@@ -58,6 +59,7 @@ public class RouteAlertService {
         routeAlert.setLatitude(routeAlertDto.getLatitude());
         routeAlert.setLongitude(routeAlertDto.getLongitude());
         routeAlert.setAlertStatus(AlertStatus.valueOf(routeAlertDto.getAlertStatus()));
+        routeAlert.setCosts(routeAlertDto.getCosts());
         routeAlert.setRouteId(routeAlertDto.getRouteId());
         return routeAlert;
     }
@@ -66,11 +68,14 @@ public class RouteAlertService {
         RouteAlertDto dto = new RouteAlertDto();
         dto.setId(routeAlert.getId());
         dto.setAlertType(routeAlert.getAlertType().name());
+        dto.setAlertDescription(routeAlert.getAlertDescription());
         dto.setAlertIssuedDate(routeAlert.getAlertIssuedDate());
-        dto.setAlertResolvedDate(routeAlert.getAlertIssuedDate());
+        dto.setAlertResolvedDate(routeAlert.getAlertResolvedDate());
         dto.setLatitude(routeAlert.getLatitude());
         dto.setLongitude(routeAlert.getLongitude());
         dto.setAlertStatus(routeAlert.getAlertStatus().name());
+        dto.setCosts(routeAlert.getCosts());
+        dto.setRouteId(routeAlert.getRouteId());
         return dto;
     }
 }

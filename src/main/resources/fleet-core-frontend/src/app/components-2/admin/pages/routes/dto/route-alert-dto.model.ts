@@ -7,5 +7,6 @@ export class RouteAlertDto{
     longitude: number;
     latitude: number;
     alertStatus: string;
+    costs: number;
     routeId: number;
 }

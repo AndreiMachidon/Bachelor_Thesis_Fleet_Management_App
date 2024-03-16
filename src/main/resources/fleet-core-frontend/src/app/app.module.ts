@@ -73,6 +73,7 @@ import { NavigateRouteComponent } from './components-2/driver/pages/navigate-rou
 import { SendAlertDialogComponent } from './components-2/driver/pages/navigate-route/send-alert-dialog/send-alert-dialog.component';
 import { EndRouteDialogComponent } from './components-2/driver/pages/navigate-route/end-route-dialog/end-route-dialog.component';
 import { StartRouteDialogComponent } from './components-2/driver/pages/navigate-route/start-route-dialog/start-route-dialog.component';
+import { MarkAlertResolvedDialogComponent } from './components-2/driver/pages/navigate-route/mark-alert-resolved-dialog/mark-alert-resolved-dialog.component';
 
 @NgModule({
   declarations: [
@@ -114,6 +115,7 @@ import { StartRouteDialogComponent } from './components-2/driver/pages/navigate-
     SendAlertDialogComponent,
     EndRouteDialogComponent,
     StartRouteDialogComponent,
+    MarkAlertResolvedDialogComponent,
   ],
   imports: [
     BrowserModule,

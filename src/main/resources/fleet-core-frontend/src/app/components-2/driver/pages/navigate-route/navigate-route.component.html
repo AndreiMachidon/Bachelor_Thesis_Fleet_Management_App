@@ -8,7 +8,7 @@
         <div class="progress-title" *ngIf="!isAlertActiveUnresolved">
             <p style="font-size: 2rem; font-weight: bold;">Route in progress</p>
             <p style="font-size: 1rem; font-weight: bold;">Your location is now shared with the organisation admin</p>
-            <p style="font-size: 1rem; font-weight: bold;">Please keep this window open in order to </p>
+            <p style="font-size: 1rem; font-weight: bold;">Please keep this window open in order for the location to be tracked</p>
         </div>
         <div *ngIf="isAlertActiveUnresolved" class="progress-title">
             <p style="font-size: 2rem; font-weight: bold;">You have an active route alert : {{activeRouteAlert.alertType}}</p>
@@ -19,7 +19,7 @@
             (click)="showNavigation()" class="action-button">Show
             Navigation</button>
             <button mat-raised-button color="accent" *ngIf="!isAlertActiveUnresolved" (click)="sendAlertToAdmin()" class="action-button">Send Alert to Admin</button>
-            <button mat-raised-button color="accent" *ngIf="isAlertActiveUnresolved" (click)="markAlertAsResolved()" class="action-button">Mark Alert as Resolved</button>
+            <button mat-raised-button color="accent" *ngIf="isAlertActiveUnresolved" (click)="openAlertResolvedDialog()" class="action-button">Mark Alert as Resolved</button>
         <button mat-raised-button color="warn" (click)="endRoute()"
             class="action-button">End
             Route</button>

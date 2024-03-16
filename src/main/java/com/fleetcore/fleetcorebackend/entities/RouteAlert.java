@@ -31,6 +31,8 @@ public class RouteAlert {
     private double latitude;
     private AlertStatus alertStatus;
 
+    private double costs;
+
     private long routeId;
 
 }

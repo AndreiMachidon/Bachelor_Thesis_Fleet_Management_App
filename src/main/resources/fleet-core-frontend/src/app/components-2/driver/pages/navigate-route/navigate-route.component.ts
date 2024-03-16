@@ -15,6 +15,7 @@ import { RouteAlertDto } from 'src/app/components-2/admin/pages/routes/dto/route
 import { EndRouteDialogComponent } from './end-route-dialog/end-route-dialog.component';
 import { StartRouteDialogComponent } from './start-route-dialog/start-route-dialog.component';
 import { MonitorLocationService } from '../../services/monitor-location.service';
+import { MarkAlertResolvedDialogComponent } from './mark-alert-resolved-dialog/mark-alert-resolved-dialog.component';
 
 @Component({
   selector: 'app-navigate-route',
@@ -25,7 +26,6 @@ export class NavigateRouteComponent {
 
   //1. Information about the route and the user position
   route: RouteDto = new RouteDto();
-  userPosition: google.maps.LatLng;
 
   //2. Flag to control the UI if the route is started
   isRouteStarted: boolean = false;
@@ -44,8 +44,23 @@ export class NavigateRouteComponent {
     private monitorLocationService: MonitorLocationService) { }
 
   ngOnInit(): void {
+    
     this.getUserLocation();
     this.getNavigableRoute();
+
+    this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken()).then(() => {
+
+      if(this.monitorLocationService.getWatchLocationId() == null){
+        this.monitorUserLocation();
+      }
+
+      // if(this.monitorLocationService.getMockLocationId() == null){
+      //   this.mockDriverMovement();
+      // }
+
+    });
+
+
   }
 
 
@@ -82,7 +97,7 @@ export class NavigateRouteComponent {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this.userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          this.monitorLocationService.setUserPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
         },
         (error) => {
           console.error('Error getting user location:', error);
@@ -118,13 +133,12 @@ export class NavigateRouteComponent {
     if (this.monitorLocationService.getWatchLocationId() == null) {
       this.monitorUserLocation();
     }
+    
     //   if(this.monitorLocationService.getMockLocationId() == null){
     //     this.mockDriverMovement();
     //  }
 
     this.updateRouteStatus('IN_PROGRESS');
-
-
 
   }
 
@@ -133,12 +147,12 @@ export class NavigateRouteComponent {
       if (navigator.geolocation) {
         const watchId = navigator.geolocation.watchPosition(
           (position) => {
-            this.userPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            this.monitorLocationService.setUserPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)); 
             this.webSocketService.sendLocation(
               this.route.id,
               this.route.driverId,
-              this.userPosition.lat(),
-              this.userPosition.lng()
+              this.monitorLocationService.getUserPosition().lat(),
+              this.monitorLocationService.getUserPosition().lng()
             );
           },
           (error) => {
@@ -164,7 +178,7 @@ export class NavigateRouteComponent {
   }
 
   openGoogleMapsNavigation() {
-    const origin = `${this.userPosition.lat()},${this.userPosition.lng()}`;
+    const origin = `${this.monitorLocationService.getUserPosition().lat()},${this.monitorLocationService.getUserPosition().lng()}`;
     const destination = this.route.waypoints.find(wp => wp.type === 'DESTINATION');
     const destinationCoords = `${destination.latitude},${destination.longitude}`;
 
@@ -180,7 +194,7 @@ export class NavigateRouteComponent {
 
   sendAlertToAdmin() {
     const dialogRef = this.dialog.open(SendAlertDialogComponent, {
-      data: { latitude: this.userPosition.lat(), longitude: this.userPosition.lng(), routeId: this.route.id }
+      data: { latitude: this.monitorLocationService.getUserPosition().lat(), longitude: this.monitorLocationService.getUserPosition().lng(), routeId: this.route.id }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -193,6 +207,7 @@ export class NavigateRouteComponent {
                 if (response) {
                   this.isAlertActiveUnresolved = true;
                   this.activeRouteAlert = response;
+                  this.updateRouteStatus('ALERT_ACTIVE');
                 }
               },
               (error) => {
@@ -217,14 +232,15 @@ export class NavigateRouteComponent {
     dialogRef.afterClosed().subscribe(response => {
       if (response === true) {
         this.isRouteStarted = false;
-        this.webSocketService.disconnectWebSocketConnection();
         if (this.monitorLocationService.getWatchLocationId() != null) {
           this.monitorLocationService.resetWatchLocationId();
         }
+        
         if (this.monitorLocationService.getMockLocationId() != null) {
-          clearInterval(this.monitorLocationService.getMockLocationId());
+          this.monitorLocationService.resetMockLocationId();
         }
-        this.updateRouteStatus('UPCOMING'); //todo: change to COMPLETED
+        this.monitorLocationService.resetUserPosition();
+        this.updateRouteStatus('COMPLETED'); //todo: change to COMPLETED
       }
     })
 
@@ -233,7 +249,7 @@ export class NavigateRouteComponent {
   updateRouteStatus(newStatus: string) {
     this.routeService.updateRouteStatus(this.route.id, newStatus).subscribe(
       (response) => {
-        console.log(response);
+        this.webSocketService.sendRouteStatusUpdate(newStatus);
       },
       (error) => {
         alert('There was an error updating the route status')
@@ -243,16 +259,16 @@ export class NavigateRouteComponent {
 
   mockDriverMovement() {
     const mockMovementIntervalId = setInterval(() => {
-      this.userPosition = new google.maps.LatLng(
-        this.userPosition.lat() + 0.0001,
-        this.userPosition.lng() + 0.0001
-      );
+      this.monitorLocationService.setUserPosition(new google.maps.LatLng(
+        this.monitorLocationService.getUserPosition().lat() + 0.0001,
+        this.monitorLocationService.getUserPosition().lng() + 0.0001
+      )); 
 
       this.webSocketService.sendLocation(
         this.route.id,
         this.route.driverId,
-        this.userPosition.lat(),
-        this.userPosition.lng()
+        this.monitorLocationService.getUserPosition().lat(),
+        this.monitorLocationService.getUserPosition().lng()
       );
     }, 2000) as unknown as number;
 
@@ -260,10 +276,24 @@ export class NavigateRouteComponent {
 
   }
 
-  markAlertAsResolved() {
-    this.routeAlertService.markRouteAlertAsResolved(this.activeRouteAlert.id).subscribe(
+  openAlertResolvedDialog() {
+    const dialogRef = this.dialog.open(MarkAlertResolvedDialogComponent, {
+      data: { alert: this.activeRouteAlert }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {   
+        const cost = result.costs;   
+        this.markAlertAsResolved(cost);
+      }
+    });
+  }
+  
+  markAlertAsResolved(cost: number) {
+    this.routeAlertService.markRouteAlertAsResolved(this.activeRouteAlert.id, cost).subscribe(
       (response) => {
-        this.webSocketService.sendAlert(this.route.id, this.activeRouteAlert);
+        this.updateRouteStatus('IN_PROGRESS');
+        this.webSocketService.sendAlert(this.route.id, {...this.activeRouteAlert, costs: cost});
         this.isAlertActiveUnresolved = false;
         this.activeRouteAlert = null;
         alert('Notification sent successfully');
@@ -271,7 +301,7 @@ export class NavigateRouteComponent {
       (error) => {
         alert('There was an error resolving the alert');
       }
-    )
+    );
   }
 
 

@@ -4,7 +4,7 @@ import { PolylineService } from '../../services/polyline.service';
 import { FuelPricesService } from '../../services/fuel-prices.service';
 import { RouteDto } from '../../dto/route-dto.model';
 import { WebSocketsService } from 'src/app/components-2/global-services/web-sockets.service';
-import { createCustomMarker } from '../../util/google.maps.util';
+import { createCustomMarker, createInfoWindowForAlertsMarker } from '../../util/google.maps.util';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { DriverLocationDto } from '../../dto/driver-location-dto.model';
 import { RouteAlertDto } from '../../dto/route-alert-dto.model';
@@ -54,7 +54,6 @@ export class RouteDetailsCardComponent {
   displayRoute() {
     this.webSocketService.unsubscribeFromRouteLocation();
     this.webSocketService.unsubscribeFromRouteAlerts();
-    this.webSocketService.disconnectWebSocketConnection();
     this.realTimeUpdatesService.resetInformation();
     const decodedPath = google.maps.geometry.encoding.decodePath(this.route.encodedPolyline);
 
@@ -79,6 +78,8 @@ export class RouteDetailsCardComponent {
   subscribeToDriverLiveLocation() {
     const routeId = this.route.id;
     this.webSocketService.subscribeToRouteLocation(routeId, (driverLocationDto) => {
+      console.log(driverLocationDto);
+      
       this.updateDriverLocationOnMap(driverLocationDto);
     });
   }
@@ -94,8 +95,6 @@ export class RouteDetailsCardComponent {
 
   subscribeToRouteAlerts(){
     this.webSocketService.subscribeToRouteAlerts(this.route.id, (routeAlertDto) => {
-      console.log(routeAlertDto);
-      
         this.displayStoredRouteAlerts();
     });
   }
@@ -116,11 +115,15 @@ export class RouteDetailsCardComponent {
 
   createMarkersForAlerts(){
     this.realTimeUpdatesService.getRouteAlerts().forEach(alert => {
+      console.log(alert);
+      
       if(alert.alertStatus === 'UNRESOLVED'){
         const marker = createCustomMarker(this.map, new google.maps.LatLng(alert.latitude, alert.longitude), '../../../../../../../assets/markers/active_alert_marker.png');
+        createInfoWindowForAlertsMarker(this.map, alert, marker);
         this.realTimeUpdatesService.pushRouteAlertMarker(marker);
       }else if(alert.alertStatus === 'RESOLVED'){
         const marker = createCustomMarker(this.map, new google.maps.LatLng(alert.latitude, alert.longitude), '../../../../../../../assets/markers/resolved_alert_marker.png');
+        createInfoWindowForAlertsMarker(this.map, alert, marker);
         this.realTimeUpdatesService.pushRouteAlertMarker(marker);
       }
     });
@@ -162,11 +165,19 @@ export class RouteDetailsCardComponent {
         return 'In Progress';
       case 'FINISHED':
         return 'Finished';
+      case 'ALERT_ACTIVE':
+        return 'Alert Active';
       default:
         return status;
     }
   }
 
+  displayCompletedRoute(){
+    this.displayRoute();
+    this.displayStoredRouteAlerts();
+  }
+
 }
+
 
 

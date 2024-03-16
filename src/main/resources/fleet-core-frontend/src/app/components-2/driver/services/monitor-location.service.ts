@@ -7,6 +7,7 @@ export class MonitorLocationService {
 
   private watchLocationId: number = null;
   private mockLocationId: number = null;
+  private userPosition: google.maps.LatLng;
 
   constructor() { }
 
@@ -32,7 +33,20 @@ export class MonitorLocationService {
   }
 
   public resetMockLocationId(){
+    clearInterval(this.mockLocationId);
     this.mockLocationId = null;
+  }
+
+  public setUserPosition(position: google.maps.LatLng) {
+    this.userPosition = position;
+  }
+
+  public getUserPosition(): google.maps.LatLng {
+    return this.userPosition;
+  }
+
+  public resetUserPosition() {
+    this.userPosition = null;
   }
 
 

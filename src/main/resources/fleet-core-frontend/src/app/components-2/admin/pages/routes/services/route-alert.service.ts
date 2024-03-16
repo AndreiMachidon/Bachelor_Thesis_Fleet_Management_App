@@ -30,9 +30,9 @@ export class RouteAlertService {
     return this.http.get<RouteAlertDto>(`${API_URL}/routes/alerts/unresolved?routeId=` + routeId, {headers: this.httpHeaders});
   }
 
-  markRouteAlertAsResolved(routeAlertId: number): Observable<any>{
-    return this.http.patch(`${API_URL}/routes/alerts/markResolved?routeAlertId=` + routeAlertId, null, {headers: this.httpHeaders, responseType: 'text'});
+  markRouteAlertAsResolved(routeAlertId: number, cost: number): Observable<any> {
+    const body = { cost: cost };
+    return this.http.patch(`${API_URL}/routes/alerts/markResolved?routeAlertId=${routeAlertId}`, body, {headers: this.httpHeaders, responseType: 'text'});
   }
 
-  
 }

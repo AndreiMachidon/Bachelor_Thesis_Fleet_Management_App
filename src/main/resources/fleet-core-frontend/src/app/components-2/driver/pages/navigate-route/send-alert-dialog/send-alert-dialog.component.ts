@@ -17,8 +17,6 @@ export class SendAlertDialogComponent {
     { value: 'VEHICLE_BREAKDOWN', viewValue: 'Vehicle Breakdown' },
     { value: 'TRAFFIC_JAM', viewValue: 'Traffic Jam' },
     { value: 'ACCIDENT_REPORT', viewValue: 'Accident Report' },
-    { value: 'HAZARDOUS_CONDITIONS', viewValue: 'Hazardous Conditions' },
-    { value: 'SECURITY_THREAT', viewValue: 'Security Threat' },
   ];
 
   sendAlertFormGroup = new FormGroup({
@@ -40,6 +38,7 @@ export class SendAlertDialogComponent {
       longitude: this.data.longitude,
       latitude: this.data.latitude,
       alertStatus: 'UNRESOLVED',
+      costs: 0,
       routeId: this.data.routeId
     };
     this.dialogRef.close(alertDto);
