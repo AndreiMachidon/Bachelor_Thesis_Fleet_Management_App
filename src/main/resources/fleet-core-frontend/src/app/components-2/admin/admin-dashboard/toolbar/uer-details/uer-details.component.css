@@ -1,5 +1,5 @@
 .user-details-container {
-    background: linear-gradient(to right, #5D5D5D, #333333);
+    background: linear-gradient(#E0EDF7, #5CABEC);
     height: 50px;
     width: 300px;
     border-radius: 25px; 
@@ -14,7 +14,7 @@
 }
 
 .profile-image {
-    border: 2px solid #69F0AE;
+    border: 2px solid #0E3F89;
     border-radius: 50%;
     height: 45px;
     width: 45px;
@@ -32,21 +32,22 @@
     align-items: center;
     justify-content: center;
     font-size: small;
-    color: white;
+    color: #0E3F89;
     width: 60%;
     height: 150%;
 }
 
 .name-text{
     margin-top: 10px;
-    color: #69F0AE;
+    color: #0E3F89;
 }
 
 .role-text{
     margin-top: -24px;
-    color: white;
-    opacity: 0.5;
+    color: #152F5F;
 }
+
+
 
 @media (max-width: 600px) {
     .profile-image {
@@ -54,5 +55,6 @@
     }
     .user-details-container {
         width: 250px;
+        margin-top: 30px;
     }
 }

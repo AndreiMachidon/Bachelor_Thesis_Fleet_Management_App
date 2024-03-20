@@ -23,14 +23,14 @@
 .right-container{
     width: 30%;
     height: 100%;
-    background-color:  #616161;
+    background-color:  #E0EDF7;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
 }
 
 .left-container{
-    background-color:  #616161;
+    background-color:  white;
     border-radius: 20px;
     margin-right: 10px;
     display: flex;
@@ -73,6 +73,7 @@
 
 .vehicle-details-title{
     margin-top: 10px;
+    color: #0E3f89;
 }
 
 .details{
@@ -83,7 +84,7 @@
 }
 
 p strong{
-    color: #69F0AE;
+    color: #5CABEC;
 }
 
 .maintanance-container{
@@ -113,8 +114,9 @@ p strong{
 .alerts-title{
     display: flex;
     align-items: center;
-    color: red;
     margin-left: 20px;
+    font-weight: bold;
+    color: black;
 }
 
 .alerts-container{
@@ -156,12 +158,13 @@ mat-divider{
     justify-content: space-evenly;
     width: 100%;
     height: 100%;
-    padding: 15px;
+    padding-top: 0.7rem;
+    padding-bottom: 0.5rem;
 }
 
 .maintanance-box {
     width: 31%;
-    background-color: #424242;
+    background-color: #E0EDF7;
     height: 70%;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15);
@@ -196,7 +199,7 @@ mat-divider{
 
 .maintanance-box h2{
     font-size: 20px;
-    color: #69F0AE;
+    color: #0E3f89;
 }
 
 .maintanance-box p{
@@ -238,6 +241,10 @@ font-size: 14px;
     align-items: center;
     height: 100%;
     text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #5CABEC;
+
 }
 
 
@@ -256,11 +263,12 @@ font-size: 14px;
 }
 
 .maintenance-history{
-
+    text-align: center;
+    font-size: 2rem;
 }
 
 .schedule-maintenance{
-
+    text-align: center;
 }
 
 

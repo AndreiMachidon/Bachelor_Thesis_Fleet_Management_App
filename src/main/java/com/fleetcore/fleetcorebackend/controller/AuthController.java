@@ -51,4 +51,14 @@ public class AuthController {
         return ResponseEntity.ok(createdDriver);
     }
 
+    @GetMapping("/getImageData")
+    public ResponseEntity<String> getImageData(@RequestParam("userId") Long userId){
+        String imageData = userService.getImageData(userId);
+        if(imageData != null){
+            return ResponseEntity.ok(imageData);
+        }else{
+            return ResponseEntity.status(400).build();
+        }
+    }
+
 }

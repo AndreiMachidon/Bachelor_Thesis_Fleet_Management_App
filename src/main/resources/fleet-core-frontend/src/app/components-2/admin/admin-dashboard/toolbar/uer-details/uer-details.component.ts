@@ -11,6 +11,7 @@ export class UerDetailsComponent {
   firstName: string;
   lastName: string;
   role: string;
+  imageData: string;
 
   constructor(private authService: AuthService){};
 
@@ -19,5 +20,15 @@ export class UerDetailsComponent {
     this.lastName = this.authService.getUserDetails().lastName;
     const initialRole = this.authService.getUserDetails().role;
     this.role = initialRole.charAt(0).toUpperCase() + initialRole.slice(1);
+    this.imageData = this.authService.getUserDetails().imageData;
+    this.authService.getImageData(this.authService.getUserDetails().id).subscribe(
+      data => {
+        this.imageData = data;
+        
+      },
+      error => {
+      }
+    );
+    
   }
 }

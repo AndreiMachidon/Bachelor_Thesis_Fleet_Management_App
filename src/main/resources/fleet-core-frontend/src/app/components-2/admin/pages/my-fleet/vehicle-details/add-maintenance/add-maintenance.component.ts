@@ -5,18 +5,22 @@ import { Vehicle } from 'src/app/components-2/admin/admin-dashboard/models/vehic
 import { Maintenance } from 'src/app/components-2/admin/admin-dashboard/models/maintanance.model';
 import { VehicleService } from '../../services/vehicle-service.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import {MAT_DATE_LOCALE } from '@angular/material/core';
 @Component({
   selector: 'app-add-maintenance',
   templateUrl: './add-maintenance.component.html',
-  styleUrls: ['./add-maintenance.component.css']
+  styleUrls: ['./add-maintenance.component.css'],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-US' },
+  ],
 })
 export class AddMaintenanceComponent {
 
   maintenance: Maintenance = new Maintenance();
-  maintenanceTypes: string[] = ['BASIC_SERVICE', 'INTERMEDIATE_INSPECTION', 'ANNUAL_FULL_INSPECTION'];
+  maintenanceTypes: string[] = ['BASIC_SAFETY_CHECK', 'EMISSIONS_EFFICIENCY_SERVICE', 'COMPREHENSIVE_MAINTENANCE_INSPECTION'];
   selectedMaintenanceType: string = '';
   selectedMaintananceDate: Date;
+  today = new Date();
 
   constructor(
     public dialogRef: MatDialogRef<VehicleDetailsComponent>,
@@ -44,12 +48,12 @@ export class AddMaintenanceComponent {
       this.maintenance.maintenanceType = this.selectedMaintenanceType;  
       this.maintenance.maintananceDate = this.selectedMaintananceDate
       this.maintenance.currentVehicleMileage = this.vehicle.milenage;
-      if(this.selectedMaintenanceType == 'BASIC_SERVICE'){
-        this.maintenance.price = 300;
-      }else if(this.selectedMaintenanceType == 'INTERMEDIATE_INSPECTION'){
-        this.maintenance.price = 550;
-      }else if(this.selectedMaintenanceType == 'ANNUAL_FULL_INSPECTION'){
-        this.maintenance.price = 900;
+      if(this.selectedMaintenanceType == 'BASIC_SAFETY_CHECK'){
+        this.maintenance.price = 250;
+      }else if(this.selectedMaintenanceType == 'EMISSIONS_EFFICIENCY_SERVICE'){
+        this.maintenance.price = 400;
+      }else if(this.selectedMaintenanceType == 'COMPREHENSIVE_MAINTENANCE_INSPECTION'){
+        this.maintenance.price = 800;
       }
       this.maintenance.vehicleId = this.vehicle.id;
   
@@ -62,7 +66,7 @@ export class AddMaintenanceComponent {
       })
   
     }else{
-      this.snackBar.open('Please select a MaintenanceType and a Date!', 'Close', {
+      this.snackBar.open('Please select a Maintenance Type and a Date!', 'Close', {
         duration: 3000,
         panelClass: ['error-snackbar']
     });

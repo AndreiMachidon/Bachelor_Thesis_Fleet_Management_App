@@ -1,25 +1,20 @@
 <div class="main">
-    <div class="contanier">
-
-        <div class="page-text">
-            <h4>Fleet Management Plarform</h4>
-            <p>A complete solution for your organisation to manage and track your fleet. </p>
-        </div>
-
         <div class="login-card">
+            <img src="../../../../../assets/images/logo.svg" alt="logo" class="logo" style="width: 40%; height: 40%; margin-bottom: 1rem;"/>
+            <p class="platform-description">A complete solution for your organisation to manage and track your fleet. </p>
+            <mat-divider horizontal></mat-divider>
             <h2 class="login-title">Sign in</h2>
             <p class="sign-in-text">If you don't have an account for your organisation, you can
                 <a routerLink="register" class="register-link"> Register your organisation here!</a>
             </p>
             <p class="sign-in-text">If you already have an organisation account or you are a driver, you can sign in
-                below</p>
+                below.</p>
 
             <form class="login-form" (ngSubmit)="loginUser()">
-                <mat-form-field class="email-form-field" style="width: 100%;" color="accent">
+                <mat-form-field class="email-form-field" style="width: 100%;" color="primary">
                     <mat-label>Email</mat-label>
                     <input type="email" matInput [formControl]="loginFormGroup.controls['emailFormControl']"
                         placeholder="Ex. pat@example.com">
-                    <mat-hint>Please enter a valid email</mat-hint>
                     <mat-error
                         *ngIf="loginFormGroup.controls['emailFormControl'].hasError('email') && !loginFormGroup.controls['emailFormControl'].hasError('required')">
                         Please enter a valid email address
@@ -29,7 +24,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field style="width: 100%;" color="accent">
+                <mat-form-field style="width: 100%;" color="primary">
                     <mat-label>Password</mat-label>
                     <input matInput [type]="hidePassword ? 'password' : 'text'"
                         [formControl]="loginFormGroup.controls['passwordFormControl']">
@@ -49,10 +44,8 @@
                 <p class="login-error" *ngIf="emailNotFound">The email is not registered</p>
                 <p class="login-error" *ngIf="incorrectPassword">Incorrect Password</p>
 
-                <button mat-raised-button color="accent" class="login-button" type="submit" >Sign in</button>
+                <button mat-raised-button color="primary" class="login-button" type="submit" >Sign in</button>
             </form>
 
         </div>
-
-    </div>
 </div>

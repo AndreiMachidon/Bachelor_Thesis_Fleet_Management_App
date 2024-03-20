@@ -1,72 +1,60 @@
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
 .main{
+    background: linear-gradient(132deg, #E0EDF7, #5CABEC, #0E3F89, #15275F);
+    background-size: 400% 400%;
+    animation: Gradient 15s ease infinite;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(../../../../../assets/images/login-screen-image.jpeg);
-    background-position: center;
-    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-
-}
-.main .contanier{
-    width: 90%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-right: 5rem;
-
+    overflow: auto;
 }
 
-.page-text {
-    color: white;
-}
-
-.page-text h4 {
-    font-size: 40px; 
-    font-weight: bold; 
-    margin-bottom: 10px; 
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); 
-    margin-bottom: 2rem;
-    line-height: 1.1;
-}
-
-.page-text p {
-    font-size: 20px; 
-    line-height: 1.5;
-    margin-bottom: 20px; 
-    text-align: justify; 
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); 
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .login-card {
-    width: 50%;
-    height: 50%;
-    border-radius: 15px;
+    width: 70%;
+    height: auto;
+    border-radius: 2rem;
     text-align: center;
-    padding: 30px;
-    background-color: #424242;
-    color: white;
+    padding: 2rem;
+    background-color:#E0EDF7;
+    color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
-    transition: box-shadow 0.3s ease; 
-    margin-left: 5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+}
 
+.login-card .platform-description{
+    color: #5CABEC;
+    font-size: 2rem;
+    line-height: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+mat-divider{
+    width: 100%;
+    height: 2px;
+    background-color: #0E3F89;
+    margin-bottom: 2rem;
 }
 
 .login-title{
-    font-size: 30px;
+    font-size: 2rem;
+    color: #5CABEC;
 }
 
 .login-card:hover {
@@ -77,62 +65,96 @@
     margin-top: 1rem;
 }
 
+.login-button{
+    width: 20rem;
+    height: 3rem;
+}
+
+button[mat-icon-button] {
+    color: #5CABEC;
+}
+
 
 .register-link {
-    color: #69F0AE;
+    color: #0E3F89;
     transition: color 0.3s ease; 
+    font-weight: bold;
 }
 
 .register-link:hover {
-    color: #00C853;
+    color: #5CABEC;
 }
 
 .forgot-password-text{
     text-align: right;
+    font-weight: bold;
 }
 
 .forgot-password-text a{
-    color: #69F0AE;
+    color: #0E3F89;
     transition: color 0.3s ease; 
 }
 
 .forgot-password-text a:hover{
-    color: #00C853;
+    color: #5CABEC;
 }
 
 .login-button{
-    margin-top: 3rem;
+    margin-top: 2rem;
 }
 
 .login-error{
     color: #D32F2F;
+    margin-top: 0.5rem;
 }
+
 @media only screen and (max-width: 768px) {
-    .contanier{
-        display: flex;
-        flex-direction: column;
+    .login-card {
+        width: 90%;
+        height: 90%;
+        padding: 1rem;
     }
 
-    .login-card{
-        width: 130%;
-        height: 100%;
-        
+    .login-card .platform-description {
+        font-size: 1rem;
+        line-height: 1.2rem;
     }
 
-    .login-title{
-        font-size: 26px;
+    mat-divider{
+        margin-bottom: 0.5rem;
     }
 
     .sign-in-text{
-        font-size: 13px;
+        font-size: 1rem;
     }
 
-    h4{
-        text-align: center;
+    .login-title {
+        font-size: 1.2rem;
     }
 
+    .login-form {
+        font-size: 1rem;
+    }
+
+    .login-button {
+        width: 100%;
+        height: 2.5rem;
+        margin-top: 0.5rem;
+        border-radius: 2rem;
+    }
+
+    .forgot-password-text {
+        font-size: 0.9rem;
+    }
+
+    .forgot-password-text a {
+        font-size: 0.9rem;
+    }
+
+    .register-link {
+        font-size: 0.9rem;
+    }
 }
-
 
 
 

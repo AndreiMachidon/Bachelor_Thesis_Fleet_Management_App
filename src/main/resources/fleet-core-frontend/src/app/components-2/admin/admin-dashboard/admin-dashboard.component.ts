@@ -18,6 +18,7 @@ export class AdminDashboardComponent {
   sidenav!: MatSidenav;
 
   constructor(private observer: BreakpointObserver, private router: Router) {}
+  
 
   ngAfterViewInit() {
     this.observer
@@ -44,4 +45,5 @@ export class AdminDashboardComponent {
         }
       });
   }
+  
 }

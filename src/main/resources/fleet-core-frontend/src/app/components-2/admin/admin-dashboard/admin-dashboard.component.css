@@ -2,8 +2,7 @@ mat-sidenav {
   margin: 16px;
   width: 200px;
   border-right: none;
-  background: linear-gradient(to bottom, #9C27B0, #673AB7);
-  color: white;
+  background: linear-gradient(#15275F, #0E3F89);
   border-radius: 10px;
   padding: 16px;
   text-align: center;
@@ -18,10 +17,13 @@ mat-sidenav {
   padding: 16px;
   overflow: auto;
   overflow-x: hidden;
+  background-color: white;
+  color: gray;
 }
 
 mat-sidenav-container {
   height: calc(100vh - 65px);
+  overflow: auto;
 }
 
 .avatar {
@@ -34,6 +36,10 @@ mat-sidenav-container {
 .name {
   margin-top: 8px;
   font-weight: normal;
+}
+
+.menu-button{
+  width: 100%;
 }
 
 .designation {
@@ -52,3 +58,21 @@ mat-divider {
   height: 100px;
   width: 150px;
 }
+@media only screen and (max-width: 768px) {
+  mat-sidenav {
+    width: 200px;
+    border-right: none;
+    background: linear-gradient(#15275F, #0E3F89);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  mat-sidenav-container {
+    height: calc(100vh - 115px);
+    overflow: auto;
+  }
+  
+}
+

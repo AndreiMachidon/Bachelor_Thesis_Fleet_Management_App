@@ -1,4 +1,4 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Admin } from '../dto/Admin';
 import { UserDto } from '../dto/UserDto';
@@ -25,6 +25,14 @@ export class AuthService {
 
   public register(signUpDto: SignUpDto): Observable<UserDto> {
      return this.http.post<UserDto>(`${API_URL}/register/admin`, signUpDto);
+  }
+
+  public getImageData(userId: number): Observable<string>{
+    let httpHeaders: HttpHeaders;
+    const token = this.getAuthToken();
+    httpHeaders = new HttpHeaders()
+    .set('Authorization', 'Bearer ' + token)
+    return this.http.get(`${API_URL}/getImageData?userId=${userId}`, { 'headers': httpHeaders, responseType: 'text' });
   }
 
   getAuthToken(): string | null {

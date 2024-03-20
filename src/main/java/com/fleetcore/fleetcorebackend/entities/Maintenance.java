@@ -28,7 +28,6 @@ public class Maintenance {
 
     private double price;
 
-    //todo: foreign key
     private Long vehicleId;
 
 

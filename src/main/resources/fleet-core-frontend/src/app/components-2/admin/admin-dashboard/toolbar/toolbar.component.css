@@ -1,12 +1,13 @@
 mat-toolbar {
-    background: linear-gradient(to bottom, #9C27B0, #673AB7);
-    color: #69F0AE;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding-left: 25px;
-    padding-right: 25px;
-
+    background: linear-gradient(#15275F, #0E3F89);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 1.5rem;
+    padding-right: 4.5rem;
 }
 
 .menu-button {
@@ -28,6 +29,17 @@ mat-toolbar {
     justify-content: space-between;
     width: 100%;
 }
+
+@media (max-width: 600px) {
+    mat-toolbar {
+        padding-right: 1.5rem;
+        height: 4rem;
+        padding-bottom: 1rem;
+        padding-top: 0.5rem;
+    }
+}
+
+
 
 
   

@@ -4,16 +4,16 @@
       <h1 class="title">My Fleet</h1>
     </div>
     <div class="actions-buttons">
-      <button mat-raised-button color="accent" (click) = "addVehicle()">Add vehicle</button>
+      <button mat-raised-button color="primary" (click) = "addVehicle()">Add vehicle</button>
       <button mat-raised-button color="warn" (click)="deleteSelectedVehicles()" [disabled]="selectedVehicles.length === 0">Delete vehicles</button>
     </div>
   </div>
   <mat-divider></mat-divider>
   <div class="vehicle-status-filter">
     <mat-chip-listbox aria-label="chip-selection">
-      <mat-chip-option color="accent" selected (click)="setFilter('ALL')">All</mat-chip-option>
-      <mat-chip-option color="accent" (click)="setFilter('IDLE')">Idle</mat-chip-option>
-      <mat-chip-option color="accent" (click)="setFilter('ON_ROUTE')">On Route</mat-chip-option>
+      <mat-chip-option color="primary" selected (click)="setFilter('ALL')">All</mat-chip-option>
+      <mat-chip-option color="primary" (click)="setFilter('IDLE')">Idle</mat-chip-option>
+      <mat-chip-option color="primary" (click)="setFilter('ON_ROUTE')">On Route</mat-chip-option>
       <mat-chip-option color="warn" (click)="setFilter('IN_SERVICE')">In Service</mat-chip-option>
     </mat-chip-listbox>
   </div>
@@ -22,6 +22,6 @@
     <div class="vehicle-card" *ngFor="let vehicle of filteredVehicles">
       <vehicle-card [vehicle]="vehicle" (vehicleSelected)="onVehicleSelected($event)"></vehicle-card>
     </div>
-    </div>
+  </div>
 </div>
 

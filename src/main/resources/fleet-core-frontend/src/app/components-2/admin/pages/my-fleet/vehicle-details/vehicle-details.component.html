@@ -2,67 +2,74 @@
     <div class="left-container">
         <div class="maintanance-container">
             <div class="maintanance-title">
-                <img src="../../../../../../assets/images/maintenance-vector.svg">
-                <h2>Maintanance</h2>
+                <img
+                    src="../../../../../../assets/images/maintenance-vector.png">
+                <h2 style="color: black; font-size: 1.7rem;">Maintanance</h2>
             </div>
             <mat-divider></mat-divider>
             <div class="maintenance-content">
                 <div class="next-maintenance maintanance-box">
-                    <h2>Next maintenance: </h2>
-                    <div class="maintenance-due" *ngIf="!isMaintenanceScheduled && !isMaintenanceMandatory">
-                        <p>There is no maintenance due</p>
+                    <h2>Next maintenance:</h2>
+                    <div *ngIf="!isMaintenanceScheduled && !isMaintenanceMandatory" class="maintenance-due">
+                        <p style="font-weight: bold; font-size: 1rem;">There is no maintenance due</p>
                         <p>You should schedule the next maintenance in: </p>
                         <p class="maintanence-in-months">
-                            <strong *ngIf="monthsUntilNextMaintenance != 0">{{monthsUntilNextMaintenance}} months</strong>
-                            <strong *ngIf = "monthsUntilNextMaintenance == 0">{{daysUntilNextMaintenance}} days</strong>
-                            <span> or </span>
-                            <strong>{{formatMilenage(kilometersUntilNextMaintenance)}} km</strong>
+                            <strong *ngIf="monthsUntilNextMaintenance" style="font-size: 1.1rem;">{{monthsUntilNextMaintenance}} months</strong>
+                            <strong *ngIf="daysUntilNextMaintenance && !monthsUntilNextMaintenance" style="font-size: 1.2rem;">{{daysUntilNextMaintenance}} days</strong>
+                            <span *ngIf="kilometersUntilNextMaintenance" style="font-size: 1.1rem;" > or </span>
+                            <strong style="font-size: 1.1rem;">{{formatMilenage(kilometersUntilNextMaintenance)}} km</strong>
                         </p>
                     </div>
-                    <div class="maintanance-mandatory" *ngIf="isMaintenanceMandatory">
-                        <p style="color: red;">YOU MUST SCHEDULE A MAINTENANCE NOW</p>
-                        <p>Please select a type of maintenance and schedule this vehicle in service right now</p>
+                    <div *ngIf="isMaintenanceMandatory && !isMaintenanceToday" class="maintanance-mandatory">
+                        <p style="color: red; font-weight: bold;">YOU MUST SCHEDULE A MAINTENANCE NOW!</p>
+                        <p>Please select a type of maintenance and schedule this vehicle in service right now.</p>
                     </div>
                     <div *ngIf="isMaintenanceScheduled && !isMaintenanceToday" class="maintenance-sheduled">
-                        <p>You have a scheduled maintenance: </p>
+                        <p style="font-weight: bold; font-size: 1rem;">You have a scheduled maintenance: </p>
                         <div class="scheduled-maintenance-details">
-                            <p style="color: #69F0AE">{{formatScheduledMaintenanceType(nextMaintenance.maintenanceType)}}</p>
-                            <p style="color: #69F0AE">{{formatDate(nextMaintenance.maintananceDate)}}</p>
+                            <p style="color: #5CABEC; font-weight: bold; font-size: 1rem;">Type: {{formatScheduledMaintenanceType(nextMaintenance.maintenanceType)}}</p>
+                            <p style="color: #5CABEC; font-weight: bold; font-size: 1rem;">Date: {{formatDate(nextMaintenance.maintananceDate)}}</p>
                         </div>
-                       
                     </div>
                     <div *ngIf="isMaintenanceToday" class="maintenance-today">
-                        The Vehicle is in the service at the moment
+                        The vehicle is in service at the moment for a {{formatScheduledMaintenanceType(nextMaintenance.maintenanceType)}}
                     </div>
-                </div>
-                <div class="maintenance-history maintanance-box">
-                    <h2>Maintenance History: </h2>
-                    <p>Here you can see the history of all the maintenances for the vehicle</p>
-                    <button mat-raised-button color="accent" style="width: 100%;" (click)="viewMaintenanceHistory()">See History</button>
                 </div>
                 <div class="schedule-maintenance maintanance-box">
                     <h2>Schedule Maintenance: </h2>
-                    <p>Here you can schedule a maintenance for the vehicle</p>
-                    <button mat-raised-button color="accent" (click)="scheduleMaintenance()" style="width: 100%;">Schedule Maintenance</button>
+                    <p>Here you can schedule a maintenance for the vehicle.</p>
+                    <button mat-raised-button color="primary"
+                        (click)="scheduleMaintenance()"
+                        style="width: 100%;">Schedule Maintenance</button>
                 </div>
-               
+                <div class="maintenance-history maintanance-box">
+                    <h2>Maintenance History: </h2>
+                    <p>Here you can see the history of all the maintenances of
+                        the vehicle.</p>
+                    <button mat-raised-button color="primary"
+                        style="width: 100%;"
+                        (click)="viewMaintenanceHistory()">See History</button>
+                </div>
+
             </div>
         </div>
         <mat-divider class="prime-divider"></mat-divider>
         <div class="alerts-container">
             <div class="alerts-title">
-                <img src="../../../../../../assets/images/alerts-vector.svg">
-                <h2>Alerts</h2>
-            </div>  
-            <mat-divider></mat-divider>        
+                <img src="../../../../../../assets/images/vehicle-statistics-icon.png" style="width: 30px; height: 30px;">
+                <h2 style="font-size: 1.7rem; margin-top: 21px; margin-left: 10px;">Vehicle Statistics</h2>
+            </div>
+            <mat-divider></mat-divider>
         </div>
-        <mat-divider></mat-divider>        
-        <button mat-raised-button color="warn" class="back-button" (click)="returnMain()">Back</button>
+        <mat-divider></mat-divider>
+        <button mat-raised-button color="warn" class="back-button"
+            (click)="returnMain()">Back</button>
     </div>
     <div class="right-container">
         <div class="image-container">
-            <img class="vehicle-image" [src]="vehicle?.imageData ? 'data:image/jpeg;base64,' + vehicle.imageData : '../../../../../../assets/images/truck-default-image.svg'">
-        </div>     
+            <img class="vehicle-image"
+                [src]="vehicle?.imageData ? 'data:image/jpeg;base64,' + vehicle.imageData : '../../../../../../assets/images/truck-default-image.svg'">
+        </div>
         <div class="general-details-container">
             <h2 class="vehicle-details-title">Vehicle Details</h2>
             <mat-divider class="details-divider"></mat-divider>
@@ -71,22 +78,30 @@
                 <p><strong>Model: </strong>{{vehicle?.model}}</p>
                 <p><strong>VIN: </strong>{{vehicle?.vin}}</p>
                 <p><strong>Lincese Plate: </strong>{{vehicle?.lincesePlate}}</p>
-                <p><strong>Milenage: </strong>{{formatMilenage(vehicle?.milenage)}} km</p>
-                <p><strong>Fuel Type: </strong>{{vehicle?.fuelType | titlecase}}</p>
-                <p><strong>Year of manufacture: </strong>{{vehicle?.yearOfManufacture}}</p>
-                <p><strong>Cargo Capacity: </strong>{{vehicle?.cargoCapacity}} m<sup>3</sup></p>
+                <p><strong>Milenage:
+                    </strong>{{formatMilenage(vehicle?.milenage)}} km</p>
+                <p><strong>Fuel Type: </strong>{{vehicle?.fuelType |
+                    titlecase}}</p>
+                <p><strong>Year of manufacture:
+                    </strong>{{vehicle?.yearOfManufacture}}</p>
+                <p><strong>Cargo Capacity: </strong>{{vehicle?.cargoCapacity}}
+                    m<sup>3</sup></p>
                 <p>
                     <strong>Fuel Capacity: </strong>{{vehicle?.fuelCapacity}}
-                    <ng-container *ngIf="vehicle?.fuelType === 'ELECTRIC'">kWh</ng-container>
-                    <ng-container *ngIf="vehicle?.fuelType !== 'ELECTRIC'">Liters</ng-container>
-                  </p>
-                  
-                  <p>
-                    <strong>Fuel Consumption: </strong>{{vehicle?.fuelConsumption}}
-                    <ng-container *ngIf="vehicle?.fuelType === 'ELECTRIC'">kWh/100km</ng-container>
-                    <ng-container *ngIf="vehicle?.fuelType !== 'ELECTRIC'">L/100km</ng-container>
-                  </p>
-                  
+                    <ng-container
+                        *ngIf="vehicle?.fuelType === 'ELECTRIC'">kWh</ng-container>
+                    <ng-container
+                        *ngIf="vehicle?.fuelType !== 'ELECTRIC'">Liters</ng-container>
+                </p>
+
+                <p>
+                    <strong>Fuel Consumption:
+                    </strong>{{vehicle?.fuelConsumption}}
+                    <ng-container
+                        *ngIf="vehicle?.fuelType === 'ELECTRIC'">kWh/100km</ng-container>
+                    <ng-container
+                        *ngIf="vehicle?.fuelType !== 'ELECTRIC'">L/100km</ng-container>
+                </p>
 
             </div>
         </div>

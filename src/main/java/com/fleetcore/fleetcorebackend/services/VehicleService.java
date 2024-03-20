@@ -16,12 +16,19 @@ public class VehicleService {
     private VehicleRepository vehicleRepository;
 
 
+    public List<Vehicle> findAll(){
+        return this.vehicleRepository.findAll();
+    }
 
     public List<Vehicle> getVehiclesByAdminId(Long adminId){
             return this.vehicleRepository.getVehiclesByAdminId(adminId);
     }
 
     public Vehicle addVehicle(Vehicle vehicle){
+        return this.vehicleRepository.save(vehicle);
+    }
+
+    public Vehicle updateVehicle(Vehicle vehicle){
         return this.vehicleRepository.save(vehicle);
     }
 

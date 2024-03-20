@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
-import com.fleetcore.fleetcorebackend.dto.UserDto;
 import com.fleetcore.fleetcorebackend.entities.User;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.net.Authenticator;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;

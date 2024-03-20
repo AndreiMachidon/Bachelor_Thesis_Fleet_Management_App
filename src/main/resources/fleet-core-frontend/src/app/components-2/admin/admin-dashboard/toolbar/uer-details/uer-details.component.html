@@ -1,13 +1,20 @@
 <div class="user-details-container">
-    <div class="profile-image">
-        <img
-        class="avatar mat-elevation-z8"
-        src="https://source.unsplash.com/c_GmwfHBDzk/200x200"
-      />
-    </div>
-    <div class="text-container">
-        <p class="name-text">{{firstName}} {{lastName}}</p>
-        <p class="role-text">{{role}}</p>
-      </div>
-      <mat-icon>menu</mat-icon>
+  <div class="profile-image">
+    <img
+      class="avatar mat-elevation-z8"
+      src="https://source.unsplash.com/c_GmwfHBDzk/200x200" />
+  </div>
+  <div class="text-container">
+    <p class="name-text">{{firstName}} {{lastName}}</p>
+    <p class="role-text">{{role}}</p>
+  </div>
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" class="custom-menu">
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Account Settings</span>
+    </button>
+  </mat-menu>
 </div>

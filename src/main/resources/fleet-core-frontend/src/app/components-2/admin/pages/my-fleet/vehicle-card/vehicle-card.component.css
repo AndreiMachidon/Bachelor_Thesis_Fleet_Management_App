@@ -5,6 +5,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border-radius: 10px;
   overflow: hidden;
+  background-color: #E0EDF7;
 }
 
 .example-card:hover {
@@ -33,7 +34,6 @@ mat-card-header {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  background: linear-gradient(to bottom, #9E9E9E, #616161);
   margin-bottom: 5px;
 }
 
@@ -53,6 +53,7 @@ mat-card-header {
 
 .vehicle-status-text{
   font-size: 18px;
+  color: black;
 }
 
 .vehicle-availability{
@@ -74,6 +75,7 @@ mat-card-content {
   margin-top: 10px;
   margin-bottom: 7px;
   width: 100%;
+  color: black;
 }
 
 .right-content{
@@ -95,7 +97,7 @@ p {
 
 .mat-divider{
   width: 100%;
-  background-color: white;
+  background-color: black;
   height: 1px;
 }
 

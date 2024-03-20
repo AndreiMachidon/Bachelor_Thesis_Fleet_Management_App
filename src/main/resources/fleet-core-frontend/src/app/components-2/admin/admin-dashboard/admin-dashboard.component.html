@@ -1,32 +1,36 @@
 <app-toolbar [matSidenav] = "sidenav" ></app-toolbar>
 <mat-sidenav-container>
   <mat-sidenav #sidenav  class="mat-elevation-z8">
-
     <img class = "logo" src="../../../../assets/images/logo.svg">
     <mat-divider></mat-divider>
 
     <button mat-button class="menu-button" routerLink="dashboard">
-      <mat-icon>dashboard</mat-icon>
-     <span>Dashboard</span>
+      <mat-icon style="color: white;">dashboard</mat-icon>
+      <span style="color: white;">Dashboard</span>
     </button>
 
 
     <button mat-button class="menu-button" routerLink="my-fleet">
-      <mat-icon> local_shipping</mat-icon>
-      <span>My Fleet</span>
+      <mat-icon style="color: white;"> local_shipping</mat-icon>
+      <span style="color: white;">My Fleet</span>
     </button>
 
     <button mat-button class="menu-button" routerLink="my-drivers">
-      <mat-icon>assignment_ind</mat-icon>
-      <span>My Drivers</span>
+      <mat-icon style="color: white;">assignment_ind</mat-icon>
+      <span style="color: white;">My Drivers</span>
     </button>
 
     <button mat-button class="menu-button" routerLink="routes">
-      <mat-icon>room</mat-icon>
-      <span>Routes</span>
+      <mat-icon style="color: white;">room</mat-icon>
+      <span style="color: white;">Routes</span>
     </button>
 
     <mat-divider></mat-divider>
+
+    <button mat-button class="menu-button sign-out-button">
+      <mat-icon style="color: white;">arrow_left</mat-icon>
+      <span style="color: white;">Sign out</span>
+    </button>
 
   </mat-sidenav>
   <mat-sidenav-content>

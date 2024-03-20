@@ -17,63 +17,64 @@ import { MaintenanceHistoryComponent } from './maintenance-history/maintenance-h
 export class VehicleDetailsComponent {
 
   vehicle: Vehicle;
-  isMaintenanceScheduled : boolean;
-  isMaintenanceToday: boolean;
-  isMaintenanceMandatory :boolean;
+  isMaintenanceScheduled: boolean = false;
+  isMaintenanceToday: boolean = false;
+  isMaintenanceMandatory: boolean = false;
   monthsUntilNextMaintenance: number = 0;
-  daysUntilNextMaintenance: number;
+  daysUntilNextMaintenance: number = 0;
   kilometersUntilNextMaintenance: number;
   nextMaintenance: Maintenance;
 
-  constructor(private route: ActivatedRoute, 
-              private vehicleService: VehicleService, 
-              private router : Router,
-              public dialog: MatDialog,
-              private datePipe: DatePipe) { }
+  constructor(private route: ActivatedRoute,
+    private vehicleService: VehicleService,
+    private router: Router,
+    public dialog: MatDialog,
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
-    const vehicleId : number = Number.parseInt(this.route.snapshot.paramMap.get('id'));
+    const vehicleId = Number.parseInt(this.route.snapshot.paramMap.get('id'));
     this.vehicleService.getVehicleById(vehicleId).subscribe(
-      (response) => {
-          this.vehicle = response;
-          this.vehicleService.getLastMaintenance(vehicleId).subscribe(
-                (response : Maintenance) => { 
-                    this.nextMaintenance = response;
-                    this.handleIncomingMaintenance(this.nextMaintenance)
-                },
-
-                (error) => {
-                    if(error.status == 400){
-                    this.isMaintenanceMandatory = true;
-                }
-              }
-          )
-    })
+      (vehicleResponse) => {
+        this.vehicle = vehicleResponse;
+        this.vehicleService.getLastMaintenance(vehicleId).subscribe(
+          (maintenanceResponse) => {
+            this.nextMaintenance = maintenanceResponse;
+            this.checkMaintenanceRequirements(this.nextMaintenance);
+          },
+          (error) => {
+            console.error(error);
+            this.isMaintenanceMandatory = true;
+          }
+        );
+      }
+    );
   }
 
   formatMilenage(milenage: number): string {
     return formatNumber(milenage, 'de', '1.0-0');
   }
 
-  returnMain(){
+  returnMain() {
     this.router.navigate(["admin-dashboard/my-fleet"]);
   }
 
   formatDate(date: Date): string {
-    return this.datePipe.transform(date, 'dd/MM/yyyy');
+    return this.datePipe.transform(date, 'dd-MM-yyyy');
   }
 
-  formatScheduledMaintenanceType(maintenanceType: string): string{
-    if(maintenanceType === 'BASIC_SERVICE'){
-      return "Basic service"
-    }else if(maintenanceType === 'INTERMEDIATE_INSPECTION'){
-      return 'Intermidiate inspection'
+  formatScheduledMaintenanceType(maintenanceType: string): string {
+    if (maintenanceType === 'BASIC_SAFETY_CHECK') {
+      return "Basic Safety Check"
+    } else if (maintenanceType === 'EMISSIONS_EFFICIENCY_SERVICE') {
+      return 'Emissions Efficiency Service'
+    } else if(maintenanceType === 'COMPREHENSIVE_MAINTENANCE_INSPECTION'){
+      return 'Comprehensive Maintenance Inspection'
     }else{
-      return 'Annual full inspection'
+      return "Maintenance"
     }
   }
 
-  scheduleMaintenance(){
+  scheduleMaintenance() {
     const dialogRef = this.dialog.open(AddMaintenanceComponent, {
       data: this.vehicle,
       width: '1200px',
@@ -81,10 +82,10 @@ export class VehicleDetailsComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result === 'Save'){
+      if (result === 'Save') {
         window.location.reload();
       }
-     
+
     });
   }
 
@@ -97,42 +98,45 @@ export class VehicleDetailsComponent {
 
   }
 
-  handleIncomingMaintenance(maintenance : Maintenance){
-    const maintenanceDate: Date = new Date(maintenance.maintananceDate);
-    const currentDate: Date = new Date(); 
-    maintenanceDate.setHours(0, 0, 0, 0);
-    currentDate.setHours(0, 0, 0, 0);
-    
-    if (maintenanceDate > currentDate) {
-        this.isMaintenanceScheduled = true;
-        this.isMaintenanceToday = false;
+  checkMaintenanceRequirements(lastMaintenance: Maintenance) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    }else if (maintenanceDate < currentDate) {
-        this.isMaintenanceScheduled = false;
-        this.isMaintenanceToday = false;
+    const lastMaintenanceDate = new Date(lastMaintenance.maintananceDate);
+    lastMaintenanceDate.setHours(0, 0, 0, 0);
 
-        const nextMaintenanceDate: Date = new Date(maintenanceDate);
-        nextMaintenanceDate.setMonth(maintenanceDate.getMonth() + 6);
-    
-        const daysDifference = Math.ceil((nextMaintenanceDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));    
-          if (daysDifference < 30) {
-            this.daysUntilNextMaintenance = daysDifference;
-          } else {
-            this.monthsUntilNextMaintenance = Math.floor(daysDifference / 30);
-            const days = daysDifference % 30;
-          }
-    
-        this.kilometersUntilNextMaintenance = 30000 - (this.vehicle.milenage - maintenance.currentVehicleMileage);
-    
-        if(this.kilometersUntilNextMaintenance < 0 || this.daysUntilNextMaintenance < 1) {
-          this.isMaintenanceMandatory = true;
-        } else {
-          this.isMaintenanceMandatory = false;
-        }
+    const sixMonthsAgo = new Date(today);
+    sixMonthsAgo.setMonth(today.getMonth() - 6);
 
+    const kmSinceLastMaintenance = this.vehicle.milenage - lastMaintenance.currentVehicleMileage;
+
+    this.isMaintenanceScheduled = lastMaintenanceDate >= today;
+    this.isMaintenanceToday =
+                            lastMaintenanceDate.getFullYear() === today.getFullYear() &&
+                            lastMaintenanceDate.getMonth() === today.getMonth() &&
+                            lastMaintenanceDate.getDate() === today.getDate();
+
+    this.isMaintenanceMandatory = kmSinceLastMaintenance >= 20000 || lastMaintenanceDate <= sixMonthsAgo;
+
+    if (!this.isMaintenanceMandatory && !this.isMaintenanceScheduled) {
+      this.calculateTimeUntilNextMaintenance(lastMaintenanceDate);
+      this.kilometersUntilNextMaintenance = 20000 - kmSinceLastMaintenance;
+    }
+  }
+
+  calculateTimeUntilNextMaintenance(lastMaintenanceDate: Date) {
+    const nextMaintenanceDate = new Date(lastMaintenanceDate);
+    nextMaintenanceDate.setMonth(lastMaintenanceDate.getMonth() + 6);
+
+    const today = new Date();
+    const daysDifference = Math.ceil((nextMaintenanceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysDifference < 30) {
+      this.daysUntilNextMaintenance = daysDifference;
+      this.monthsUntilNextMaintenance = 0;
     } else {
-        this.isMaintenanceScheduled = true;
-        this.isMaintenanceToday = true;
+      this.monthsUntilNextMaintenance = Math.floor(daysDifference / 30);
+      this.daysUntilNextMaintenance = daysDifference % 30;
     }
   }
 

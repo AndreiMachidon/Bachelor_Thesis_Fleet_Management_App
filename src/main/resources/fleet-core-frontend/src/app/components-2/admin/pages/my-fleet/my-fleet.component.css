@@ -27,6 +27,14 @@
     width: 30%;
     margin: 5px;
     box-sizing: border-box; 
+    position: relative;
+  }
+
+  .vehicle-card [matBadge] {
+    position: relative;
+    z-index: 1000;
+    top: 0;
+    right: 0;
   }
 
   .header {
@@ -48,6 +56,8 @@
 
 .title{
   font-size: 30px;
+  font-weight: bold;
+  color: #15275F;
 }
 
 .actions-buttons {
@@ -63,8 +73,22 @@
   margin-left: 100px;
 }
 
-.my-fleet-container{
-  overflow-x: hidden;
+@media only screen and (max-width: 768px) {
+  .vehicle-card {
+    width: 100%;
+  }
+
+  .vehicle-status-filter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0px;
+  }
+
+  .actions-buttons button {
+    height: 2.5rem;
+    justify-content: center;
+  }
 }
 
 

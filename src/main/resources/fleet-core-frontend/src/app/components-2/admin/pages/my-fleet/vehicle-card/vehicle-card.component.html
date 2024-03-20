@@ -1,8 +1,8 @@
 <mat-card class="example-card">
   <mat-card-header>
     <div class="header-left">
-      <mat-card-title>{{vehicle.make}}  {{vehicle.model}}</mat-card-title>
-      <mat-card-subtitle>Truck</mat-card-subtitle>
+      <mat-card-title style="color: #15275F;">{{vehicle.make}}  {{vehicle.model}}</mat-card-title>
+      <mat-card-subtitle style="color: black">Truck</mat-card-subtitle>
       <div class="vehicle-status">
         <div class="vehicle-availability" 
         [ngStyle]="{'background-color': getVehicleAvailabilityColor(vehicle.vehicleStatus)}">
@@ -11,7 +11,7 @@
       </div>  
     </div>
     <div class="header-right">
-      <mat-checkbox class="example-margin" [(ngModel)]="checked" (change)="onCheckboxChange()"></mat-checkbox>
+      <mat-checkbox class="example-margin" [(ngModel)]="checked" (change)="onCheckboxChange()" [color]="'warn'"></mat-checkbox>
     </div>
   </mat-card-header>
   <div class="card-body">
@@ -43,7 +43,7 @@
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions>
-      <button class="details-button" mat-raised-button color="accent" (click)="getVehicleDetails()">DETAILS</button>
+      <button class="details-button" mat-raised-button color="primary" (click)="getVehicleDetails()">DETAILS</button>
     </mat-card-actions>
   </div>
 </mat-card>

@@ -28,26 +28,20 @@ export class LoginPageComponent {
 
   loginUser(){
     if(this.loginFormGroup.valid){
-
       const signInDto: SignInDto = new SignInDto();
-
       signInDto.email = this.loginFormGroup.value.emailFormControl;
       signInDto.password = this.loginFormGroup.value.passwordFormControl;
       this.authService.login(signInDto)
       .subscribe((response: UserDto) => {
         if (response) {
-          console.log('Login successful:', response);
           this.authService.setAuthToken(response.token);
-
           this.webSocketService.initializeWebSocketConnection(response.token);
-
           const role = this.authService.getUserDetails().role;
           if(role === 'admin'){
             this.router.navigate(['admin-dashboard']);
           }else if(role === 'driver')
             this.router.navigate(['driver-home']);
         } else {
-          console.log('Login failed.');
           this.loginFormGroup.reset();
           this.emailNotFound = false;
           this.incorrectPassword = false;
@@ -55,11 +49,9 @@ export class LoginPageComponent {
       },
       (error) => {
         if (error.status === 404) {
-          console.log('Email not found');
           this.emailNotFound = true;
           this.incorrectPassword = false;
         } else if(error.status === 400){
-          console.log("Incorrect Password");
           this.emailNotFound = false;
           this.incorrectPassword = true;
         }

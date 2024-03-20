@@ -1,7 +1,6 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.entities.Maintenance;
-import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.repository.MaintenanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class MaintenanceService {
     public Optional<Maintenance> getLastMaintenance(long vehicleId){
         List<Maintenance> maintenanceList = maintenanceRepository.getAllByVehicleId(vehicleId);
         Optional<Maintenance> maintenance = maintenanceList.stream()
-                .sorted((m1, m2) -> m2.getMaintananceDate().compareTo(m1.getMaintananceDate()))
+                .sorted(Comparator.comparing(Maintenance::getMaintananceDate))
                 .findFirst();
 
         return maintenance;
@@ -32,9 +31,8 @@ public class MaintenanceService {
 
     public List<Maintenance> getAllMaintenancesForVehicle(long vehicleId){
         List<Maintenance> maintenanceList = maintenanceRepository.getAllByVehicleId(vehicleId);
-
         return maintenanceList.stream()
-                .sorted((m1, m2) ->  -m1.getMaintananceDate().compareTo(m2.getMaintananceDate()))
+                .sorted(Comparator.comparing(Maintenance::getMaintananceDate))
                 .collect(Collectors.toList());
     }
 }

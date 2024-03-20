@@ -68,7 +68,8 @@ public class UserService {
         user.setLastName(signUpDto.lastName());
         user.setPassword(signUpDto.phoneNumber());
         user.setEmail(signUpDto.email());
-        user.setRole(signUpDto.email());
+        user.setRole(signUpDto.role());
+        user.setPhoneNumber(signUpDto.phoneNumber());
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(signUpDto.password())));
 
         userRepository.save(user);
@@ -77,5 +78,10 @@ public class UserService {
         userDto.setToken(userAuthProvider.createTokenForAdmin(user));
 
         return userDto;
+    }
+
+    public String getImageData(Long userId){
+        String imageData = userRepository.getImageDataByUserId(userId).orElse(null);
+        return imageData;
     }
 }

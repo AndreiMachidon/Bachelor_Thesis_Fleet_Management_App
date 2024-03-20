@@ -1,11 +1,15 @@
 .main-container{
     width: 100%;
     height: 100%;
-    background-color: #424242;
+    background: linear-gradient(132deg, #E0EDF7,  #0E3F89, #15275F);
+    background-size: 400% 400%;
+    animation: Gradient 15s ease infinite;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: auto;
 }
+
 
 .register-container{
     height: 100%;
@@ -15,6 +19,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    text-align: center;
+    color: #333;
 }
 
 .register-form{
@@ -26,15 +32,13 @@
 }
 
 .register-header{
-    color: white;
     font-size: x-large;
     font-weight: bold;
+    color: #0E3F89;
 }
 
 .register-container p{
-    color: white;
     font-size: large;
-
 }
 
 mat-form-field{
@@ -43,10 +47,10 @@ mat-form-field{
 }
 
 .admin-details-header{
-    color: white;
     font-size: x-large;
     font-weight: bold;
     margin-top: 2rem;
+    color: #0E3F89;
 }
 
 
@@ -75,17 +79,50 @@ mat-divider{
 }
 
 .sign-in-link{
-    color: #69F0AE;
+    color: #0E3F89;
 }
 
   
 .sign-in-return a:hover {
-    color: #00C853
+    color: #5CABEC
 }
 
 mat-icon {  
     display: inline-flex;
     vertical-align: top;
+}
+
+@media only screen and (max-width: 768px) {
+    .register-container {
+        width: 90%;
+        height: 100%;
+        padding: 0.5rem;
+    }
+
+    mat-form-field {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .form-group-1, .form-group-2, .form-group-3 {
+        flex-direction: column;
+    }
+
+    .admin-details-header, .register-header, .register-container p {
+        font-size: medium;
+    }
+
+    .register-button {
+        width: auto;
+        height: auto;
+        padding: 10px 20px;
+    }
+
+
+
+    mat-icon {
+        margin-left: 5px;
+    }
 }
 
 

@@ -74,6 +74,8 @@ import { SendAlertDialogComponent } from './components-2/driver/pages/navigate-r
 import { EndRouteDialogComponent } from './components-2/driver/pages/navigate-route/end-route-dialog/end-route-dialog.component';
 import { StartRouteDialogComponent } from './components-2/driver/pages/navigate-route/start-route-dialog/start-route-dialog.component';
 import { MarkAlertResolvedDialogComponent } from './components-2/driver/pages/navigate-route/mark-alert-resolved-dialog/mark-alert-resolved-dialog.component';
+import { MatMenuModule } from '@angular/material/menu';
+import {MatBadgeModule} from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -145,11 +147,13 @@ import { MarkAlertResolvedDialogComponent } from './components-2/driver/pages/na
     MatDatepickerModule,
     NgxMatDatetimePickerModule,
     NgxMatNativeDateModule,
-    NgxMatTimepickerModule
+    NgxMatTimepickerModule,
+    MatMenuModule,
+    MatBadgeModule
   ],
   
   providers: [DatePipe, 
-            { provide: LOCALE_ID, useValue: 'de' }],
+            { provide: LOCALE_ID, useValue: 'en-US' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,5 @@
 <div class="header">
-    <h1 class="title">My Fleet</h1>
+    <h1 class="title" style="color: #15275F">My Fleet</h1>
 </div>
 
 <mat-divider></mat-divider>
@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="next-button">
-                <button mat-button matStepperNext color="accent">Next</button>
+                <button mat-button matStepperNext color="primary">Next</button>
             </div>
         </form>
     </mat-step>
@@ -87,10 +87,11 @@
             <ng-template matStepLabel>Technical Details</ng-template>
             <div class="form-fields">
                 <div class="left-form">                  
-                    <mat-form-field>
-                        <input matInput formControlName="yearOfManufactureControl" [matDatepicker]="picker" placeholder="Year of Manufacture" readonly>
+                    <mat-form-field >
+                        <input matInput [max]="maxDate" formControlName="yearOfManufactureControl" [matDatepicker]="picker" [placeholder]="'Year of manufacture...'" (click)="picker.open()">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker startView="multi-year" (yearSelected)="yearChanged($event, picker)"></mat-datepicker>
+                        <mat-datepicker  startView="multi-year" #picker (yearSelected)="yearChanged($event, picker)">
+                        </mat-datepicker>
                     </mat-form-field>
                     <mat-form-field class="first-page-form-field">
                         <mat-label>Cargo capacity (in m<sup>3</sup> ) </mat-label>
@@ -129,7 +130,7 @@
                 </div>
             </div>
             <div class="next-button">
-                <button mat-button matStepperNext color="accent">Next</button>
+                <button mat-button matStepperNext color="primary">Next</button>
             </div>
         </form>
     </mat-step>
@@ -139,9 +140,11 @@
             <ng-template matStepLabel>Photo Upload</ng-template>
             <div class="form-fields-photo">
                 <div class="left-form-photo">
+                    <p>Here you can upload a photo for your vehicle.</p>
+                    <p>It is not mandatory but it can help you manage your vehicles better.</p>
                     <div class="image-buttons"> 
                         <div class="file-upload-buttons">
-                            <button mat-raised-button color="accent" (click)="fileInput.click()" class="upload-photo-button">Upload a photo</button>
+                            <button mat-raised-button color="primary" (click)="fileInput.click()" class="upload-photo-button">Upload a photo</button>
                             <input hidden #fileInput type="file" (change)="onFileSelected($event)"> 
                             <button mat-raised-button (click)="clearImage()" color="warn" class="remove-img-button">Remove</button>
                         </div>                      
@@ -161,7 +164,7 @@
                 </div>                
             </div>
             <div class="next-button">
-                <button mat-button matStepperNext color="accent">Next</button>
+                <button mat-button matStepperNext color="primary">Next</button>
             </div>
         </form>
     </mat-step>
@@ -182,7 +185,7 @@
             </div>
             <mat-divider vertical></mat-divider>
             <div class="second-column">               
-                <p><strong>Year of Manufacture:</strong> {{ getYearFromDate(technicalDetailsFormGroup.get('yearOfManufactureControl').value) }}</p>
+                <p><strong>Year of Manufacture:</strong> {{ selectedYear }}</p>
                 <p><strong>Fuel Type:</strong> {{ generalDetilsFormGroup.get('fuelTypeControl').value | titlecase }}</p>
                 <p> 
                     <span *ngIf="selectedFuelType === 'ELECTRIC'"><strong>Battery Capacity:</strong></span>
@@ -202,13 +205,13 @@
             </div>
             <mat-divider vertical></mat-divider>
           <div class="third-column">           
-            <img class="image-view" [src]="uploadedImage ? uploadedImage :  '../../../../../../assets/images/truck-default-image.svg'"  width="400px" height="300px">
+            <img class=" image-view" [src]="uploadedImage ? uploadedImage :  '../../../../../../assets/images/truck-default-image.svg'"  width="400px" height="300px">
           </div>
         </div>
         <mat-divider horizontal></mat-divider>
         <div class="actions-button">
             <button mat-raised-button (click)="onCancel()" color="warn">Cancel</button>
-            <button class="save-button" mat-raised-button (click)="onSave()" color="accent" >Save</button>
+            <button class="save-button" mat-raised-button (click)="onSave()" color="primary" >Save</button>
         </div>
     </mat-step>
 </mat-stepper>

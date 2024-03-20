@@ -5,6 +5,7 @@ import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
 import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
 import com.fleetcore.fleetcorebackend.repository.*;
+import jakarta.annotation.PostConstruct;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -38,7 +39,7 @@ public class MockEntities {
     @Autowired
     private CountryFuelPricesRepository countryFuelPricesRepository;
 
-//    @PostConstruct
+    @PostConstruct
     public void mockEntities() throws Exception {
         this.mockUser();
         this.mockVehicles();
@@ -89,13 +90,8 @@ public class MockEntities {
             truck.setFuelCapacity(fuelCapacity);
             truck.setFuelConsumption(fuelConsumption);
 
-            if (i < 4) {
-                truck.setVehicleStatus(VehicleStatus.IDLE);
-            } else if (i < 7) {
-                truck.setVehicleStatus(VehicleStatus.ON_ROUTE);
-            } else {
-                truck.setVehicleStatus(VehicleStatus.IN_SERVICE);
-            }
+            truck.setVehicleStatus(VehicleStatus.IDLE);
+
 
             try {
                 String base64ImageData = fetchImageFromInternetAsBase64(imageUrl);
@@ -112,30 +108,36 @@ public class MockEntities {
 
         //mock maintenance
 
-        //example month
+        //Example for a vehicle that exceded 6 months or 20.000 km -> SHOULD SHOW SCHEDULE MAINTENANCE
         Calendar cal = Calendar.getInstance();
         cal.set(2023, Calendar.JULY, 1);
         Date date1 = cal.getTime();
-        Maintenance maintenance = new Maintenance(1, MaintenanceType.BASIC_SERVICE, date1, vehicleList.get(0).getMilenage() - 20000, 300, vehicleList.get(0).getId());
+        Maintenance maintenance = new Maintenance(1, MaintenanceType.BASIC_SAFETY_CHECK, date1, vehicleList.get(0).getMilenage() - 20000, 250, vehicleList.get(0).getId());
         maintenanceRepository.save(maintenance);
 
-        //example days
-        cal.set(2023, Calendar.MAY,  1);
+        //Example for a vehicle that did 20.000 km even if the 6 months didn't pass -> SHOULD SHOW SCHEDULE MAINTENANCE
+        cal.set(2024, Calendar.JANUARY,  1);
         Date date2 = cal.getTime();
-        Maintenance maintenance2 = new Maintenance(2, MaintenanceType.BASIC_SERVICE, date2, vehicleList.get(1).getMilenage() - 20000, 300, vehicleList.get(1).getId());
+        Maintenance maintenance2 = new Maintenance(2, MaintenanceType.BASIC_SAFETY_CHECK, date2, vehicleList.get(1).getMilenage() - 20000, 250, vehicleList.get(1).getId());
         maintenanceRepository.save(maintenance2);
 
-        //example in the future
-        cal.set(2023, Calendar.OCTOBER, 27);
+        //Example for a vehicle that didn't pass 20.000 km and also didn't pass 6 months -> SHOULD SHOW TIME AND KILOMETERS UNTIL NEXT MAINTENANCE
+        cal.set(2024, Calendar.FEBRUARY, 27);
         Date date3 = cal.getTime();
-        Maintenance maintenance3 = new Maintenance(3, MaintenanceType.BASIC_SERVICE, date3, vehicleList.get(2).getMilenage() - 20000, 300, vehicleList.get(2).getId());
+        Maintenance maintenance3 = new Maintenance(3, MaintenanceType.BASIC_SAFETY_CHECK, date3, vehicleList.get(2).getMilenage() - 10000, 250, vehicleList.get(2).getId());
         maintenanceRepository.save(maintenance3);
 
-        //example today
+        //Example for a maintenance that is  today -> SHOULD SHOW THAT MAINTENANCE IS TODAY
         cal = Calendar.getInstance();
         Date date4 = cal.getTime();
-        Maintenance maintenance4 = new Maintenance(4, MaintenanceType.BASIC_SERVICE, date4, vehicleList.get(3).getMilenage() - 20000, 300, vehicleList.get(3).getId());
+        Maintenance maintenance4 = new Maintenance(4, MaintenanceType.COMPREHENSIVE_MAINTENANCE_INSPECTION, date4, vehicleList.get(3).getMilenage() - 20000, 800, vehicleList.get(3).getId());
         maintenanceRepository.save(maintenance4);
+
+        //Example for scheduled maintenance in the future -> SHOULD SHOW THAT YOU HAVE A SCHEDULED MAINTENANCE
+        cal.set(2024, Calendar.JUNE, 25);
+        Date date5 = cal.getTime();
+        Maintenance maintenance5 = new Maintenance(5, MaintenanceType.EMISSIONS_EFFICIENCY_SERVICE, date5, vehicleList.get(3).getMilenage() - 20000, 400, vehicleList.get(4).getId());
+        maintenanceRepository.save(maintenance5);
 
 
     }

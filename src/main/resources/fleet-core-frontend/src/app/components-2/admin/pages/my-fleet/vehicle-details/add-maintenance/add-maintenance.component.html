@@ -1,50 +1,48 @@
-<h1 mat-dialog-title>Maintenance for {{vehicle.make}} {{vehicle.model}}</h1>
+<h1 mat-dialog-title style="font-weight: bold; color: #0E3F89;">Maintenance for {{vehicle.make}} {{vehicle.model}}</h1>
   <div mat-dialog-content>
     <div class="content">
-      <h1>Select the type of maintanance you want to schedule:</h1>
+      <h1 style="font-weight: bold;">Select the type of maintanance you want to schedule:</h1>
       <div class="options">
-        <div class="maintanance-option"  (click)="selectMaintenanceType('BASIC_SERVICE')"  [class.active]="selectedMaintenanceType === 'BASIC_SERVICE'">
-          <h2 style="color: #69F0AE">BASIC SERVICE</h2>
+        <div class="maintanance-option" (click)="selectMaintenanceType('BASIC_SAFETY_CHECK')" [class.active]="selectedMaintenanceType === 'BASIC_SAFETY_CHECK'">
+          <h2 style="color: #0E3F89; font-weight: bold;">Basic Safety Check</h2>
           <p>&#8226; Brake inspection</p>
-          <p>&#8226; Lighting check</p>
-          <p>&#8226; Battery test</p>
-          <p>&#8226; Fuilds Refills (engine oil, transmission fluid and brake fluid)</p>
-          <p style="font-size: 20px; margin-top: 40px;"><strong style="color:#69F0AE;">Price: </strong> 300 €</p>
+          <p>&#8226; Lighting and signals check</p>
+          <p>&#8226; Tire pressure and tread depth check</p>
+          <p>&#8226; Fluid levels check</p>
+          <p style="font-size: 20px; margin-top: 40px; justify-self: flex-end;"><strong style="color:#0E3F89;">Price: 250 €</strong></p>
         </div>
-        <div class="maintanance-option"  (click)="selectMaintenanceType('INTERMEDIATE_INSPECTION')"  [class.active]="selectedMaintenanceType === 'INTERMEDIATE_INSPECTION'">
-          <h2 style="color: #69F0AE">INTERMEDIATE INSPECTION</h2>
-          <p>&#8226; Oil change</p>
-          <p>&#8226; Air Filter replacemeent</p>
-          <p>&#8226; Fuel filter replacement</p>
-          <p>&#8226; Minor repairs</p>
-          <p style="font-size: 20px; margin-top: 40px;"><strong style="color:#69F0AE;">Price: </strong> 550 €</p>
+        <div class="maintanance-option" (click)="selectMaintenanceType('EMISSIONS_EFFICIENCY_SERVICE')" [class.active]="selectedMaintenanceType === 'EMISSIONS_EFFICIENCY_SERVICE'">
+          <h2 style="color: #0E3F89; font-weight: bold;">Emissions and Efficiency Service</h2>
+          <p>&#8226; Emissions test</p>
+          <p>&#8226; Oil change and filter replacement</p>
+          <p>&#8226; Fuel system check</p>
+          <p>&#8226; Air filter replacement</p>
+          <p style="font-size: 20px; margin-top: 40px;"><strong style="color:#0E3F89;">Price: 400 € </strong></p>
         </div>
-        <div class="maintanance-option" (click)="selectMaintenanceType('ANNUAL_FULL_INSPECTION')" [class.active]="selectedMaintenanceType === 'ANNUAL_FULL_INSPECTION'">
-          <h2 style="color: #69F0AE">ANNUAL FULL INSPECTION</h2>
-          <p>&#8226; Engine performance analysis</p>
-          <p>&#8226; Major component checks</p>
-          <p>&#8226; Engine replacement</p>
-          <p>&#8226; Tire replacement</p>
-          <p style="font-size: 20px; margin-top: 40px;"><strong style="color:#69F0AE;">Price: </strong> 900 €</p>
+        <div class="maintanance-option" (click)="selectMaintenanceType('COMPREHENSIVE_MAINTENANCE_INSPECTION')" [class.active]="selectedMaintenanceType === 'COMPREHENSIVE_MAINTENANCE_INSPECTION'">
+          <h2 style="color: #0E3F89; font-weight: bold;">Comprehensive Maintenance and Inspection</h2>
+          <p>&#8226; Full vehicle health check</p>
+          <p>&#8226; Engine and components diagnostics</p>
+          <p>&#8226; Suspension and transmission inspection</p>
+          <p style="font-size: 20px; margin-top: 40px; color:#0E3F89; "><strong>Price: 800 €</strong ></p>
         </div>
       </div>
       <mat-form-field class="example-form-field">
         <mat-label>Choose a date</mat-label>
-        <input matInput [matDatepicker]="datepicker" color="accent" (dateChange)="setMaintenanceDate($event.value)">
+        <input matInput [matDatepicker]="datepicker" [min]="today" color="primary" (dateChange)="setMaintenanceDate($event.value)">
         <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="datepicker" color="accent"></mat-datepicker-toggle>
-        <mat-datepicker #datepicker color="accent">
+        <mat-datepicker-toggle matIconSuffix [for]="datepicker" color="primary"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker color="primary">
           <mat-datepicker-actions>
             <button mat-button matDatepickerCancel>Cancel</button>
-            <button mat-raised-button color="accent" matDatepickerApply>Apply</button>
+            <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
           </mat-datepicker-actions>
         </mat-datepicker>
       </mat-form-field>
     </div>
-    
   </div>
   <div mat-dialog-actions align="end" class="actions-buttons">
     <button mat-raised-button (click)="onNoClick()" color="warn">Cancel</button>
-    <button mat-raised-button [mat-dialog-close]="maintenance" (click)="saveMaintenance()" cdkFocusInitial color="accent">Save</button>
+    <button mat-raised-button [mat-dialog-close]="maintenance" (click)="saveMaintenance()" cdkFocusInitial color="primary">Save</button>
 </div>
 

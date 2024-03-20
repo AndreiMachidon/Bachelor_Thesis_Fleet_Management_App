@@ -13,7 +13,7 @@
 
 .maintanance-option {
     padding: 40px;
-    background-color: #616161; 
+    background-color: #E0EDF7; 
     border-radius: 10px;
     text-align: center;
     margin-right: 20px;
@@ -21,15 +21,18 @@
     height: 300px;
     width: 350px;
     transition: all 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .maintanance-option.active {
-    background-color: #83d2866c;
+    background-color: #5CABEC;
 }
 
 
 .maintanance-option:hover {
-    background-color: #83d2866c; 
+    background-color: #5CABEC; 
     cursor: pointer;
 }
 
@@ -55,4 +58,8 @@ mat-form-field{
 .error-snackbar {
     background-color: #f44336;
     color: white;
+}
+
+.maintanance-option p {
+    font-size: 1rem;
 }

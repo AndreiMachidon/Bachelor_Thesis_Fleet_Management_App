@@ -36,8 +36,6 @@ export class RegisterPageComponent {
     return password === repeatPassword ? null : { passwordMismatch: true };
   }
 
-
-
   registerUserFormSubmit(){
     if (this.registerFormGroup.valid) {
       const signUpDto: SignUpDto = new SignUpDto();
@@ -57,18 +55,14 @@ export class RegisterPageComponent {
         )
         .subscribe((response: UserDto) => {
           if (response) {
-            console.log('Registration successful:', response);
             this.authService.setAuthToken(response.token);
 
             this.openSuccessfulDialog();
           } else {
-            console.log('Registration failed.');
             this.openErrorDialog();
             this.registerFormGroup.reset();
           }
         });
-    } else {
-      console.log("Formul nu este valid");
     }
 
   }
@@ -78,7 +72,7 @@ export class RegisterPageComponent {
       data: {
         dialogMainHeader: "Successful Registration!",
         dialogHeader: "Admin sucesfully registered!",
-        dialogText: "You can now log in with this credentials via the Log in page"
+        dialogText: "You can now log in with this credentials via the Sign in page"
       }
     });
 
@@ -91,7 +85,7 @@ export class RegisterPageComponent {
   openErrorDialog() {
     const dialogRef = this.dialog.open(CustomDialogComponent, {
       data: {
-        dialogMainHeader: "Error!",
+        dialogMainHeader: "Registration Error!",
         dialogHeader: "Error while registering the organisation!",
         dialogText: "There is already a user with this email"
       }

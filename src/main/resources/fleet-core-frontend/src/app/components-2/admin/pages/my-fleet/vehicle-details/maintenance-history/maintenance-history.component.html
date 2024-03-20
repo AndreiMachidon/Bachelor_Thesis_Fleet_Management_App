@@ -1,35 +1,26 @@
 <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
   
-  <ng-container matColumnDef="type">
+  <ng-container matColumnDef="maintenanceType">
     <th mat-header-cell *matHeaderCellDef> Type </th>
-    <td mat-cell *matCellDef="let element"> {{element.maintenanceType}} </td>
+    <td mat-cell *matCellDef="let element"> {{convertMaintenanceTypeToString(element.maintenanceType)}} </td>
   </ng-container>
-
-  <ng-container matColumnDef="date">
+  
+  <ng-container matColumnDef="maintananceDate">
     <th mat-header-cell *matHeaderCellDef> Date </th>
     <td mat-cell *matCellDef="let element"> {{element.maintananceDate | date:'dd-MM-yyyy'}} </td>
   </ng-container>
-
-  <ng-container matColumnDef="vehicleMilenage">
+  
+  <ng-container matColumnDef="currentVehicleMileage">
     <th mat-header-cell *matHeaderCellDef> Vehicle Mileage </th>
-    <td mat-cell *matCellDef="let element"> {{element.currentVehicleMileage | number:'1.0-0'}} km</td>
+    <td mat-cell *matCellDef="let element"> {{formatMilenage(element.currentVehicleMileage)}} km</td>
   </ng-container>
-
+  
   <ng-container matColumnDef="price">
     <th mat-header-cell *matHeaderCellDef> Price </th>
-    <td mat-cell *matCellDef="let element"> ${{element.price | number:'1.2-2'}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.price | number:'1.2-2'}} €</td>
   </ng-container>
-
-  <ng-container matColumnDef="expand">
-    <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
-    <td mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation()">
-        <mat-icon>{{ expandedElement === element ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-  <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row" [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = expandedElement === element ? null : element"></tr>
+  
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
 
 </table>

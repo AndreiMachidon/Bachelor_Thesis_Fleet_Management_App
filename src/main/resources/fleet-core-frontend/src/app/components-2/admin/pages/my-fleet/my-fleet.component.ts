@@ -6,6 +6,7 @@ import { response } from 'express';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteVehicleDialogComponent } from './dialogs/delete-vehicle-dialog/delete-vehicle-dialog.component';
+import { Maintenance } from '../../admin-dashboard/models/maintanance.model';
 
 @Component({
   selector: 'app-my-fleet',
@@ -74,5 +75,6 @@ export class MyFleetComponent implements OnInit{
       return this.vehicles;
     }
       return this.vehicles.filter(vehicle => vehicle.vehicleStatus === this.currentFilter);
-  }
+    }
+
 }
