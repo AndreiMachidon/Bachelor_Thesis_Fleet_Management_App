@@ -2,21 +2,20 @@
   <div class="profile-header"></div>
   <div class="profile-content">
     <img
-      [src]="driver.imageData ? 'data:image/jpeg;base64,' + driver.imageData : '../../../../../../assets/images/profile-default-icon.png'"
+      [src]="driver.imageData ? 'data:image/jpeg;base64,' + driver.imageData : '../../../../../../assets/images/user-icon-white.png'"
       alt="Profile Picture" class="profile-image">
-    <h2>{{driver.firstName}} {{driver.lastName}}</h2>
-    <p class="role">Driver</p>
+    <h2 style="color: #0E3F89;">{{driver.firstName}} {{driver.lastName}}</h2>
+    <p class="role" style="color: #0E3F89;">Driver</p>
     <p><strong>Rate:</strong> {{driver.ratePerKilometer}} € / km</p>
     <p><strong>Experience:</strong> {{driver.yearsOfExperience}} years</p>
     <p><strong>License expiry date:</strong> {{ driver.licenseExpiryDate |
       date:'dd-MM-yyyy' }}</p>
-    <p><strong>Total kilometers driven:</strong> {{driver.totalKilometersDriven
-      | number:'1.0-0'}} km</p>
+    <p><strong>Total kilometers driven:</strong> {{formatMilenage(driver.totalKilometersDriven)}} km</p>
     <mat-divider></mat-divider>
     <div class="actions">
       <button mat-raised-button color="warn"
         (click)="deleteDriver()">Delete</button>
-      <button mat-raised-button color="accent"
+      <button mat-raised-button color="primary"
         (click)="viewDriverDetails()">Details</button>
     </div>
   </div>

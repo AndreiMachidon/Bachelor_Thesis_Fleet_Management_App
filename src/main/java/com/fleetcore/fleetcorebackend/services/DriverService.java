@@ -9,11 +9,13 @@ import com.fleetcore.fleetcorebackend.entities.DriverDetails;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.exceptions.AuthException;
 import com.fleetcore.fleetcorebackend.repository.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repository.RouteRepository;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import com.fleetcore.fleetcorebackend.util.DriverPasswordGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +91,13 @@ public class DriverService {
 
     public DriverDto registerDriver(Long adminId, DriverDto driverDto) {
 
+        User existingUser = userRepository.findByEmail(driverDto.getEmail()).orElse(null);
+
+        if(existingUser != null){
+            throw new AuthException("A user with this email is already registered", HttpStatus.CONFLICT);
+        }
+
+
         DriverDetails driverDetails = DriverDetails.builder()
                 .adminId(adminId)
                 .ratePerKilometer(driverDto.getRatePerKilometer())
@@ -117,11 +126,14 @@ public class DriverService {
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setRecipient(user.getEmail());
         emailDetails.setSubject("Fleet Core Account Password");
-        String messaage = String.format("Hello %s %s!\nWelcome to Fleet Core!\nThe password to your account is: %s.\nYou can log in into your account!",
-                user.getFirstName(), user.getLastName(), driverPassword);
-        emailDetails.setMsgBody(messaage);
-
-        emailService.sendSimpleMail(emailDetails);
+        String htmlContent = "<div style='color: #333;'>" +
+                "<h2>Hello " + user.getFirstName() + " " + user.getLastName() + "!</h2>" +
+                "<p>Welcome to <strong>Fleet Core</strong>! Your driver account has been created.</p>" +
+                "<p>You are now registered for organisation: <strong>" + user.getOrganisationName() + "</strong>.</p>" +
+                "<p>Your password is: <strong>" + driverPassword + "</strong></p>" +
+                "</div>";
+        emailDetails.setMsgBody(htmlContent);
+        emailService.sendHtmlMail(emailDetails);
 
         return createDriverDtoForLogin(user);
     }

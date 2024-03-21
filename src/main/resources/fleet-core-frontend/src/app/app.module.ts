@@ -76,6 +76,8 @@ import { StartRouteDialogComponent } from './components-2/driver/pages/navigate-
 import { MarkAlertResolvedDialogComponent } from './components-2/driver/pages/navigate-route/mark-alert-resolved-dialog/mark-alert-resolved-dialog.component';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
+import { DeleteDriverDialogComponent } from './components-2/admin/pages/my-drivers/dialogs/delete-driver-dialog/delete-driver-dialog.component';
+import { AddDriverDialogComponent } from './components-2/admin/pages/my-drivers/dialogs/add-driver-dialog/add-driver-dialog.component';
 
 @NgModule({
   declarations: [
@@ -118,6 +120,8 @@ import {MatBadgeModule} from '@angular/material/badge';
     EndRouteDialogComponent,
     StartRouteDialogComponent,
     MarkAlertResolvedDialogComponent,
+    DeleteDriverDialogComponent,
+    AddDriverDialogComponent,
   ],
   imports: [
     BrowserModule,

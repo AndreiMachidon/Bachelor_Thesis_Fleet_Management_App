@@ -13,13 +13,13 @@
 
 .profile-header {
     height: 90px;
-    background: linear-gradient(135deg, #767676, #9E9E9E, #B6B6B6);
+    background-color: #5CABEC;
 }
 
 .profile-content {
-    background: linear-gradient(135deg, #6E007B, #9C27B0, #C74BDC);
+    background-color: #E0EDF7;
     padding: 20px;
-    color: white;
+    color: rgb(100, 100, 100);
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,7 @@
     height: 80px;
     border-radius: 50%;
     margin: -65px auto 20px auto;
-    border-color: #69F0AE;
+    border-color: #0E3F89;
     border-style: solid;
     background-color: transparent;
     border-width: 3px;

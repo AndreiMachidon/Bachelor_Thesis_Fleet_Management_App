@@ -71,4 +71,20 @@ public class EmailServiceImpl implements EmailService{
         }
     }
 
+    public String sendHtmlMail(EmailDetails details) {
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setFrom(sender);
+            helper.setTo(details.getRecipient());
+            helper.setSubject(details.getSubject());
+            helper.setText(details.getMsgBody(), true);
+
+            javaMailSender.send(mimeMessage);
+            return "Mail Sent Successfully...";
+        } catch (MessagingException e) {
+            return "Error while Sending Mail";
+        }
+    }
+
 }

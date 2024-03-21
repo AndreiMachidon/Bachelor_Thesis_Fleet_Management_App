@@ -3,8 +3,7 @@
   <input type="file"
     style="display: none;"
     #fileInput
-    (change)="onFileSelected($event)"
-    [formControl]="addDriverFormGroup.controls.imageDataFromControl">
+    (change)="onFileSelected($event)">
 
   <div class="image-upload-container" (click)="fileInput.click()">
     <img
@@ -69,7 +68,7 @@
         <mat-label>Rate</mat-label>
         <input matInput type="number" class="example-right-align"
           placeholder="0" formControlName="ratePerKilometerFormControl">
-        <span matTextPrefix>$&nbsp;</span>
+        <span matTextPrefix>€&nbsp;</span>
         <span matTextSuffix>/km</span>
         <mat-error
           *ngIf="addDriverFormGroup.get('ratePerKilometerFormControl').hasError('required')">
@@ -80,7 +79,9 @@
       <mat-form-field class="form-field">
         <mat-label>License Expiry Date</mat-label>
         <input matInput [matDatepicker]="picker"
-          formControlName="licenseExpiryDateFormControl">
+          formControlName="licenseExpiryDateFormControl" 
+          [min] = "today"
+          readonly>
         <mat-datepicker-toggle matIconSuffix
           [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -112,7 +113,7 @@
     <div class="form-actions">
       <button mat-raised-button color="warn" (click)="cancelAddDriver()">
         Cancel</button>
-      <button mat-raised-button color="accent" (click)="addDriver()"
+      <button mat-raised-button color="primary" (click)="addDriver()"
         type="submit">Add Driver</button>
     </div>
 

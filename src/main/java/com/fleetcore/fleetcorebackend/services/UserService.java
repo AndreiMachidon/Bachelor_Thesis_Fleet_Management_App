@@ -6,7 +6,7 @@ import com.fleetcore.fleetcorebackend.dto.SignInDto;
 import com.fleetcore.fleetcorebackend.dto.SignUpDto;
 import com.fleetcore.fleetcorebackend.dto.UserDto;
 import com.fleetcore.fleetcorebackend.entities.User;
-import com.fleetcore.fleetcorebackend.exceptions.AppException;
+import com.fleetcore.fleetcorebackend.exceptions.AuthException;
 import com.fleetcore.fleetcorebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class UserService {
         logger.info("Sign in user with email: " + signInDto);
 
         User user = userRepository.findByEmail(signInDto.email())
-                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new AuthException("Unknown user", HttpStatus.NOT_FOUND));
 
         UserDto userDto = new UserDto();
         if (passwordEncoder.matches(CharBuffer.wrap(signInDto.password()), user.getPassword())) {
@@ -51,15 +51,18 @@ public class UserService {
                 userDto.setToken(userAuthProvider.createTokenForDriver(driverDto));
                 return userDto;
             }
+        }else{
+            throw new AuthException("Invalid password", HttpStatus.BAD_REQUEST);
         }
-        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
+
+
     }
 
-    public UserDto register(SignUpDto signUpDto) {
+    public UserDto register(SignUpDto signUpDto){
         Optional<User> optionalUser = userRepository.findByEmail(signUpDto.email());
 
         if (optionalUser.isPresent()) {
-            throw new AppException("Login already exists", HttpStatus.CONFLICT);
+            throw new AuthException("Email address already in use", HttpStatus.CONFLICT);
         }
 
         User user = new User();
@@ -71,9 +74,7 @@ public class UserService {
         user.setRole(signUpDto.role());
         user.setPhoneNumber(signUpDto.phoneNumber());
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(signUpDto.password())));
-
         userRepository.save(user);
-
         UserDto userDto = new UserDto();
         userDto.setToken(userAuthProvider.createTokenForAdmin(user));
 
