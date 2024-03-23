@@ -62,11 +62,11 @@ public class MockEntities {
                 {"MAN", "TGX", "https://www.man.eu/ntg_media/media/content_medien/img/bw_master_1/truck/truck_1/tgx/man-lkw-tgx-individual-lion-teaser-1-1_width_534_height_300.jpg", FuelType.DIESEL.name(), "44000", "500", "12.4"},
                 {"Scania", "R 500", "https://d1hv7ee95zft1i.cloudfront.net/custom/truck-model-photo/original/60a3b86144a02.jpg", FuelType.DIESEL.name(), "44000", "500", "13.0"},
                 {"DAF", "XF", "https://www.daf.com.au/wp-content/uploads/2020/02/XF_800x400px.jpg", FuelType.DIESEL.name(), "44000", "500", "12.9"},
-                {"VOLVO", "FM","https://www.volvotrucks.ro/content/dam/volvo-trucks/markets/master/home/trucks/volvo-fm/specifications/volvo-fm-specifications-cabs.jpg", FuelType.DIESEL.name(), "40000", "480", "12.8"},
+                {"VOLVO", "FM","https://www.volvotrucks.ro/content/dam/volvo-trucks/markets/master/home/trucks/volvo-fm/specifications/volvo-fm-specifications-cabs.jpg", FuelType.DIESEL.name(), "400", "480", "12.8"},
                 {"Renault", "T High", "https://cdn-trans.info/uploads/2021/07/3bf9700940edfe5b266c3b72adf.jpg", FuelType.ELECTRIC.name(), "44000", "500", "13.0"},
                 {"MAN", "TGL", "https://www.lectura-specs.ro/models/renamed/orig/sasiuri-rigide-tgl-8190-man.jpg", FuelType.DIESEL.name(), "12000", "150", "6.9"},
-                {"Renault", "Premium", "https://img.oemoffhighway.com/files/base/acbm/ooh/image/2016/03/RenaultTrucks_NewT2016Model.56eac5c0e131c.png?auto=format%2Ccompress&q=70", FuelType.DIESEL.name(), "44000", "500", "11.0"},
-                {"Volvo", "FL", "https://www.volvotrucks.ro/content/dam/volvo-trucks/markets/master/home/trucks/volvo-fl/specifications/volvo-fl-specifications-cab-icon.jpg", FuelType.DIESEL.name(), "18000", "200", "7.2"}
+                {"Renault", "Premium", "https://img.oemoffhighway.com/files/base/acbm/ooh/image/2016/03/RenaultTrucks_NewT2016Model.56eac5c0e131c.png?auto=format%2Ccompress&q=70", FuelType.DIESEL.name(), "440", "500", "11.0"},
+                {"Volvo", "FL", "https://www.volvotrucks.ro/content/dam/volvo-trucks/markets/master/home/trucks/volvo-fl/specifications/volvo-fl-specifications-cab-icon.jpg", FuelType.DIESEL.name(), "180", "200", "7.2"}
         };
 
         for (int i = 0; i < truckData.length; i++) {

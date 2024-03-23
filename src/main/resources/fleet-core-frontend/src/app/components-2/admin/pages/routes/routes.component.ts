@@ -12,13 +12,15 @@ import { Driver } from 'src/app/components-2/auth/dto/Driver';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { GoogleMapsService } from './services/google-maps.service';
 import { CustomWaypoint } from './util/custom-waypoint.interface';
-import {FuelPricesService } from './services/fuel-prices.service';
-import { calculateDistanceAndDurationBetweenWaypoints, calculateDurationInHoursAndMinutes, createCustomMarker, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint, getPointsAlongRoute } from './util/google.maps.util';
+import { FuelPricesService } from './services/fuel-prices.service';
+import { calculateDistanceAndDurationBetweenWaypoints, calculateDurationInHoursAndMinutes, createCustomMarker, createInfoWindowForElectricStationsMarkerWaypoint, createInfoWindowForGasStationsMarkerWaypoint, createInfoWindowForRestBreaksMarkerWaypoint, formatConnectorType, formatMaxChargeRate, getPointsAlongRoute } from './util/google.maps.util';
 import { SaveFinalRouteDialogComponent } from './dialogs/save-final-route-dialog/save-final-route-dialog.component';
 import { RoutesService } from './services/routes.service';
 import { RouteDto } from './dto/route-dto.model';
 import * as e from 'express';
 import { WebSocketsService } from 'src/app/components-2/global-services/web-sockets.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { RouteSavedDialogComponent } from './dialogs/route-saved-dialog/route-saved-dialog.component';
 
 
 @Component({
@@ -73,6 +75,11 @@ export class RoutesComponent {
   waypoints: CustomWaypoint[] = [];
   waypointsMarkers: google.maps.Marker[] = [];
 
+  //9. For map costumisation options
+  showTrafficLayer: boolean = false;
+  trafficLayer: google.maps.TrafficLayer;
+
+
   @ViewChild('startingLocationAuto') startingLocationAuto: MatAutocomplete;
   @ViewChild('destinationLocationAuto') destinationLocationAuto: MatAutocomplete;
 
@@ -95,7 +102,7 @@ export class RoutesComponent {
       this.webSocketService.subscribeToRouteStatuses((routeStatus) => {
         console.log("New route status received:", routeStatus);
         this.updateRoutesList();
-      });   
+      });
     });
   }
 
@@ -117,8 +124,7 @@ export class RoutesComponent {
       },
     };
     this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, mapOptions);
-    const trafficLayer = new google.maps.TrafficLayer();
-    trafficLayer.setMap(this.map);
+    this.trafficLayer = new google.maps.TrafficLayer();
   }
 
   getUserLocation() {
@@ -175,6 +181,15 @@ export class RoutesComponent {
       const place = autocomplete.getPlace();
       this.destinationLocation = place.formatted_address;
     });
+  }
+
+  toggleTrafficLayer(show: boolean) {
+    this.showTrafficLayer = show; 
+    if (this.showTrafficLayer) {
+      this.trafficLayer.setMap(this.map);
+    } else {
+      this.trafficLayer.setMap(null);
+    }
   }
 
   onDateSelected() {
@@ -300,34 +315,70 @@ export class RoutesComponent {
     });
   }
 
-  addRestBreakWaipoints(directionResult: google.maps.DirectionsResult) {
+  async addRestBreakWaipoints(directionResult: google.maps.DirectionsResult) {
     const maxDrivingTime = 4.5 * 3600; // 4.5 hours in seconds
     let totalDrivenTime = 0;
-    let breakpoints = [];
+    let promises: Promise<any>[] = [];
 
     directionResult.routes[0].legs.forEach((leg) => {
       leg.steps.forEach((step) => {
         totalDrivenTime += step.duration.value;
         if (totalDrivenTime >= maxDrivingTime) {
           totalDrivenTime = 0;
-          breakpoints.push(step.end_location);
+          const breakpoint = step.end_location;
+          promises.push(this.findRestBreakLocation(breakpoint));
         }
       });
     });
 
-    breakpoints.forEach((breakpoint, index) => {
-      let waypoint: CustomWaypoint = {
-        location: breakpoint,
-        stopover: true,
-        type: "restBreak",
-        restBreakDuration: 45 ,
-        placeId: null
-      };
-      this.waypoints.push(waypoint);
+    const locations = await Promise.all(promises);
+
+    locations.forEach((location) => {
+      if(location !== undefined) {
+        let waypoint: CustomWaypoint = {
+          location: new google.maps.LatLng(location.location.latitude, location.location.longitude),
+          stopover: true,
+          type: "restBreak",
+          restBreakDuration: 45,
+          placeId: location.id || undefined,
+          restBreakLocationName: location.displayName.text,
+          address: location.formattedAddress
+        };
+        this.waypoints.push(waypoint);
+      }
+     
     });
 
     this.findOptimalRoute(false, true);
 
+  }
+
+  async findRestBreakLocation(location: google.maps.LatLng): Promise<any> {
+    const request = {
+      includedTypes: ["cafe", "restaurant", "coffee_shop", "truck_stop"],
+      locationRestriction: {
+        circle: {
+          center: {
+            latitude: location.lat(),
+            longitude: location.lng()
+          },
+          radius: 20000.0
+        }
+      },
+      maxResultCount: 5,
+      languageCode: "en"
+    }
+
+    try{
+        const response: any = await this.googleMapsService.getNearbyLocationsForRestBreaks(request).toPromise();
+        if(response && response.places && response.places.length > 0) {
+          const place = response.places[0];
+          return place;
+        }
+      } catch (error) {
+        console.error('Error getting rest break location:', error);
+      }
+      return undefined;
   }
 
   placeWaypointMarkers() {
@@ -394,7 +445,7 @@ export class RoutesComponent {
 
     if (this.selectedVehicle.fuelType === "ELECTRIC") {
       this.googleMapsService.getNearbyChargingStations(request).subscribe((response: any) => {
-        if(response.places !== undefined){
+        if (response.places !== undefined) {
           response.places.forEach((place) => {
             this.createMarkerForElectricStation(place);
           })
@@ -402,7 +453,7 @@ export class RoutesComponent {
       });
     } else {
       this.googleMapsService.getNearbyGasStations(request).subscribe((response: any) => {
-        if(response.places !== undefined){
+        if (response.places !== undefined) {
           response.places.forEach((place) => {
             this.createMarkerForFuelStation(place);
           });
@@ -421,70 +472,113 @@ export class RoutesComponent {
         scaledSize: new google.maps.Size(40, 40)
       },
     });
-  
+
     this.fuelStationsMarkers.push(marker);
-  
+
     google.maps.event.addListener(marker, 'click', () => {
       const infoWindowContent = document.createElement('div');
+      infoWindowContent.className = 'info-window-content';
       infoWindowContent.style.width = '500px';
-  
+      infoWindowContent.style.height = 'auto';
+
       // Adăugarea titlului stației
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
-      stationName.style.color = '#333';
+      stationName.style.color = '#0E3F89';
       stationName.textContent = place.displayName.text;
-      infoWindowContent.appendChild(stationName);
-  
+
+      // Create an image element
+      const stationImage = document.createElement('img');
+      stationImage.src = '../../../assets/images/gas-station-info-window-icon.svg';
+      stationImage.alt = 'Station Icon';
+      stationImage.style.width = '25px';
+      stationImage.style.height = '25px';
+      stationImage.style.marginRight = '10px';
+
+      const titleContainer = document.createElement('div');
+      titleContainer.style.display = 'flex';
+      titleContainer.style.alignItems = 'center';
+      titleContainer.style.justifyContent = 'flex-start';
+
+      // Append the image and station name to the title container
+      titleContainer.appendChild(stationImage);
+      titleContainer.appendChild(stationName);
+
+      // Now, append the title container to your main info window content
+      infoWindowContent.appendChild(titleContainer);
+
+
+      //Adaugare adresa statie
+      const stationAddress = document.createElement('div');
+      stationAddress.style.fontSize = '15px';
+      stationAddress.style.color = '#5CABEC';
+      stationAddress.textContent = place.formattedAddress;
+      infoWindowContent.appendChild(stationAddress);
+
+
       //getting the country for the place
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averageGasolinePrice = this.fuelPriceService.getGasolinePrice(country);
       const averageDieselPrice = this.fuelPriceService.getDieselPrice(country);
-  
+      
+
       // Adăugăm opțiunile de combustibil la infowindow
       let fuelOptionsHtml = '';
 
       if (averageGasolinePrice && averageDieselPrice) {
-        fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
-        <strong>Gasoline:</strong> ${averageGasolinePrice} €/L<br>
-        <strong>Diesel:</strong> ${averageDieselPrice} €/L
+        fuelOptionsHtml = `<div style="margin-top: 25px; color:black; font-size:15px; font-weight:bold;">
+        <strong>Average Gasoline Price in ${country}:</strong> ${averageGasolinePrice} €/L<br>
+        <strong>Average Diesel Price in ${country}:</strong> ${averageDieselPrice} €/L
         </div>`;
-      }else{
-        fuelOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional fuel information available.</div>`;
+      } else {
+        fuelOptionsHtml = `<div style="font-size:15px; margin-top: 25px; color:black;">No additional fuel information available.</div>`;
       }
       const fuelOptionsDiv = document.createElement('div');
       fuelOptionsDiv.innerHTML = fuelOptionsHtml;
       infoWindowContent.appendChild(fuelOptionsDiv);
-  
+
       // Crearea și adăugarea butonului de adăugare la rută
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
       Object.assign(addToRouteButton.style, {
-        marginTop: '12px',
-        backgroundColor: '#4CAF50',
+        marginTop: '17px',
+        marginLeft: '375px',
+        backgroundColor: '#0E3F89',
         color: 'white',
         padding: '8px 16px',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
         fontWeight: 'bold',
+        with: '100px',
+        height: '40px',
+        marginBottom: '10px'
       });
-      if(this.selectedVehicle.fuelType === "GASOLINE"){
+      addToRouteButton.style.transition = 'background-color 0.3s ease';
+
+      addToRouteButton.onmouseover = () => {
+        addToRouteButton.style.backgroundColor = '#5CABEC';
+      };
+      addToRouteButton.onmouseout = () => {
+        addToRouteButton.style.backgroundColor = '#0E3F89';
+      };
+      if (this.selectedVehicle.fuelType === "GASOLINE") {
         addToRouteButton.onclick = () => {
           this.addStationWaypointToRoute(place, 'gasoline', averageGasolinePrice, averageDieselPrice, null);
         };
-      }else{
+      } else {
         addToRouteButton.onclick = () => {
           this.addStationWaypointToRoute(place, 'diesel', averageGasolinePrice, averageDieselPrice, null);
         };
       }
-      
+
       infoWindowContent.appendChild(addToRouteButton);
-  
+
       const infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent,
       });
-  
+
       infoWindow.open(this.map, marker);
     });
   }
@@ -504,34 +598,65 @@ export class RoutesComponent {
 
     google.maps.event.addListener(marker, 'click', () => {
       const infoWindowContent = document.createElement('div');
+      infoWindowContent.className = 'info-window-content';
       infoWindowContent.style.width = '500px';
+      infoWindowContent.style.height = 'auto';
 
       // Adăugarea titlului stației
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
-      stationName.style.color = '#333';
+      stationName.style.color = '#0E3F89';
       stationName.textContent = place.displayName.text;
-      infoWindowContent.appendChild(stationName);
+
+      // Create an image element
+      const stationImage = document.createElement('img');
+      stationImage.src = '../../../assets/images/electric-station-info-window-icon.svg';
+      stationImage.alt = 'Station Icon';
+      stationImage.style.width = '25px';
+      stationImage.style.height = '25px';
+      stationImage.style.marginRight = '10px';
+
+      const titleContainer = document.createElement('div');
+      titleContainer.style.display = 'flex';
+      titleContainer.style.alignItems = 'center';
+      titleContainer.style.justifyContent = 'flex-start';
+
+      // Append the image and station name to the title container
+      titleContainer.appendChild(stationImage);
+      titleContainer.appendChild(stationName);
+
+      // Now, append the title container to your main info window content
+      infoWindowContent.appendChild(titleContainer);
+
+
+      //Adaugare adresa statie
+      const stationAddress = document.createElement('div');
+      stationAddress.style.fontSize = '15px';
+      stationAddress.style.color = '#5CABEC';
+      stationAddress.textContent = place.formattedAddress;
+      infoWindowContent.appendChild(stationAddress);
 
       //getting the country for the place
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averagePrice = this.fuelPriceService.getElectricityPrice(country);
 
-      // Verificăm dacă există opțiuni de încărcare electrică
       let chargeOptionsHtml = '';
+
       if (place.evChargeOptions && place.evChargeOptions.connectorAggregation) {
-        chargeOptionsHtml = place.evChargeOptions.connectorAggregation.map(connector => {
-          return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
-                  <span style="font-weight: bold; font-size:14px;">${connector.type}: Max charge rate ${connector.maxChargeRateKw} kW</span>
-                  <span style="font-size:13px;">Connectors available: ${connector.count}</span>
-                </div>`;
+        chargeOptionsHtml += '<div style="font-weight: bold; margin-bottom: 10px; margin-top: 12px; font-size:18px; color: #0E3F89;">Charge Options:</div>';
+        chargeOptionsHtml += place.evChargeOptions.connectorAggregation.map((connector, index, array) => {
+          return `<div style="padding: 10px; border-bottom: ${index === array.length - 1 ? 'none' : '1px solid #ddd'};">
+          <div style="font-weight: bold; font-size:14px; color:#5CABEC;">Connector type: ${formatConnectorType(connector.type)}</div>
+          <div style="font-weight: bold; font-size:13px;">Max charge rate: ${formatMaxChargeRate(connector.maxChargeRateKw)}</div>
+          <div style="font-weight: bold; font-size:13px;">Connectors count: ${connector.count}</div>
+        </div>`;
         }).join('');
       } else {
-        chargeOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional charging information available.</div>`;
+        chargeOptionsHtml = '<div style="font-size:15px; margin-top: 10px; color:black; font-weight: bold; color: #0E3F89;">No information about the charging options available.</div>';
       }
 
-      // Adăugăm opțiunile de încărcare la infowindow
+      // Adaugă opțiunile de încărcare la infowindow
       const chargeOptionsDiv = document.createElement('div');
       chargeOptionsDiv.innerHTML = chargeOptionsHtml;
       infoWindowContent.appendChild(chargeOptionsDiv);
@@ -539,8 +664,8 @@ export class RoutesComponent {
       //Daugam pretul mediu la electricitate
       if (averagePrice) {
         const averagePriceHtml = document.createElement('div');
-        averagePriceHtml.innerHTML = `<div style="margin-top: 10px; font-size:14px; color:black;">
-                                          Average electricity price: ${averagePrice} €/kWh
+        averagePriceHtml.innerHTML = `<div style="margin-top: 25px; color:black; font-size:15px; font-weight:bold;">
+                                          Average ev charging price in ${country}: ${averagePrice} €/kWh
                                       </div>`;
         infoWindowContent.appendChild(averagePriceHtml);
       }
@@ -549,15 +674,27 @@ export class RoutesComponent {
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
       Object.assign(addToRouteButton.style, {
-        marginTop: '12px',
-        backgroundColor: '#4CAF50',
+        marginTop: '10px',
+        marginBottom: '10px',
+        marginLeft: '375px',
+        backgroundColor: '#0E3F89',
         color: 'white',
         padding: '8px 16px',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',
         fontWeight: 'bold',
+        with: '100px',
+        height: '40px'
       });
+      addToRouteButton.style.transition = 'background-color 0.3s ease';
+
+      addToRouteButton.onmouseover = () => {
+        addToRouteButton.style.backgroundColor = '#5CABEC';
+      };
+      addToRouteButton.onmouseout = () => {
+        addToRouteButton.style.backgroundColor = '#0E3F89';
+      };
       addToRouteButton.onclick = () => {
         this.addStationWaypointToRoute(place, 'electric', null, null, averagePrice);
       };
@@ -571,7 +708,7 @@ export class RoutesComponent {
     });
   }
 
-  addStationWaypointToRoute(place, type: string, gasolinePrice : number, dieselPrice: number, electricPrice: number) {
+  addStationWaypointToRoute(place, type: string, gasolinePrice: number, dieselPrice: number, electricPrice: number) {
     const lat = place.location.latitude;
     const long = place.location.longitude;
 
@@ -586,9 +723,11 @@ export class RoutesComponent {
         gasolinePrice: gasolinePrice,
         diselPrice: dieselPrice,
         electricityPrice: electricPrice,
-        placeId: place.id
+        placeId: place.id,
+        restBreakLocationName: null,
+        address: place.formattedAddress
       };
-    } else if(type === 'gasoline'){
+    } else if (type === 'gasoline') {
       waypoint = {
         location: new google.maps.LatLng(lat, long),
         stopover: true,
@@ -598,9 +737,11 @@ export class RoutesComponent {
         gasolinePrice: gasolinePrice,
         diselPrice: dieselPrice,
         electricityPrice: electricPrice,
-        placeId: place.id
+        placeId: place.id,
+        restBreakLocationName: null,
+        address: place.formattedAddress
       };
-    } else{
+    } else {
       waypoint = {
         location: new google.maps.LatLng(lat, long),
         stopover: true,
@@ -610,10 +751,12 @@ export class RoutesComponent {
         gasolinePrice: gasolinePrice,
         diselPrice: dieselPrice,
         electricityPrice: electricPrice,
-        placeId: place.id
+        placeId: place.id,
+        restBreakLocationName: null,
+        address: place.formattedAddress
       };
     }
-    
+
     this.waypoints.push(waypoint);
 
     const index = this.fuelStationsMarkers.findIndex(marker =>
@@ -656,26 +799,26 @@ export class RoutesComponent {
     //calculam pretul mediu la carburant pentru toate statiile de alimentare/incarcare de pe toata ruta
     let averageFuelPrice = 0;
     let numberOfFuelStations = 0;
- 
+
     //4. Costurile de carburant
     this.waypoints.forEach((waypoint) => {
-      if(waypoint.type !== "restBreak"){
-        if(this.selectedVehicle.fuelType === "GASOLINE" && waypoint.fuelType === 'gasoline'){
+      if (waypoint.type !== "restBreak") {
+        if (this.selectedVehicle.fuelType === "GASOLINE" && waypoint.fuelType === 'gasoline') {
           averageFuelPrice += waypoint.gasolinePrice;
           numberOfFuelStations++;
-        }else if (this.selectedVehicle.fuelType === "DIESEL" && waypoint.fuelType === 'diesel'){
+        } else if (this.selectedVehicle.fuelType === "DIESEL" && waypoint.fuelType === 'diesel') {
           averageFuelPrice += waypoint.diselPrice;
           numberOfFuelStations++;
-        }else if(this.selectedVehicle.fuelType === "ELECTRIC" && waypoint.fuelType === 'electric'){
+        } else if (this.selectedVehicle.fuelType === "ELECTRIC" && waypoint.fuelType === 'electric') {
           averageFuelPrice += waypoint.electricityPrice;
           numberOfFuelStations++;
         }
-    }
+      }
     });
-    if(numberOfFuelStations > 0){
+    if (numberOfFuelStations > 0) {
       averageFuelPrice = averageFuelPrice / numberOfFuelStations;
-    }else{
-      switch(this.selectedVehicle.fuelType){
+    } else {
+      switch (this.selectedVehicle.fuelType) {
         case "GASOLINE":
           averageFuelPrice = this.fuelPriceService.getGasolinePrice("Europe");
           break;
@@ -695,47 +838,50 @@ export class RoutesComponent {
 
     //5. Costurile pentru sofer
     const driverRatePerKilometer = this.selectedDriver.ratePerKilometer; // tariful pe kilometru pentru șoferul selectat
-    
+
     const totalDriverCost = totalDistanceInKm * driverRatePerKilometer;
 
     const routeFinalDetails = {
-        adminId: this.authService.getUserDetails().id,
-        vehicle: this.selectedVehicle,
-        driver: this.selectedDriver,
-        routeStartDate: this.startTime,
-        routeEndDate: this.arrivalTime,
-        routeDuration: routeDuration,
-        restBreaksDuration: restBreaksDuration,
-        totalRouteDuration: totalRouteDuration,
-        totalDistance: totalDistance,
-        waypointsInfo: waypointsInfo,
-        averageFuelPrice: averageFuelPrice,
-        totalFuelCost: totalFuelCost,
-        totalDriverCost: totalDriverCost,
-        totalCosts: totalFuelCost + totalDriverCost,
-        googleMapsDirectionResult: this.directionResult,
+      adminId: this.authService.getUserDetails().id,
+      vehicle: this.selectedVehicle,
+      driver: this.selectedDriver,
+      routeStartDate: this.startTime,
+      routeEndDate: this.arrivalTime,
+      routeDuration: routeDuration,
+      restBreaksDuration: restBreaksDuration,
+      totalRouteDuration: totalRouteDuration,
+      totalDistance: totalDistance,
+      waypointsInfo: waypointsInfo,
+      averageFuelPrice: averageFuelPrice,
+      totalFuelCost: totalFuelCost,
+      totalDriverCost: totalDriverCost,
+      totalCosts: totalFuelCost + totalDriverCost,
+      googleMapsDirectionResult: this.directionResult,
     }
 
     const dialogRef = this.dialog.open(SaveFinalRouteDialogComponent, {
       width: '90vw',
       height: '90vh',
-      data: { routeFinalDetails: routeFinalDetails}
+      data: { routeFinalDetails: routeFinalDetails }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'Saved') {
         console.log("Route saved successfully!");
-        alert("Route saved successfully!");
+        const dialogRef = this.dialog.open(RouteSavedDialogComponent);
+        dialogRef.afterClosed().subscribe(result => {
+          this.updateRoutesList();
+        });
         this.resetMapConfiguration();
-      }else if(result === 'NotSaved'){
+      } else if (result === 'NotSaved') {
         console.log("There was an error while saving the route!");
         alert("There was an error while saving the route!");
       }
     });
- 
+
   }
 
-  resetMapConfiguration(){
+  resetMapConfiguration() {
     this.directionRenderer.setMap(null);
     this.fuelStationsMarkers.forEach(marker => marker.setMap(null));
     this.fuelStationsMarkers = [];
@@ -754,32 +900,41 @@ export class RoutesComponent {
     this.showFuelStationsFlag = false;
   }
 
-  //View Routes Window
-  getSavedRoutes(){
+  onTabChanged(event: MatTabChangeEvent) {
+    this.ngOnInit();
+    if (event.index === 1) {
+
+      this.getSavedRoutes();
+    }
+  }
+
+  getSavedRoutes() {
     this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
       (routes) => {
-      this.routesList = routes;
-    },
-    (error) => {
-      console.log(error)
-      alert("There was an error while fetching the routes from the server!");
-    }
+        this.routesList = routes;
+        console.log(routes);
+        
+      },
+      (error) => {
+        console.log(error)
+        alert("There was an error while fetching the routes from the server!");
+      }
     );
   }
 
   updateRoutesList() {
     this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
-        (routes) => {
-            this.routesList = routes;
-            this.cdRef.detectChanges();
-        },
-        (error) => {
-            console.error("Error fetching routes", error);
-        }
+      (routes) => {
+        this.routesList = routes;
+        this.cdRef.detectChanges();
+      },
+      (error) => {
+        console.error("Error fetching routes", error);
+      }
     );
-}
+  }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.webSocketService.unsubscribeFromRouteStatuses();
     this.webSocketService.disconnectWebSocketConnection();
   }

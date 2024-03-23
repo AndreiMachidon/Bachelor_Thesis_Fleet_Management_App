@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CountryFuelPricesRepository extends JpaRepository<CountryFuelPrices, Long> {
 
-    List<CountryFuelPrices> getAllByCountryIs(String country);
+    List<CountryFuelPrices> getAllByCountry(String country);
 }

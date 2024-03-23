@@ -1,6 +1,7 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
+import com.fleetcore.fleetcorebackend.repository.MaintenanceRepository;
 import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private MaintenanceRepository maintenanceRepository;
 
 
     public List<Vehicle> findAll(){
@@ -47,8 +51,9 @@ public class VehicleService {
         Date dateStartTime = java.sql.Timestamp.valueOf(startTime);
         Date dateArrivalTime  = java.sql.Timestamp.valueOf(arrivalTime);
 
-        List<Vehicle> vehicles = vehicleRepository.findAvailableVehicles(adminId, dateStartTime, dateArrivalTime);
-        return vehicles;
+        List<Vehicle> availableVehicles = vehicleRepository.findAvailableVehicles(adminId, dateStartTime, dateArrivalTime);
+
+        return availableVehicles;
     }
 
 }

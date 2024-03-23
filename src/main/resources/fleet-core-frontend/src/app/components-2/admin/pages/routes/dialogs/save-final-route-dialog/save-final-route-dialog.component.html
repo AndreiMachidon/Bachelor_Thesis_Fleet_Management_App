@@ -4,7 +4,7 @@
     </div>
     <div class="route-info">
         <div class="time-info">
-            <p class="header"><mat-icon>access_time</mat-icon> Route duration</p>
+            <p class="header"><mat-icon color="primary">access_time</mat-icon> Route duration</p>
             <mat-divider horizontal class="divider"></mat-divider>
             <p class="info">Route duration: {{routeDurationFormatted}}</p>
             <p class="info">Breaks duration: {{numberOfBreaks}} x 45 mins = {{restBreaksDurationFormatted}}</p>
@@ -13,23 +13,23 @@
             <p class="info important">Arrival time: {{routeFinalDetails.routeEndDate | date:'yyyy-MM-dd HH:mm'}}</p>
         </div>
         <div class="distance-info">
-            <p class="header"><mat-icon>map</mat-icon> Route distance</p>
+            <p class="header"><mat-icon color="primary">map</mat-icon> Route distance</p>
             <mat-divider horizontal class="divider"></mat-divider>
-            <p class="info important">Route distance: Total distance: {{routeFinalDetails.totalDistance}} km</p>
+            <p class="info important">Route distance: Total distance: {{routeFinalDetails.totalDistance.toFixed(1)}} km</p>
         </div>
         <div class="cost-info">
-            <!-- Pentru vehicule pe diesel sau benzină -->
+            <!-- For gasoline or diesel vehicles -->
             <ng-container *ngIf="routeFinalDetails.vehicle.fuelType === 'DIESEL' || routeFinalDetails.vehicle.fuelType === 'GASOLINE'">
-                <p class="header"><mat-icon>local_gas_station</mat-icon>Fuel costs</p>
+                <p class="header"><mat-icon color="primary">local_gas_station</mat-icon>Fuel costs</p>
                 <mat-divider horizontal class="divider"></mat-divider>
                 <p class="info">Fuel average price: {{routeFinalDetails.averageFuelPrice.toFixed(2)}} €/L</p>
                 <p class="info">Vehicle fuel consumption ({{routeFinalDetails.vehicle.make}} {{routeFinalDetails.vehicle.model}}): {{routeFinalDetails.vehicle.fuelConsumption.toFixed(2)}} L/100km</p>
                 <p class="info important">Total fuel costs: {{routeFinalDetails.totalFuelCost.toFixed(2)}} €</p>
             </ng-container>
                     
-            <!-- Pentru vehicule electrice -->
+            <!-- For electric vehicles -->
             <ng-container *ngIf="routeFinalDetails.vehicle.fuelType === 'ELECTRIC'">
-                <p class="header"><mat-icon>ev_station</mat-icon>Charging costs</p>
+                <p class="header"><mat-icon color="primary">ev_station</mat-icon>Charging costs</p>
                 <mat-divider horizontal class="divider"></mat-divider>
                 <p class="info">Electricity average price: {{routeFinalDetails.averageFuelPrice.toFixed(2)}} €/kWh</p>
                 <p class="info">Vehicle energy consumption ({{routeFinalDetails.vehicle.make}} {{routeFinalDetails.vehicle.model}}): {{routeFinalDetails.vehicle.fuelConsumption.toFixed(2)}} kWh/100km</p>
@@ -37,18 +37,18 @@
             </ng-container>
 
             
-            <p class="header"><mat-icon>assignment_ind</mat-icon>Driver costs</p>
-            <mat-divider horizontal class="divider"></mat-divider>
+            <p class="header" style="margin-top: 2rem;"><mat-icon color="primary" >assignment_ind</mat-icon>Driver costs</p>
+            <mat-divider horizontal class="divider" ></mat-divider>
             <p class="info">Driver's rate({{routeFinalDetails.driver.firstName}} {{routeFinalDetails.driver.lastName}}): {{routeFinalDetails.driver.ratePerKilometer.toFixed(2)}} €/Km</p>
             <p class="info important">Total driver costs: {{routeFinalDetails.totalDriverCost.toFixed(2)}} €</p>
 
-            <p class="header"><mat-icon> attach_money</mat-icon>Route total cost</p>
+            <p class="header" style="margin-top: 2rem;"><mat-icon color="primary">attach_money</mat-icon>Route total cost</p>
             <mat-divider horizontal class="divider"></mat-divider>
             <p class="info important">Total costs: {{routeFinalDetails.totalCosts.toFixed(2)}}  €</p>
         </div>
 
         <div class="actions">
-            <button mat-raised-button color="accent" (click)="saveRoute()">Schedule route</button>
+            <button mat-raised-button color="primary" (click)="saveRoute()" style="width: 9rem; height: 2.5rem; margin-bottom: 1rem;">Schedule route</button>
         </div>
     </div>
 </div>

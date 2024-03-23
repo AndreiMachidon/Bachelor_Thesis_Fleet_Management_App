@@ -9,5 +9,7 @@ export interface CustomWaypoint {
     diselPrice ?: number;
     electricityPrice ?: number;
     restBreakDuration ?: number;
+    restBreakLocationName: string;
     placeId: string;
+    address: string;
   }

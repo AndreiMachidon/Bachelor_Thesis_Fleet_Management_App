@@ -78,8 +78,6 @@ export class RouteDetailsCardComponent {
   subscribeToDriverLiveLocation() {
     const routeId = this.route.id;
     this.webSocketService.subscribeToRouteLocation(routeId, (driverLocationDto) => {
-      console.log(driverLocationDto);
-      
       this.updateDriverLocationOnMap(driverLocationDto);
     });
   }

@@ -4,6 +4,7 @@ import { FuelPricesService } from '../services/fuel-prices.service';
 import { RouteDto } from '../dto/route-dto.model';
 import { WaypointDto } from '../dto/waypoint-dto.model';
 import { RouteAlertDto } from '../dto/route-alert-dto.model';
+import { GoogleMapsService } from '../services/google-maps.service';
 
 function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, iconUrl: string) {
   return new google.maps.Marker({
@@ -17,34 +18,63 @@ function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, 
 }
 
 function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker, fuelPriceService: FuelPricesService, isForDisplayRoute: boolean = false) {
+
   google.maps.event.addListener(marker, 'click', () => {
     const infoWindowContent = document.createElement('div');
+    infoWindowContent.className = 'info-window-content';
     infoWindowContent.style.width = '500px';
+    infoWindowContent.style.height = 'auto';
 
     // Adăugarea titlului stației
     const stationName = document.createElement('div');
     stationName.style.fontSize = '25px';
     stationName.style.fontWeight = 'bold';
-    stationName.style.color = '#333';
+    stationName.style.color = '#0E3F89';
     stationName.textContent = waypoint.gasStationInfo.displayName.text;
-    infoWindowContent.appendChild(stationName);
+
+    // Create an image element
+    const stationImage = document.createElement('img');
+    stationImage.src = '../../../assets/images/gas-station-info-window-icon.svg';
+    stationImage.alt = 'Station Icon';
+    stationImage.style.width = '25px';
+    stationImage.style.height = '25px';
+    stationImage.style.marginRight = '10px';
+
+    const titleContainer = document.createElement('div');
+    titleContainer.style.display = 'flex';
+    titleContainer.style.alignItems = 'center';
+    titleContainer.style.justifyContent = 'flex-start';
+
+    // Append the image and station name to the title container
+    titleContainer.appendChild(stationImage);
+    titleContainer.appendChild(stationName);
+
+    // Now, append the title container to your main info window content
+    infoWindowContent.appendChild(titleContainer);
+
+
+    // Adaugare adresa statie
+    const stationAddress = document.createElement('div');
+    stationAddress.style.fontSize = '15px';
+    stationAddress.style.color = '#5CABEC';
+    stationAddress.textContent = waypoint.address;
+    infoWindowContent.appendChild(stationAddress);
+
 
     // Adăugăm opțiunile de combustibil la infowindow
     let fuelOptionsHtml = '';
 
     if (waypoint.gasolinePrice && waypoint.diselPrice) {
-      fuelOptionsHtml = `<div style="margin-top: 10px; color:black;">
-      <strong>Gasoline:</strong> ${waypoint.gasolinePrice} €/L<br>
-      <strong>Diesel:</strong> ${waypoint.diselPrice} €/L
+      fuelOptionsHtml = `<div style="margin-top: 20px; color:black; font-size:15px; font-weight:bold; margin-bottom:10px">
+      <strong>Average Gasoline Price: </strong> ${waypoint.gasolinePrice} €/L<br>
+      <strong>Average Diesel Price: </strong> ${waypoint.diselPrice} €/L
       </div>`;
     } else {
-      fuelOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional fuel information available.</div>`;
+      fuelOptionsHtml = `<div style="font-size:15px; margin-top: 25px; color:black;">No additional fuel information available.</div>`;
     }
-
     const fuelOptionsDiv = document.createElement('div');
     fuelOptionsDiv.innerHTML = fuelOptionsHtml;
     infoWindowContent.appendChild(fuelOptionsDiv);
-
 
 
 
@@ -60,27 +90,60 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
 
   google.maps.event.addListener(marker, 'click', () => {
     const infoWindowContent = document.createElement('div');
-    infoWindowContent.style.width = '500px';
+      infoWindowContent.className = 'info-window-content';
+      infoWindowContent.style.width = '500px';
+      infoWindowContent.style.height = 'auto';
 
-    // Adăugarea titlului stației
-    const stationName = document.createElement('div');
-    stationName.style.fontSize = '25px';
-    stationName.style.fontWeight = 'bold';
-    stationName.style.color = '#333';
-    stationName.textContent = waypoint.evChargeInfo.displayName.text;
-    infoWindowContent.appendChild(stationName);
+      // Adăugarea titlului stației
+      const stationName = document.createElement('div');
+      stationName.style.fontSize = '25px';
+      stationName.style.fontWeight = 'bold';
+      stationName.style.color = '#0E3F89';
+      stationName.textContent = waypoint.evChargeInfo.displayName.text;
+
+      // Create an image element
+      const stationImage = document.createElement('img');
+      stationImage.src = '../../../assets/images/electric-station-info-window-icon.svg';
+      stationImage.alt = 'Station Icon';
+      stationImage.style.width = '25px';
+      stationImage.style.height = '25px';
+      stationImage.style.marginRight = '10px';
+
+      const titleContainer = document.createElement('div');
+      titleContainer.style.display = 'flex';
+      titleContainer.style.alignItems = 'center';
+      titleContainer.style.justifyContent = 'flex-start';
+
+      // Append the image and station name to the title container
+      titleContainer.appendChild(stationImage);
+      titleContainer.appendChild(stationName);
+
+      // Now, append the title container to your main info window content
+      infoWindowContent.appendChild(titleContainer);
+
+      //Adaugare adresa statie
+      const stationAddress = document.createElement('div');
+      stationAddress.style.fontSize = '15px';
+      stationAddress.style.color = '#5CABEC';
+      stationAddress.textContent = waypoint.address;
+      infoWindowContent.appendChild(stationAddress);
+
 
 
     // Verificăm dacă există opțiuni de încărcare electrică
     let chargeOptionsHtml = '';
+
     if (waypoint.evChargeInfo.evChargeOptions && waypoint.evChargeInfo.evChargeOptions.connectorAggregation) {
-      chargeOptionsHtml = waypoint.evChargeInfo.evChargeOptions.connectorAggregation.map(connector => {
-        return `<div style="color:black; display:flex; flex-direction:column; margin-bottom: 9px;">
-                <span style="font-weight: bold; font-size:14px;">${connector.type}: Max charge rate ${connector.maxChargeRateKw} kW</span>
-              </div>`;
+      chargeOptionsHtml += '<div style="font-weight: bold; margin-bottom: 10px; margin-top: 12px; font-size:18px; color: #0E3F89;">Charge Options:</div>';
+      chargeOptionsHtml += waypoint.evChargeInfo.evChargeOptions.connectorAggregation.map((connector, index, array) => {
+        return `<div style="padding: 10px; border-bottom: ${index === array.length - 1 ? 'none' : '1px solid #ddd'};">
+        <div style="font-weight: bold; font-size:14px; color:#5CABEC;">Connector type: ${formatConnectorType(connector.type)}</div>
+        <div style="font-weight: bold; font-size:13px;">Max charge rate: ${formatMaxChargeRate(connector.maxChargeRateKw)}</div>
+        <div style="font-weight: bold; font-size:13px;">Connectors count: ${connector.count}</div>
+      </div>`;
       }).join('');
     } else {
-      chargeOptionsHtml = `<div style="font-size:15px; margin-top: 10px; color:black;">No additional charging information available.</div>`;
+      chargeOptionsHtml = '<div style="font-size:15px; margin-top: 10px; color:black; font-weight: bold; color: #0E3F89;">No information about the charging options available.</div>';
     }
 
     // Adăugăm opțiunile de încărcare la infowindow
@@ -89,11 +152,13 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
     infoWindowContent.appendChild(chargeOptionsDiv);
 
     //Daugam pretul mediu la electricitate
-    const averagePriceHtml = document.createElement('div');
-    averagePriceHtml.innerHTML = `<div style="margin-top: 10px; font-size:14px; color:black;">
-                                        Average electricity price: ${waypoint.electricityPrice} €/kWh
+    if (waypoint.electricityPrice) {
+      const averagePriceHtml = document.createElement('div');
+      averagePriceHtml.innerHTML = `<div style="margin-top: 20px; color:black; font-size:15px; font-weight:bold; margin-bottom:10px">
+                                        Average ev charging price : ${waypoint.electricityPrice} €/kWh
                                     </div>`;
-    infoWindowContent.appendChild(averagePriceHtml);
+      infoWindowContent.appendChild(averagePriceHtml);
+    }
 
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
@@ -104,27 +169,58 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
 }
 
 function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypoint: CustomWaypoint, marker: google.maps.Marker, index: number) {
-  // Adding content for the infoWindow
   const infoWindowContent = document.createElement('div');
-  infoWindowContent.style.width = '300px';
-  infoWindowContent.style.padding = '10px';
-  infoWindowContent.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+  infoWindowContent.className = 'info-window-content';
+  infoWindowContent.style.width = '500px';
+  infoWindowContent.style.height = '200px';
+  infoWindowContent.style.paddingRight = '10px';
 
-  // Adding the title
-  const title = document.createElement('div');
-  title.style.fontSize = '18px';
-  title.style.color = '#333';
-  title.style.marginBottom = '5px';
-  title.style.fontWeight = 'bold';
-  title.textContent = `Rest Break number ${index + 1}`;
-  infoWindowContent.appendChild(title);
+  // Adăugarea titlului stației
+  const stationName = document.createElement('div');
+  stationName.style.fontSize = '25px';
+  stationName.style.fontWeight = 'bold';
+  stationName.style.color = '#0E3F89';
+  stationName.textContent = "Rest Break " + (index + 1) + " -45 minutes";
 
-  // Adding description
-  const description = document.createElement('div');
-  description.style.fontSize = '14px';
-  description.style.color = '#555';
-  description.textContent = 'Rest break for 45 minutes.';
-  infoWindowContent.appendChild(description);
+  // Create an image element
+  const stationImage = document.createElement('img');
+  stationImage.src = '../../../assets/images/rest-break-info-window-icon.svg';
+  stationImage.alt = 'Station Icon';
+  stationImage.style.width = '25px';
+  stationImage.style.height = '25px';
+  stationImage.style.marginRight = '10px';
+
+  const titleContainer = document.createElement('div');
+  titleContainer.style.display = 'flex';
+  titleContainer.style.alignItems = 'center';
+  titleContainer.style.justifyContent = 'flex-start';
+
+  titleContainer.appendChild(stationImage);
+  titleContainer.appendChild(stationName);
+
+  infoWindowContent.appendChild(titleContainer);
+
+  const restBreakName = document.createElement('div');
+  restBreakName.style.fontSize = '16px';
+  restBreakName.style.color = '#5CABEC';
+  restBreakName.style.marginTop = '10px';
+  restBreakName.style.fontWeight = 'bold';
+  restBreakName.textContent = waypoint.restBreakLocationName;
+  infoWindowContent.appendChild(restBreakName);
+
+  const restBreakInfoParagraph = document.createElement('div');
+  restBreakInfoParagraph.style.fontSize = '15px';
+  restBreakInfoParagraph.style.color = 'black';
+  restBreakInfoParagraph.style.marginTop = '10px';
+  restBreakInfoParagraph.innerHTML = `
+    <div style="font-size:15px; color:black; margin-top:10px; text-align:justify; font-weight:bold;">
+      <p>According to European regulations, drivers are required to take a rest break after every 4.5 hours of driving. </p>
+      <p>The duration of this break should be 45 minutes. </p>
+      <p>This location is indicative as the algorithm seeks leisure locations near the required rest break area.</p>
+    </div>`;
+    
+  infoWindowContent.appendChild(restBreakInfoParagraph);
+
 
   // Creating the infowindow
   const infoWindow = new google.maps.InfoWindow({
@@ -185,7 +281,7 @@ function getPointsAlongRoute(directionResult: google.maps.DirectionsResult) {
   const totalDistance = directionResult.routes[0].legs.reduce((total, leg) => total + leg.distance.value, 0);
 
   //the interval in kilometers in which we will select the points along the route to search for fuel stations
-  let interval = 250 * 1000; //we will search for fuel stations every 300 km
+  let interval = 100 * 1000; //we will search for fuel stations every 200 km
 
   //accumulated distance between 2 points along the route in which we will search for fuel stations
   let accumulatedDistance = 0;
@@ -282,7 +378,8 @@ function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.ma
         'restBreakDuration': customWaypoint?.restBreakDuration,
         'evChargeInfo': customWaypoint?.evChargeInfo,
         'gasStationInfo': customWaypoint?.gasStationInfo,
-        'placeId': customWaypoint?.placeId
+        'placeId': customWaypoint?.placeId,
+        'restBreakLocationName': customWaypoint?.restBreakLocationName,
       });
   });
   return result;
@@ -320,9 +417,35 @@ function convertWaypointDtoToCustomWaypoint(waypoint: WaypointDto): CustomWaypoi
     diselPrice: waypoint.dieselPrice,
     electricityPrice: waypoint.electricityPrice,
     restBreakDuration: waypoint.duration,
-    placeId: waypoint.placeId
+    placeId: waypoint.placeId,
+    restBreakLocationName: waypoint.restBreakLocationName,
+    address: waypoint.address
   };
 }
+
+function formatConnectorType(connectorType) {
+  const typeMappings = {
+    "EV_CONNECTOR_TYPE_UNSPECIFIED": "Unspecified connector",
+    "EV_CONNECTOR_TYPE_OTHER": "Other connector types",
+    "EV_CONNECTOR_TYPE_J1772": "J1772 type 1 connector",
+    "EV_CONNECTOR_TYPE_TYPE_2": "IEC 62196 type 2 connector",
+    "EV_CONNECTOR_TYPE_CHADEMO": "CHAdeMO type connector",
+    "EV_CONNECTOR_TYPE_CCS_COMBO_1": "Combined Charging System (CCS) Type-1",
+    "EV_CONNECTOR_TYPE_CCS_COMBO_2": "Combined Charging System (CCS) Type-2",
+    "EV_CONNECTOR_TYPE_TESLA": "Tesla connector",
+    "EV_CONNECTOR_TYPE_UNSPECIFIED_GB_T": "GB/T type connector",
+    "EV_CONNECTOR_TYPE_UNSPECIFIED_WALL_OUTLET": "Unspecified wall outlet",
+  };
+
+  let formattedType = connectorType.replace("EV_CONNECTOR_TYPE_", "").replace(/_/g, " ");
+
+  return typeMappings[connectorType] || formattedType;
+}
+
+function formatMaxChargeRate(chargeRate) {
+  return chargeRate ? `${Number(chargeRate).toFixed(2)} kW` : 'Information not Available';
+}
+
 
 
 export {
@@ -335,6 +458,8 @@ export {
   calculateMidpoint,
   calculateDurationInHoursAndMinutes,
   calculateDistanceAndDurationBetweenWaypoints,
-  convertWaypointDtoToCustomWaypoint
+  convertWaypointDtoToCustomWaypoint,
+  formatConnectorType,
+  formatMaxChargeRate
 };
 

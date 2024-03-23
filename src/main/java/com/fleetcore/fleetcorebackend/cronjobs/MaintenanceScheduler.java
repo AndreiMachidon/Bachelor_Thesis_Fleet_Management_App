@@ -22,7 +22,6 @@ public class MaintenanceScheduler {
     @Autowired
     private MaintenanceService maintenanceService;
 
-    //@Scheduled(cron = "0 0 0 * * ?") -> For running once a day at the middle of the night
     @Scheduled(fixedRate = 5000)
     public void checkVehiclesForCurrentDateMaintenance() {
         List<Vehicle> vehicles = vehicleService.findAll();

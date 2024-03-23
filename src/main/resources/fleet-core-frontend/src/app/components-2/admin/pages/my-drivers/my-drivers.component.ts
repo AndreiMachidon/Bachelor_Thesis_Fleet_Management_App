@@ -19,9 +19,7 @@ export class MyDriversComponent {
 
   ngOnInit(){
     this.driversService.getAllDriversForAdmin(this.authService.getUserDetails().id).subscribe((response) => {
-      console.log(response);   
-      this.drivers = response;
-      
+      this.drivers = response;   
     })
   }
 

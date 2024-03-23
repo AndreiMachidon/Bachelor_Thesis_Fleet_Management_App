@@ -27,7 +27,7 @@
   .c-timeline__content:after {
     content: "";
     position: absolute;
-    left: -9px; /* Centrarea cercului */
+    left: -9px;
     top: 0;
     width: 20px;
     height: 20px;
@@ -44,18 +44,20 @@
   
   .c-timeline__title {
     font-weight: bold;
-    color: white;
+    color: #0E3F89;
     font-size: 22px;
   }
   
   .c-timeline__desc {
-    color: rgb(123, 121, 121);
+    color: gray;
     margin-top: -1rem;
   }
   
   .waypoint-details {
     text-align: start;
-    color: white;
+    color: #5CABEC;
+    font-weight: bold;
+    margin-top: 3rem;
   }
   
   .wrapper {

@@ -26,6 +26,7 @@ public class WaypointDto {
 
     private String fuelStationName;
     private String electricStationName;
+    private String restBreakLocationName;
 
     private String placeId;
 }

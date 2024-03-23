@@ -16,7 +16,7 @@ export class GoogleMapsService {
     let httpHeaders = new HttpHeaders()
     .set('Content-Type', 'application/json')
     .set('X-Goog-Api-Key', 'AIzaSyCbyhY3YjBZ4KfkY_aceUm408pDw7Dc290')
-    .set('X-Goog-FieldMask', 'places.displayName,places.id,places.location,places.addressComponents');
+    .set('X-Goog-FieldMask', 'places.displayName,places.id,places.location,places.addressComponents,places.formattedAddress');
     return this.httpClient.post(this.placesNearbySearchUrl, request, { 'headers': httpHeaders});
   }
 
@@ -24,7 +24,15 @@ export class GoogleMapsService {
     let httpHeaders = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('X-Goog-Api-Key', 'AIzaSyCbyhY3YjBZ4KfkY_aceUm408pDw7Dc290')
-      .set('X-Goog-FieldMask', 'places.displayName,places.id,places.location,places.evChargeOptions,places.addressComponents');
+      .set('X-Goog-FieldMask', 'places.displayName,places.id,places.location,places.evChargeOptions,places.addressComponents,places.formattedAddress');
+    return this.httpClient.post(this.placesNearbySearchUrl, request, { 'headers': httpHeaders});
+  }
+
+  public getNearbyLocationsForRestBreaks(request: any) {
+    let httpHeaders = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('X-Goog-Api-Key', 'AIzaSyCbyhY3YjBZ4KfkY_aceUm408pDw7Dc290')
+      .set('X-Goog-FieldMask', 'places.displayName,places.id,places.location,places.formattedAddress');
     return this.httpClient.post(this.placesNearbySearchUrl, request, { 'headers': httpHeaders});
   }
 }

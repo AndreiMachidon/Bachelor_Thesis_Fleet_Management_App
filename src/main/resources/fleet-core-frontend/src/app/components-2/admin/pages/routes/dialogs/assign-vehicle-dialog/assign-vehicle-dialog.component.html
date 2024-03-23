@@ -1,71 +1,57 @@
-<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows
+  class="mat-elevation-z8">
 
-    <ng-container matColumnDef="vehicleIcon">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <img src="../../../../../../../assets/images/truck-default-image.svg" alt="Vehicle" class="vehicle-icon"
-                    style="height: 40px; width: 40px;"/>
-        </td>
-      </ng-container>
-  
-    <ng-container matColumnDef="make">
-      <th mat-header-cell *matHeaderCellDef> Make </th>
-      <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="model">
-      <th mat-header-cell *matHeaderCellDef> Model </th>
-      <td mat-cell *matCellDef="let element"> {{element.model}}</td>
-    </ng-container>
-  
-    <ng-container matColumnDef="milenage">
-      <th mat-header-cell *matHeaderCellDef> Mileage </th>
-      <td mat-cell *matCellDef="let element"> {{element.milenage | number:'1.0-0'}} km</td>
-    </ng-container>
-  
-    <ng-container matColumnDef="fuelType">
-      <th mat-header-cell *matHeaderCellDef> Fuel Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.fuelType}} </td>
-    </ng-container>
+  <ng-container matColumnDef="vehicleIcon">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <img src="../../../../../../../assets/images/truck-default-image.svg"
+        alt="Vehicle" class="vehicle-icon"
+        style="height: 40px; width: 40px;" />
+    </td>
+  </ng-container>
 
-    <ng-container matColumnDef="fuelConsumption">
-        <th mat-header-cell *matHeaderCellDef> Fuel consumption </th>
-        <td mat-cell *matCellDef="let element"> {{element.fuelConsumption}} {{getFuelConsumptionUnit(element) }}</td>
-      </ng-container>
+  <ng-container matColumnDef="make">
+    <th mat-header-cell *matHeaderCellDef> Make </th>
+    <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+  </ng-container>
 
-      <ng-container matColumnDef="cargoCapacity">
-        <th mat-header-cell *matHeaderCellDef> Cargo Capacity </th>
-        <td mat-cell *matCellDef="let element"> {{element.cargoCapacity | number:'1.0-0'}} m<sup>3</sup></td>
-      </ng-container>
+  <ng-container matColumnDef="model">
+    <th mat-header-cell *matHeaderCellDef> Model </th>
+    <td mat-cell *matCellDef="let element"> {{element.model}}</td>
+  </ng-container>
 
+  <ng-container matColumnDef="milenage">
+    <th mat-header-cell *matHeaderCellDef> Mileage </th>
+    <td mat-cell *matCellDef="let element"> {{formatMilenage(element.milenage)}}
+      km</td>
+  </ng-container>
 
-    <ng-container matColumnDef="expand">
-        <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
-        <td mat-cell *matCellDef="let element">
-            <button mat-icon-button aria-label="expand row" (click)="expandedElement = expandedElement === element ? null : element; $event.stopPropagation()">
-                <mat-icon *ngIf="expandedElement === element; else downIcon">keyboard_arrow_up</mat-icon>
-                <ng-template #downIcon><mat-icon>keyboard_arrow_down</mat-icon></ng-template>
-            </button>
-        </td>
-      </ng-container>
+  <ng-container matColumnDef="fuelType">
+    <th mat-header-cell *matHeaderCellDef> Fuel Type </th>
+    <td mat-cell *matCellDef="let element"> {{element.fuelType}} </td>
+  </ng-container>
 
-      <!-- Expanded Content Column -->
-      <ng-container matColumnDef="expandedDetail">
-        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
-          <div class="vehicle-details"
-               [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                <button mat-raised-button class="select-vehicle-button" color="accent" (click)="selectVehicle(element)">Select</button>
-          </div>
-        </td>
-      </ng-container>
-    
-  
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
-      <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
-          class="example-element-row"
-          [class.example-expanded-row]="expandedElement === element"
-          (click)="expandedElement = expandedElement === element ? null : element">
-      </tr>
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  <ng-container matColumnDef="fuelConsumption">
+    <th mat-header-cell *matHeaderCellDef> Fuel consumption </th>
+    <td mat-cell *matCellDef="let element"> {{element.fuelConsumption}}
+      {{getFuelConsumptionUnit(element) }}</td>
+  </ng-container>
 
-  </table>
+  <ng-container matColumnDef="cargoCapacity">
+    <th mat-header-cell *matHeaderCellDef> Cargo Capacity </th>
+    <td mat-cell *matCellDef="let element">
+      {{formatCargoCapacity(element.cargoCapacity)}} m<sup>3</sup></td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-raised-button class="select-vehicle-button" color="primary"
+        (click)="selectVehicle(element)">Select</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+
+</table>

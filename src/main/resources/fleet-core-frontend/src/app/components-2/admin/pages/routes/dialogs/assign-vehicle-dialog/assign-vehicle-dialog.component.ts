@@ -6,26 +6,18 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'app-assign-vehicle-dialog',
   templateUrl: './assign-vehicle-dialog.component.html',
   styleUrls: ['./assign-vehicle-dialog.component.css'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed,void', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-  ],
 })
 export class AssignVehicleDialogComponent {
 
   dataSource = new MatTableDataSource<Vehicle>;
-  columnsToDisplay = ['vehicleIcon', 'make', 'model', 'milenage', 'fuelType', 'fuelConsumption', 'cargoCapacity'];
-  columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+  columnsToDisplay = ['vehicleIcon', 'make', 'model', 'milenage', 'fuelType', 'fuelConsumption', 'cargoCapacity', 'actions'];
   expandedElement: Vehicle | null;
-  selection = new SelectionModel<Vehicle>(true, []);
 
 
   constructor(private vehicleService: VehicleService,
@@ -60,5 +52,13 @@ export class AssignVehicleDialogComponent {
 
   selectVehicle(row: Vehicle){
     this.dialogRef.close(row);
+  }
+
+  formatMilenage(milenage: number): string {
+    return formatNumber(milenage, 'de', '1.0-0');
+  }
+
+  formatCargoCapacity(cargoCapacity: number): string {
+    return formatNumber(cargoCapacity, 'de', '1.0-0');
   }
 }

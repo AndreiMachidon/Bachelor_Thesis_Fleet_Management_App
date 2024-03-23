@@ -78,6 +78,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
 import { DeleteDriverDialogComponent } from './components-2/admin/pages/my-drivers/dialogs/delete-driver-dialog/delete-driver-dialog.component';
 import { AddDriverDialogComponent } from './components-2/admin/pages/my-drivers/dialogs/add-driver-dialog/add-driver-dialog.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { RouteSavedDialogComponent } from './components-2/admin/pages/routes/dialogs/route-saved-dialog/route-saved-dialog.component';
 
 @NgModule({
   declarations: [
@@ -122,6 +124,7 @@ import { AddDriverDialogComponent } from './components-2/admin/pages/my-drivers/
     MarkAlertResolvedDialogComponent,
     DeleteDriverDialogComponent,
     AddDriverDialogComponent,
+    RouteSavedDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -153,7 +156,8 @@ import { AddDriverDialogComponent } from './components-2/admin/pages/my-drivers/
     NgxMatNativeDateModule,
     NgxMatTimepickerModule,
     MatMenuModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatTabsModule
   ],
   
   providers: [DatePipe, 

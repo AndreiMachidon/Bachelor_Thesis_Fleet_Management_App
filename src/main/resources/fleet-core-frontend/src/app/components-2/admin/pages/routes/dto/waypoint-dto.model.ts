@@ -11,5 +11,7 @@ export class WaypointDto{
     duration: number;
     electricStationName: string;
     fuelStationName: string;
+    restBreakLocationName: string;
     placeId: string;
+
 }

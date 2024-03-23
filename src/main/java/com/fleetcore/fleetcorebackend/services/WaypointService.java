@@ -30,6 +30,7 @@ public class WaypointService {
             case "RestBreak":
                 RestBreakWaypoint restBreak = new RestBreakWaypoint();
                 restBreak.setDuration(dto.getDuration());
+                restBreak.setRestBreakLocationName(dto.getRestBreakLocationName());
                 waypoint = restBreak;
                 break;
             case "Start":
@@ -76,6 +77,7 @@ public class WaypointService {
         } else if (waypoint instanceof RestBreakWaypoint) {
             RestBreakWaypoint restBreak = (RestBreakWaypoint) waypoint;
             dto.setDuration(restBreak.getDuration());
+            dto.setRestBreakLocationName(restBreak.getRestBreakLocationName());
 
         }
 

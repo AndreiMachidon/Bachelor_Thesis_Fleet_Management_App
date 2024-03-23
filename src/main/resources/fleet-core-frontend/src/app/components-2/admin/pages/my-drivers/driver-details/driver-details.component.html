@@ -1,1 +1,62 @@
-<p>First name: {{driver.firstName}}, Last name: {{driver.lastName}}</p>
+<div class="main-container" *ngIf="driver">
+    <div class="upper-container">
+        <div class="upper-container-left">
+            <img
+            [src]="driver.imageData ? 'data:image/jpeg;base64,' + driver.imageData : '../../../../../../assets/images/user-icon-white.png'"
+            alt="Profile Picture" class="driver-profile-picture-container">
+        </div>
+        <div class="upper-container-right">
+            <div class="general-details">
+                <div class="general-details-header">
+                    <img src="../../../../../../assets/images/driver-general-details-icon.svg" style="width: 35px; height: 35px; margin-bottom: 0.3rem;">
+                    <h2 class="general-details-title">General Details</h2>
+                </div>
+
+                <mat-divider></mat-divider>
+                <div class="general-details-body">
+                    <div class="column">
+                        <p>Name: {{driver.firstName}} {{driver.lastName}}</p>
+                        <p>Orgaisation name: {{driver.organisationName}}</p>
+                    </div>
+                    <mat-divider vertical style="width: 2px; width: 1px; height: 100%; margin-top: 0.1rem;"></mat-divider>
+                    <div class="column">
+                        <p>Email: {{driver.email}}</p>
+                        <p>Phone number: {{driver.phoneNumber}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="specific-details">
+                <div class="specific-details-header">
+                    <img src="../../../../../../assets/images/driver-specific-details-icon.svg" style="width: 35px; height: 35px; margin-bottom: 0.3rem;">
+                    <h2 class="driver-specific-details-title">Driver Specific Details</h2>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="specific-details-body">
+                    <div class="column">
+                        <p>Rate per kilometer: {{driver.ratePerKilometer}} € / km</p>
+                        <p>License expiry date: {{driver.licenseExpiryDate | date:'dd-MM-yyyy'}}</p>
+                    </div>
+                    <mat-divider vertical style="width: 2px; width: 1px; height: 100%; margin-top: 0.1rem;"></mat-divider>
+                    <div class="column">
+                        <p>Experience: {{driver.yearsOfExperience}} years</p>
+                        <p>Total kilometers: {{formatMilenage(driver.totalKilometersDriven)}} km</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="lower-container">
+        <div class="statistics-container">
+            <div class="statistcs-header">
+                <img src="../../../../../../assets/images/driver-statistics-icon.svg" style="width: 45px; height: 45px; ">
+                <h2 class="driver-statistics-title">Driver Statistics</h2>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+   
+</div>
+
+
+

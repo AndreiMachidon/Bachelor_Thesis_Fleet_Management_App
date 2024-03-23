@@ -39,8 +39,6 @@ export class DriverCardComponent {
 
   viewDriverDetails() {
     this.router.navigate(["admin-dashboard/driver-details", this.driver.id]);
-    
-
   }
 
   formatMilenage(milenage: number): string {

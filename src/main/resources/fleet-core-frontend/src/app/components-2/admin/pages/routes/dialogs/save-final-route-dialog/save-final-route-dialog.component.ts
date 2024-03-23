@@ -79,6 +79,7 @@ export class SaveFinalRouteDialogComponent {
         case 'restBreak':
           waypointDto.type = 'RestBreak';
           waypointDto.duration = waypoint.restBreakDuration;
+          waypointDto.restBreakLocationName = waypoint.restBreakLocationName;
           break;
         case 'fuelStation':
           waypointDto.type = 'FuelStation';

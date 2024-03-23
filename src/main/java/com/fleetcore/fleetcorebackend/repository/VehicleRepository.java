@@ -21,12 +21,16 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Transactional
     void deleteVehicleById(Long id);
 
-    @Query("SELECT v FROM Vehicle v WHERE v.adminId = :adminId AND v.id NOT IN (" +
-            "SELECT r.vehicleId FROM Route r WHERE r.adminId = :adminId AND NOT (" +
-            "r.arrivalTime < :startTime OR r.startTime > :endTime))")
+    @Query("SELECT v FROM Vehicle v WHERE v.adminId = :adminId " +
+            "AND v.id NOT IN (" +
+            "    SELECT r.vehicleId FROM Route r WHERE r.adminId = :adminId AND NOT (" +
+            "        r.arrivalTime < :startTime OR r.startTime > :endTime)) " +
+            "AND v.id NOT IN (" +
+            "    SELECT m.vehicleId FROM Maintenance m WHERE m.vehicleId = v.id AND (" +
+            "        m.maintananceDate BETWEEN :startTime AND :endTime))")
     List<Vehicle> findAvailableVehicles(@Param("adminId") Long adminId,
-                                        @Param("startTime") Date startTime,
-                                        @Param("endTime") Date endTime);
+                                                         @Param("startTime") Date startTime,
+                                                         @Param("endTime") Date endTime);
 
 
 }

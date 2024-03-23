@@ -25,12 +25,13 @@ export class PolylineService {
   }
 
   setWaypoints(waypoints: WaypointDto[], map: google.maps.Map, fuelPriceService: FuelPricesService) {
+    console.log(waypoints);
+    
     this.waypointsMarkersSubject.getValue().forEach(marker => marker.setMap(null));
+    let restBreakIndex = 0;
     const markers = waypoints.map((waypointDto, index) => {
-        // Convertim WaypointDto la CustomWaypoint
         const customWaypoint = convertWaypointDtoToCustomWaypoint(waypointDto);
         let marker = null;
-        // Creează markerul corespunzător tipului de waypoint
         if(customWaypoint.type === 'START') {
           marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/start_point.png'); // Sau altă imagine pentru DESTINATION
         } else if(customWaypoint.type === 'FUEL_STATION') {
@@ -41,7 +42,8 @@ export class PolylineService {
           createInfoWindowForElectricStationsMarkerWaypoint(map, customWaypoint, marker, fuelPriceService);
         } else if(customWaypoint.type === 'REST_BREAK') {
           marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/rest_break_point.png');
-          createInfoWindowForRestBreaksMarkerWaypoint(map, customWaypoint, marker, index);
+          createInfoWindowForRestBreaksMarkerWaypoint(map, customWaypoint, marker, restBreakIndex);
+          restBreakIndex++;
         }else if(customWaypoint.type === 'DESTINATION'){
           marker = createCustomMarker(map, customWaypoint.location, '../../../assets/markers/end_point.png');
         }

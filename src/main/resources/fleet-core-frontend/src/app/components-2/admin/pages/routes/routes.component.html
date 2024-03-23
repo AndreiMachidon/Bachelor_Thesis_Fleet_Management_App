@@ -1,130 +1,136 @@
 <div class="main-container">
 
   <div class="left-container">
-    <ng-container *ngIf="showSelectOptions; else addRouteContainer">
-      <div class="option view-all-options">
-        <button mat-raised-button color="accent"
-          (click)="showSelectOptions = false; showAddRoute = true"
-          class="action-button">Add
-          Route</button>
-        <button mat-raised-button color="accent"
-          (click)="showSelectOptions = false; showViewRoutes = true; getSavedRoutes()"
-          class="action-button">View All Routes</button>
-      </div>
-    </ng-container>
+    <mat-tab-group [selectedIndex]="1" (selectedTabChange)="onTabChanged($event)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>add</mat-icon>
+          Add route
+        </ng-template>
+        <ng-template matTabContent>
+          <div class="option-add-route">
+            <mat-form-field class="location-input">
+              <input type="text" placeholder="Starting Point"
+                [(ngModel)]="startingLocation" #startingLocationInput matInput
+                [matAutocomplete]="startingLocationAuto"
+                (input)="startingLocationAutocomplete(startingLocationInput)" />
+              <mat-autocomplete #startingLocationAuto="matAutocomplete">
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field class="location-input">
+              <input type="text" placeholder="Destination"
+                [(ngModel)]="destinationLocation" #destinationLocationInput
+                matInput
+                [matAutocomplete]="destinationLocationAuto"
+                (input)="destinationLocationAutocomplete(destinationLocationInput)" />
+              <mat-autocomplete #destinationLocationAuto="matAutocomplete">
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="findOptimalRoute()"
+              class="action-button">Find optimal route</button>
+
+            <mat-form-field class="date-time-input">
+              <input matInput [ngxMatDatetimePicker]="picker"
+                placeholder="Choose a date and time for the route"
+                [formControl]="dateControl"
+                [min]="minDate | date:'yyyy-MM-ddTHH:mm:ss'"
+                [disabled]="false">
+              <ngx-mat-datepicker-toggle matSuffix
+                [for]="picker"></ngx-mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #picker
+                [showSpinners]="true"
+                [showSeconds]="false"
+                [stepHour]="1"
+                [stepMinute]="1"
+                [touchUi]="false"
+                [color]="'primary'"
+                [enableMeridian]="false"
+                [disableMinute]="false"
+                [hideTime]="false"
+                [disabled]="!isRouteConfigured"
+                (closed)="onDateSelected()">
+              </ngx-mat-datetime-picker>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openChoseVehicleDialog()"
+              [disabled]="!isRouteConfigured || !startTime"
+              class="action-button route-details-selection">Chose
+              vehicle</button>
+
+            <div *ngIf="selectedVehicle">
+              <p>Selected Vehicle: {{selectedVehicle.make}}
+                {{selectedVehicle.model}} - {{selectedVehicle.fuelType}}</p>
+            </div>
+
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openChoseDriverDialog()"
+              [disabled]="!isRouteConfigured || !startTime"
+              class="action-button route-details-selection">Chose
+              driver</button>
+
+            <div *ngIf="selectedDriver">
+              <p>Selected Driver: {{selectedDriver.firstName}}
+                {{selectedDriver.lastName}}</p>
+            </div>
+
+            <mat-checkbox class="example-margin"
+              [disabled]="!isRouteConfigured || selectedVehicle ==null || selectedDriver == null"
+              (change)="showFuelStations()"
+              [color]="'primary'">
+              Show Fuel/Charging Stations</mat-checkbox>
+
+            <mat-checkbox class="example-margin"
+              [disabled]="!isRouteConfigured || selectedVehicle == null || selectedDriver == null"
+              (change)="toggleTrafficLayer($event.checked)"
+              [checked]="showTrafficLayer"
+              [color]="'primary'">
+              Show real-time traffic
+            </mat-checkbox>
+
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="showFinalDetails()"
+              [disabled]="!isRouteConfigured || selectedVehicle ==null || selectedDriver == null"
+              class="action-button route-details-selection total-cost">See
+              details
+              and costs</button>
+            <div class="lower-container">
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>map</mat-icon>
+          View routes
+        </ng-template>
+        <ng-template matTabContent>
+          <div class="left-container-view-routes">
+            <ng-container>
+              <div class="route-details-container">
+                <app-route-details-card class="app-route-card"
+                  *ngFor="let route of routesList"
+                  [route]="route"
+                  [map]="map"></app-route-details-card>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+
+      </mat-tab>
+    </mat-tab-group>
   </div>
-
-  <ng-template #addRouteContainer>
-    <ng-container *ngIf="showAddRoute; else showRoutesContainer">
-      <div class="option-add-route">
-        <mat-form-field class="location-input">
-          <input type="text" placeholder="Starting Point"
-            [(ngModel)]="startingLocation" #startingLocationInput matInput
-            [matAutocomplete]="startingLocationAuto"
-            (input)="startingLocationAutocomplete(startingLocationInput)" />
-          <mat-autocomplete #startingLocationAuto="matAutocomplete">
-          </mat-autocomplete>
-        </mat-form-field>
-
-        <mat-form-field class="location-input">
-          <input type="text" placeholder="Destination"
-            [(ngModel)]="destinationLocation" #destinationLocationInput matInput
-            [matAutocomplete]="destinationLocationAuto"
-            (input)="destinationLocationAutocomplete(destinationLocationInput)" />
-          <mat-autocomplete #destinationLocationAuto="matAutocomplete">
-          </mat-autocomplete>
-        </mat-form-field>
-
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="findOptimalRoute()"
-          class="action-button">Find optimal route</button>
-
-        <mat-form-field class="date-time-input">
-          <input matInput [ngxMatDatetimePicker]="picker"
-            placeholder="Choose a date and time for the route"
-            [formControl]="dateControl"
-            [min]="minDate | date:'yyyy-MM-ddTHH:mm:ss'"
-            [disabled]="false">
-          <ngx-mat-datepicker-toggle matSuffix
-            [for]="picker"></ngx-mat-datepicker-toggle>
-          <ngx-mat-datetime-picker #picker
-            [showSpinners]="true"
-            [showSeconds]="false"
-            [stepHour]="1"
-            [stepMinute]="1"
-            [touchUi]="false"
-            [color]="'accent'"
-            [enableMeridian]="false"
-            [disableMinute]="false"
-            [hideTime]="false"
-            [disabled]="!isRouteConfigured"
-            (closed)="onDateSelected()">
-          </ngx-mat-datetime-picker>
-        </mat-form-field>
-
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="openChoseVehicleDialog()"
-          [disabled]="!isRouteConfigured || !startTime"
-          class="action-button route-details-selection">Chose vehicle</button>
-
-        <div *ngIf="selectedVehicle">
-          <p>Selected Vehicle: {{selectedVehicle.make}}
-            {{selectedVehicle.model}} - {{selectedVehicle.fuelType}}</p>
-        </div>
-
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="openChoseDriverDialog()"
-          [disabled]="!isRouteConfigured || !startTime"
-          class="action-button route-details-selection">Chose driver</button>
-
-        <div *ngIf="selectedDriver">
-          <p>Selected Driver: {{selectedDriver.firstName}}
-            {{selectedDriver.lastName}}</p>
-        </div>
-
-        <mat-checkbox class="example-margin"
-          [disabled]="!isRouteConfigured || selectedVehicle ==null || selectedDriver == null"
-          (change)="showFuelStations()">
-          Show Fuel/Charging Stations</mat-checkbox>
-
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="showFinalDetails()"
-          [disabled]="!isRouteConfigured || selectedVehicle ==null || selectedDriver == null"
-          class="action-button route-details-selection total-cost">See details
-          and costs</button>
-        <div class="lower-container">
-
-          <button mat-raised-button color="warn"
-            class="action-button"
-            (click)="showSelectOptions = true; showAddRoute = false">Back</button>
-        </div>
-      </div>
-    </ng-container>
-
-  </ng-template>
-
-  <ng-template #showRoutesContainer>
-    <div class="left-container-view-routes">
-      <ng-container>
-        <div class="route-details-container">
-          <app-route-details-card class="app-route-card"
-            *ngFor="let route of routesList"
-            [route]="route" 
-            [map]="map"
-            ></app-route-details-card>
-        </div>
-      </ng-container>
-    </div>
-  </ng-template>
-
   <div class="right-container">
     <div id="map"></div>
   </div>

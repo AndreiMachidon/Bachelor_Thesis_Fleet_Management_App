@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RestBreakWaypoint extends Waypoint {
 
-    //duration in minutes
+    private String restBreakLocationName;
+
     private Integer duration;
 }

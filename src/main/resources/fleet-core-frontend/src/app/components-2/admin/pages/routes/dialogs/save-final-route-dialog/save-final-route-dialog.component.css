@@ -16,13 +16,13 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    color: white;
+    color: black;
     margin-left: 2rem;
     margin-top: 2rem;
 }
 
 .divider{
-    background-color: white;
+    background-color: black;
     height: 1px;
     margin-bottom: 1rem;
 }
@@ -41,6 +41,7 @@
     gap: 10px;
     font-weight: bolder;
     font-size: 20px;
+    color: #0E3F89
   }
 
 .header mat-icon {
@@ -55,7 +56,7 @@
 .important{
     font-size: 18px;
     font-weight: bold;
-    color: #69F0AE;
+    color: #0E3F89;
 }
 
 .actions{
