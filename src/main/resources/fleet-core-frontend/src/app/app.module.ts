@@ -80,6 +80,7 @@ import { DeleteDriverDialogComponent } from './components-2/admin/pages/my-drive
 import { AddDriverDialogComponent } from './components-2/admin/pages/my-drivers/dialogs/add-driver-dialog/add-driver-dialog.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { RouteSavedDialogComponent } from './components-2/admin/pages/routes/dialogs/route-saved-dialog/route-saved-dialog.component';
+import { DriverMainComponent } from './components-2/driver/driver-main/driver-main.component';
 
 @NgModule({
   declarations: [
@@ -125,6 +126,7 @@ import { RouteSavedDialogComponent } from './components-2/admin/pages/routes/dia
     DeleteDriverDialogComponent,
     AddDriverDialogComponent,
     RouteSavedDialogComponent,
+    DriverMainComponent,
   ],
   imports: [
     BrowserModule,

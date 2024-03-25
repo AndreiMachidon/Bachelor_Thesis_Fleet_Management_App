@@ -1,0 +1,55 @@
+.welcome-message {
+    width: 90%;
+    height: 85%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #F0F8FF;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    
+}
+
+.logo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.logo{
+    max-width: 100%;
+    max-height: 5rem;
+    height: auto;
+}
+
+.welcome-header {
+    color: #0E3F89;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    line-height: 2.5rem;
+    
+}
+
+.welcome-logo {
+    color: #0E3F89;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    line-height: 2.2rem;
+    font-weight: bold;
+}
+
+.welcome-text {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.view-routes-button{
+    width: 100%;
+    margin-top: 1rem;
+    height: 3rem;
+    border-radius: 2rem;
+}

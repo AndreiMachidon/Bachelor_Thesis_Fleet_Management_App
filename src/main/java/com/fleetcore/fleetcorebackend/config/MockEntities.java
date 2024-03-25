@@ -5,7 +5,6 @@ import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
 import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
 import com.fleetcore.fleetcorebackend.repository.*;
-import jakarta.annotation.PostConstruct;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -39,7 +38,7 @@ public class MockEntities {
     @Autowired
     private CountryFuelPricesRepository countryFuelPricesRepository;
 
-    @PostConstruct
+//    @PostConstruct
     public void mockEntities() throws Exception {
         this.mockUser();
         this.mockVehicles();

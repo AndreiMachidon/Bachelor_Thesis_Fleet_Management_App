@@ -1,8 +1,11 @@
 <div class="navigation-container">
-
-    <div class="actions-container" *ngIf="!isRouteStarted">
-        <button mat-raised-button color="accent" (click)="acknowledgeUserAgreementForLocation()"
-            class="action-button">Start Route</button>
+    <div class="actions-container" *ngIf="!isRouteStarted">      
+        <!-- <div class="stepper-container">
+            <app-route-waypoints-stepper [waypointsInfo]="route.waypoints"></app-route-waypoints-stepper>
+        </div> -->
+        <button mat-raised-button color="primary" style="margin-bottom: 10rem;" (click)="acknowledgeUserAgreementForLocation()"
+            class="action-button">Start Route
+        </button>
     </div>
     <div *ngIf="isRouteStarted" class="route-in-progress-container" [ngClass]="{'alert-active': isAlertActiveUnresolved}">
         <div class="progress-title" *ngIf="!isAlertActiveUnresolved">

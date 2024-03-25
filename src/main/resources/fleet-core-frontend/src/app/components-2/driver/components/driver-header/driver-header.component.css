@@ -1,0 +1,31 @@
+.mat-elevation-z8 {
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.2), 0 9px 28px 0px rgba(0,0,0,0.14), 0 12px 48px 16px rgba(0,0,0,0.12);
+  }
+
+.header{
+  background-color: #15275F;
+  color: white;
+}
+  
+  .toolbar-spacer {
+    flex: 1 1 auto;
+  }
+  
+  mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 9rem;
+  height: 2.7rem;
+}
+  

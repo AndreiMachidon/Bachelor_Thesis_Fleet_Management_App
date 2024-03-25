@@ -17,8 +17,11 @@
         <div class="route-status-info">
             Route status: {{route.routeStatus}}
         </div>
+        <div class="route-start-time-info">
+            Start time: {{route.startTime | date:'yyyy-MM-dd HH:mm'}}
+        </div>
     </div>
     <div class="card-actions">
-        <button mat-raised-button color="accent" (click)="viewRoute()">View Route</button>
+        <button mat-raised-button color="primary" (click)="viewRoute()">View Route</button>
     </div>
 </div>

@@ -1,15 +1,22 @@
 .route-card {
-    background-color: whitesmoke;
+    background-color: #E0EDF7;
     width: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: hidden;
     color: black;
     padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.route-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .card-header {
@@ -85,6 +92,8 @@
 .left-details{
     align-items: flex-start;
     justify-content: center;
+    margin-top: 1rem;
+    font-weight: bold;
 }
 
 .right-details{
@@ -95,6 +104,7 @@
     align-items: flex-end;
     justify-content: center;
     gap: 1rem;
+    margin-top: 1rem;
 }
 
 .status-upcoming {

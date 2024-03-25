@@ -11,6 +11,7 @@
    height: 100%;
    display: flex;
    flex-direction: column;
+   overflow: auto;
 }
 
 .right-container{
@@ -107,7 +108,7 @@ mat-divider{
 
 .route-details-container{
     width: 100%;
-
+    padding-top: 2rem;
     padding-bottom: 1rem;
     max-height: 100%;
     display: flex;

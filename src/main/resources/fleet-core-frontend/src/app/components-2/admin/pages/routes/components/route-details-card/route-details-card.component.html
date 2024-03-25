@@ -24,17 +24,17 @@
           </div>
         <div class="route-details-info">
             <div class="left-details">
-                <p>Total costs: {{totalCosts.toFixed(2)}} €</p>
-                <p>Total distance: {{route.distance.toFixed(2)}} km</p>
+                <p>Total costs: {{totalCosts.toFixed(1)}} €</p>
+                <p>Total distance: {{route.distance.toFixed(1)}} km</p>
             </div>
             <div class="right-details">
-                <button *ngIf="route.routeStatus === 'IN_PROGRESS' || route.routeStatus === 'ALERT_ACTIVE'" mat-raised-button color="accent" (click)="viewLiveRouteStatus()">
+                <button *ngIf="route.routeStatus === 'IN_PROGRESS' || route.routeStatus === 'ALERT_ACTIVE'" mat-raised-button color="primary" (click)="viewLiveRouteStatus()">
                     View Live Status
                   </button>
-                  <button *ngIf="route.routeStatus !== 'IN_PROGRESS' && route.routeStatus !== 'COMPLETED'  && route.routeStatus !== 'ALERT_ACTIVE'" mat-raised-button color="accent" (click)="displayRoute()">
+                  <button *ngIf="route.routeStatus !== 'IN_PROGRESS' && route.routeStatus !== 'COMPLETED'  && route.routeStatus !== 'ALERT_ACTIVE'" mat-raised-button color="primary" (click)="displayRoute()">
                     Display Route
                   </button>
-                  <button *ngIf="route.routeStatus === 'COMPLETED'" mat-raised-button color="accent" (click)="displayCompletedRoute()">
+                  <button *ngIf="route.routeStatus === 'COMPLETED'" mat-raised-button color="primary" (click)="displayCompletedRoute()">
                     Display Completed Route
                   </button>
               </div>

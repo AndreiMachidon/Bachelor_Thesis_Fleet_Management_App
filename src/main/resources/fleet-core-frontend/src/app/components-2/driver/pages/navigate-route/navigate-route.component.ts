@@ -45,12 +45,11 @@ export class NavigateRouteComponent {
 
   ngOnInit(): void {
     
-    this.getUserLocation();
     this.getNavigableRoute();
 
     this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken()).then(() => {
 
-      if(this.monitorLocationService.getWatchLocationId() == null){
+      if(this.monitorLocationService.getWatchLocationId() == null && this.route.routeStatus === 'IN_PROGRESS'){
         this.monitorUserLocation();
       }
 
