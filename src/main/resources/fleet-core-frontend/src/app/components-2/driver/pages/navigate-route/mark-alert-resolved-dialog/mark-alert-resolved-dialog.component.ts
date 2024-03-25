@@ -32,5 +32,19 @@ export class MarkAlertResolvedDialogComponent {
       this.dialogRef.close(this.form.value);
     }
   }
+
+  formatAlertType(alertType: string): string {
+    switch (alertType) {
+        case 'VEHICLE_BREAKDOWN':
+          return 'Vehicle Breakdown';
+        case 'TRAFFIC_JAM':
+          return 'Traffic Jam';
+        case 'ACCIDENT_REPORT':
+          return 'Accident Report';
+        default:
+          return 'Road alert';
+    }
+
+  }
 }
 

@@ -20,7 +20,8 @@
   }
 
 .action-button{
-    width: 90%;
+    width: 80%;
+    height: 3rem;
 }
 
 @-webkit-keyframes MOVE-BG {

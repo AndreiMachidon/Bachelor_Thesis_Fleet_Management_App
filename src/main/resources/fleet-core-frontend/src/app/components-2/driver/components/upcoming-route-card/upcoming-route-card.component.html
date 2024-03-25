@@ -15,7 +15,7 @@
     </div>
     <div class="card-body">
         <div class="route-status-info">
-            Route status: {{route.routeStatus}}
+            Route status: {{formatRouteStatus(route.routeStatus)}}
         </div>
         <div class="route-start-time-info">
             Start time: {{route.startTime | date:'yyyy-MM-dd HH:mm'}}

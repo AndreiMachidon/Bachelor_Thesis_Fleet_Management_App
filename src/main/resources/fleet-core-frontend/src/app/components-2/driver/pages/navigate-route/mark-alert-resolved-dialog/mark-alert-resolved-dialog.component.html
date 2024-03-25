@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Mark Alert Resolved</h1>
 <div mat-dialog-content [formGroup]="form">
-  <p>Is the current alert resolved? <strong>{{data.alert.alertType}}</strong></p>
+  <p>Is the current alert resolved? <strong>{{formatAlertType(data.alert.alertType)}}</strong></p>
   <p>Additional Costs (€). If there are none please write 0 (€)</p>
   <mat-form-field appearance="fill" style="width: 100%;">
     <mat-label>Additional Costs</mat-label>

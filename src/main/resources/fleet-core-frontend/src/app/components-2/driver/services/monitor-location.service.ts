@@ -6,8 +6,9 @@ import { Injectable } from '@angular/core';
 export class MonitorLocationService {
 
   private watchLocationId: number = null;
+  private sendLocationIntervalId: number = null;
   private mockLocationId: number = null;
-  private userPosition: google.maps.LatLng;
+  private userPosition: google.maps.LatLng = null;
 
   constructor() { }
 
@@ -22,6 +23,19 @@ export class MonitorLocationService {
   public resetWatchLocationId(){
     navigator.geolocation.clearWatch(this.watchLocationId);
     this.watchLocationId = null;
+  }
+
+  public setWatchLocationIntervalId(id: number) {
+    this.sendLocationIntervalId = id;
+  }
+
+  public getWatchLocationIntervalId(): number {
+    return this.sendLocationIntervalId;
+  }
+
+  public resetWatchLocationIntervalId(){
+    clearInterval(this.sendLocationIntervalId);
+    this.sendLocationIntervalId = null;
   }
 
   public setMockLocationId(id: number) {

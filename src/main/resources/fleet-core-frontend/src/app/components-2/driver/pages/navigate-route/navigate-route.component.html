@@ -4,28 +4,29 @@
             <app-route-waypoints-stepper [waypointsInfo]="route.waypoints"></app-route-waypoints-stepper>
         </div> -->
         <button mat-raised-button color="primary" style="margin-bottom: 10rem;" (click)="acknowledgeUserAgreementForLocation()"
-            class="action-button">Start Route
+            class="action-button"><mat-icon>flag</mat-icon>
+            Start Route
         </button>
     </div>
     <div *ngIf="isRouteStarted" class="route-in-progress-container" [ngClass]="{'alert-active': isAlertActiveUnresolved}">
         <div class="progress-title" *ngIf="!isAlertActiveUnresolved">
             <p style="font-size: 2rem; font-weight: bold;">Route in progress</p>
             <p style="font-size: 1rem; font-weight: bold;">Your location is now shared with the organisation admin</p>
-            <p style="font-size: 1rem; font-weight: bold;">Please keep this window open in order for the location to be tracked</p>
+            <p style="font-size: 1rem; font-weight: bold;">If you leave this window, please refresh the page in order for the location sharing to continue.</p>
         </div>
         <div *ngIf="isAlertActiveUnresolved" class="progress-title">
-            <p style="font-size: 2rem; font-weight: bold;">You have an active route alert : {{activeRouteAlert.alertType}}</p>
+            <p style="font-size: 2rem; font-weight: bold; line-height: 2.5rem;">You have an active route alert : {{formatAlertType(activeRouteAlert.alertType)}}</p>
             <p style="font-size: 1rem; font-weight: bold;">Please notify the admin when the alert is resolved!</p>
         </div>
         <div *ngIf="isRouteStarted" class="bg"></div>
         <button mat-raised-button color="primary"
-            (click)="showNavigation()" class="action-button">Show
-            Navigation</button>
-            <button mat-raised-button color="accent" *ngIf="!isAlertActiveUnresolved" (click)="sendAlertToAdmin()" class="action-button">Send Alert to Admin</button>
-            <button mat-raised-button color="accent" *ngIf="isAlertActiveUnresolved" (click)="openAlertResolvedDialog()" class="action-button">Mark Alert as Resolved</button>
+            (click)="showNavigation()" class="action-button">
+            <mat-icon> navigation</mat-icon> Show Navigation</button>
+            <button mat-raised-button color="warn" *ngIf="!isAlertActiveUnresolved" (click)="sendAlertToAdmin()" class="action-button"><mat-icon>warning</mat-icon>Send Alert to Admin</button>
+            <button mat-raised-button color="warn" *ngIf="isAlertActiveUnresolved" (click)="openAlertResolvedDialog()" class="action-button"><mat-icon>warning</mat-icon> Mark Alert as Resolved</button>
         <button mat-raised-button color="warn" (click)="endRoute()"
-            class="action-button">End
-            Route</button>
+            class="action-button">
+            <mat-icon>clear</mat-icon>End Route</button>
     </div>
     
     

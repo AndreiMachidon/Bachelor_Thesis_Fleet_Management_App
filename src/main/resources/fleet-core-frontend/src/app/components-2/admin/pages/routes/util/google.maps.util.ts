@@ -233,22 +233,39 @@ function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypo
 
 }
 
+function formatAlertType(alertType: string): string {
+  switch (alertType) {
+    case 'VEHICLE_BREAKDOWN':
+      return 'Vehicle Breakdown';
+    case 'TRAFFIC_JAM':
+      return 'Traffic Jam';
+    case 'ACCIDENT_REPORT':
+      return 'Accident Report';
+    default:
+      return "Road alert";
+  }
+}
+
+function formatAlertStatus(alertStatus: string): string {
+  switch (alertStatus) {
+    case 'RESOLVED':
+      return 'Resolved';
+    case 'UNRESOLVED':
+      return 'Unresolved';
+    default:
+      return 'Unresolved';
+  }
+}
+
 function createInfoWindowForAlertsMarker(map: google.maps.Map, alert: RouteAlertDto, marker: google.maps.Marker) {
-  const alertTypeDescriptions = {
-    VEHICLE_BREAKDOWN: "Vehicle Breakdown",
-    TRAFFIC_JAM: "Traffic Jam",
-    ACCIDENT_REPORT: "Accident Report",
-    HAZARDOUS_CONDITIONS: "Hazardous Conditions",
-    SECURITY_THREAT: "Security Threat"
-  };
 
   const statusColor = alert.alertStatus === 'RESOLVED' ? 'green' : 'red';
   let infoWindowContent = `
-  <div style="font-size: 14px; color: #333;">
-    <h2 style="margin: 0; padding-bottom: 5px; border-bottom: 1px solid #ccc;">Alert Details</h2>
-    <p style="margin: 5px 0;"><strong>Type:</strong> ${alert.alertType}</p>
+  <div style="font-size: 14px; color: #333; width:300px;">
+    <h2 style="margin: 0; padding-bottom: 5px; border-bottom: 1px solid #ccc; font-weight:bold;">Alert Details</h2>
+    <p style="margin: 5px 0; font-weight:bold"><strong>Type:</strong> ${formatAlertType(alert.alertType)}</p>
     <p style="margin: 5px 0;"><strong>Description:</strong> ${alert.alertDescription}</p>
-    <p style="margin: 5px 0; font-size: 14px; color: ${statusColor};"><strong>Status:</strong> ${alert.alertStatus}</p>
+    <p style="margin: 5px 0; font-size: 14px; color: ${statusColor};"><strong>Status:</strong> ${formatAlertStatus(alert.alertStatus)}</p>
     <p style="margin: 5px 0;"><strong>Issued:</strong> ${new Date(alert.alertIssuedDate).toLocaleString()}</p>
     
   </div>`;

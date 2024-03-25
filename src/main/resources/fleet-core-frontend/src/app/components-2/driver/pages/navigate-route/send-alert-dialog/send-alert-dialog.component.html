@@ -10,7 +10,7 @@
            </mat-error>
         </mat-form-field>
         <mat-form-field>
-            <mat-label>Please write additional info about the alert</mat-label>
+            <mat-label>Additional information</mat-label>
             <textarea matInput placeholder="Detailed info..." formControlName="alertDescriptionFormControl"></textarea>
             <mat-error *ngIf="sendAlertFormGroup.get('alertDescriptionFormControl').hasError('required')">
               Alert description is <strong>required</strong>
@@ -18,9 +18,9 @@
           </mat-form-field>
   
         <div class="form-actions">
-            <button mat-raised-button color="warn" (click)="cancelSendAlert()">
+            <button mat-raised-button color="info" (click)="cancelSendAlert()">
               Cancel</button>
-            <button mat-raised-button color="accent" (click)="sendAlert()"
+            <button mat-raised-button color="warn" (click)="sendAlert()"
               type="submit">Send Alert</button>
           </div>
     </form>

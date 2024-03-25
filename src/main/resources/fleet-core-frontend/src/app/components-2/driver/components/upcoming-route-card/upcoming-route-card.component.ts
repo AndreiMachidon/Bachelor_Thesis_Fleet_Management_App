@@ -32,4 +32,19 @@ export class UpcomingRouteCardComponent {
     this.router.navigate(["driver-home/route-navigation", this.route.id]);
   }
 
+  formatRouteStatus(status: string): string {
+    switch(status) {
+      case 'UPCOMING':
+        return 'Upcoming';
+      case 'IN_PROGRESS':
+        return 'In Progress';
+      case 'FINISHED':
+        return 'Finished';
+      case 'ALERT_ACTIVE':
+        return 'Alert Active';
+      default:
+        return status;
+    }
+  }
+
 }

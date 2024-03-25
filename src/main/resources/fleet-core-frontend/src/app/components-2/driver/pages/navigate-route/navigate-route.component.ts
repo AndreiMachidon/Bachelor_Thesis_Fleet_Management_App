@@ -46,20 +46,21 @@ export class NavigateRouteComponent {
   ngOnInit(): void {
     
     this.getNavigableRoute();
-
     this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken()).then(() => {
 
-      if(this.monitorLocationService.getWatchLocationId() == null && this.route.routeStatus === 'IN_PROGRESS'){
+      if(this.route.routeStatus === 'IN_PROGRESS'){
+        this.isRouteStarted = true;
+        if(this.monitorLocationService.getWatchLocationId() == null){
         this.monitorUserLocation();
+        this.setLocationWatchInterval();
       }
+    }
 
       // if(this.monitorLocationService.getMockLocationId() == null){
       //   this.mockDriverMovement();
       // }
 
     });
-
-
   }
 
 
@@ -92,26 +93,6 @@ export class NavigateRouteComponent {
     )
   }
 
-  getUserLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.monitorLocationService.setUserPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
-        },
-        (error) => {
-          console.error('Error getting user location:', error);
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 5000,
-          timeout: 10000
-        }
-      );
-    } else {
-      console.error('Geolocation is not supported by this browser.');
-    }
-  }
-
   acknowledgeUserAgreementForLocation() {
     const dialogRef = this.dialog.open(StartRouteDialogComponent, {
     });
@@ -132,6 +113,10 @@ export class NavigateRouteComponent {
     if (this.monitorLocationService.getWatchLocationId() == null) {
       this.monitorUserLocation();
     }
+
+    if(this.monitorLocationService.getWatchLocationIntervalId() == null){
+      this.setLocationWatchInterval();
+    }
     
     //   if(this.monitorLocationService.getMockLocationId() == null){
     //     this.mockDriverMovement();
@@ -147,12 +132,6 @@ export class NavigateRouteComponent {
         const watchId = navigator.geolocation.watchPosition(
           (position) => {
             this.monitorLocationService.setUserPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude)); 
-            this.webSocketService.sendLocation(
-              this.route.id,
-              this.route.driverId,
-              this.monitorLocationService.getUserPosition().lat(),
-              this.monitorLocationService.getUserPosition().lng()
-            );
           },
           (error) => {
             console.error('Error updating user location:', error);
@@ -170,6 +149,21 @@ export class NavigateRouteComponent {
     };
 
     tryToGetLocation();
+  }
+
+  setLocationWatchInterval(){
+    if(this.monitorLocationService.getUserPosition !== null && this.monitorLocationService.getWatchLocationIntervalId() == null){
+      const sendLocationIntervalId = setInterval(() => {
+        this.webSocketService.sendLocation(
+          this.route.id,
+          this.route.driverId,
+          this.monitorLocationService.getUserPosition().lat(),
+          this.monitorLocationService.getUserPosition().lng()
+        );
+      }, 2000) as unknown as number;
+
+      this.monitorLocationService.setWatchLocationIntervalId(sendLocationIntervalId);
+    }
   }
 
   showNavigation() {
@@ -193,6 +187,8 @@ export class NavigateRouteComponent {
 
   sendAlertToAdmin() {
     const dialogRef = this.dialog.open(SendAlertDialogComponent, {
+      width: '95vw',
+      height: '40%',
       data: { latitude: this.monitorLocationService.getUserPosition().lat(), longitude: this.monitorLocationService.getUserPosition().lng(), routeId: this.route.id }
     });
 
@@ -238,8 +234,12 @@ export class NavigateRouteComponent {
         if (this.monitorLocationService.getMockLocationId() != null) {
           this.monitorLocationService.resetMockLocationId();
         }
+
+        if(this.monitorLocationService.getWatchLocationIntervalId() != null){
+            this.monitorLocationService.resetWatchLocationIntervalId();
+        }
         this.monitorLocationService.resetUserPosition();
-        this.updateRouteStatus('COMPLETED'); //todo: change to COMPLETED
+        this.updateRouteStatus('COMPLETED');
       }
     })
 
@@ -301,6 +301,20 @@ export class NavigateRouteComponent {
         alert('There was an error resolving the alert');
       }
     );
+  }
+
+  formatAlertType(alertType: string): string {
+    switch (alertType) {
+        case 'VEHICLE_BREAKDOWN':
+          return 'Vehicle Breakdown';
+        case 'TRAFFIC_JAM':
+          return 'Traffic Jam';
+        case 'ACCIDENT_REPORT':
+          return 'Accident Report';
+        default:
+          return 'Road alert';
+    }
+
   }
 
 

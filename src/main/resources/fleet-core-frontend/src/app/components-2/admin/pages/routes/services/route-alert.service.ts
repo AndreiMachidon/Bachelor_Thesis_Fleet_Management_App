@@ -5,6 +5,7 @@ import { API_URL } from 'src/app/contants';
 import { RouteAlertDto } from '../dto/route-alert-dto.model';
 import { Observable } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
