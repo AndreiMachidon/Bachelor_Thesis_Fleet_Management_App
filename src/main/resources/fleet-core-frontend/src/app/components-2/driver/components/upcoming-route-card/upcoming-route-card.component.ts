@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouteDto } from 'src/app/components-2/admin/pages/routes/dto/route-dto.model';
+import { MonitorLocationService } from '../../services/monitor-location.service';
 
 @Component({
   selector: 'app-upcoming-route-card',
@@ -15,12 +16,15 @@ export class UpcomingRouteCardComponent {
    //1. Start and end location for the route
    startLocationAddress: string;
    endLocationAddress: string;
+   startedRouteId: number;
 
-   constructor(private router: Router) { }
+   constructor(private router: Router,
+    private monitorLocationService: MonitorLocationService) { }
  
 
    ngOnInit() {
     this.getStartAndDestinationInformation();
+    this.startedRouteId = this.monitorLocationService.getStartedRouteId();
   }
 
   getStartAndDestinationInformation() {

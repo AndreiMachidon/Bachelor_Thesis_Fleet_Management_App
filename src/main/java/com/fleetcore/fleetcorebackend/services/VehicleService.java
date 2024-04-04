@@ -1,8 +1,8 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
-import com.fleetcore.fleetcorebackend.repository.MaintenanceRepository;
-import com.fleetcore.fleetcorebackend.repository.VehicleRepository;
+import com.fleetcore.fleetcorebackend.repositories.MaintenanceRepository;
+import com.fleetcore.fleetcorebackend.repositories.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

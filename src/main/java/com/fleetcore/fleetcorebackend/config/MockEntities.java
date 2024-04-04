@@ -4,7 +4,7 @@ import com.fleetcore.fleetcorebackend.entities.*;
 import com.fleetcore.fleetcorebackend.entities.enums.FuelType;
 import com.fleetcore.fleetcorebackend.entities.enums.MaintenanceType;
 import com.fleetcore.fleetcorebackend.entities.enums.VehicleStatus;
-import com.fleetcore.fleetcorebackend.repository.*;
+import com.fleetcore.fleetcorebackend.repositories.*;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;

@@ -9,11 +9,13 @@ export class MonitorLocationService {
   private sendLocationIntervalId: number = null;
   private mockLocationId: number = null;
   private userPosition: google.maps.LatLng = null;
+  private startedRouteId: number = null;
 
   constructor() { }
 
-  public setWatchLocationId(id: number) {
+  public setWatchLocationId(id: number, routeId: number) {
     this.watchLocationId = id;
+    this.startedRouteId = routeId;
   }
 
   public getWatchLocationId(): number {
@@ -23,6 +25,7 @@ export class MonitorLocationService {
   public resetWatchLocationId(){
     navigator.geolocation.clearWatch(this.watchLocationId);
     this.watchLocationId = null;
+    this.startedRouteId = null;
   }
 
   public setWatchLocationIntervalId(id: number) {
@@ -38,8 +41,9 @@ export class MonitorLocationService {
     this.sendLocationIntervalId = null;
   }
 
-  public setMockLocationId(id: number) {
+  public setMockLocationId(id: number, routeId: number) {
     this.mockLocationId = id;
+    this.startedRouteId = routeId;
   }
 
   public getMockLocationId(): number {
@@ -49,6 +53,7 @@ export class MonitorLocationService {
   public resetMockLocationId(){
     clearInterval(this.mockLocationId);
     this.mockLocationId = null;
+    this.startedRouteId = null;
   }
 
   public setUserPosition(position: google.maps.LatLng) {
@@ -61,6 +66,10 @@ export class MonitorLocationService {
 
   public resetUserPosition() {
     this.userPosition = null;
+  }
+
+  public getStartedRouteId(): number {
+    return this.startedRouteId;
   }
 
 

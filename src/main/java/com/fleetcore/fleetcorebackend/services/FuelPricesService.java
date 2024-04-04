@@ -1,7 +1,7 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.entities.CountryFuelPrices;
-import com.fleetcore.fleetcorebackend.repository.CountryFuelPricesRepository;
+import com.fleetcore.fleetcorebackend.repositories.CountryFuelPricesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

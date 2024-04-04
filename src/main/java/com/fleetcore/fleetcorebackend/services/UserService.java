@@ -7,7 +7,7 @@ import com.fleetcore.fleetcorebackend.dto.SignUpDto;
 import com.fleetcore.fleetcorebackend.dto.UserDto;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.exceptions.AuthException;
-import com.fleetcore.fleetcorebackend.repository.UserRepository;
+import com.fleetcore.fleetcorebackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

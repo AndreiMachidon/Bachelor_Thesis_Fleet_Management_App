@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.repository;
+package com.fleetcore.fleetcorebackend.repositories;
 
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
 import jakarta.transaction.Transactional;

@@ -81,6 +81,7 @@ import { AddDriverDialogComponent } from './components-2/admin/pages/my-drivers/
 import {MatTabsModule} from '@angular/material/tabs';
 import { RouteSavedDialogComponent } from './components-2/admin/pages/routes/dialogs/route-saved-dialog/route-saved-dialog.component';
 import { DriverMainComponent } from './components-2/driver/driver-main/driver-main.component';
+import { DriverRouteWaypointsStepperComponent } from './components-2/driver/components/driver-route-waypoints-stepper/driver-route-waypoints-stepper.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +128,7 @@ import { DriverMainComponent } from './components-2/driver/driver-main/driver-ma
     AddDriverDialogComponent,
     RouteSavedDialogComponent,
     DriverMainComponent,
+    DriverRouteWaypointsStepperComponent,
   ],
   imports: [
     BrowserModule,

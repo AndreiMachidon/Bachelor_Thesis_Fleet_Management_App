@@ -1,0 +1,18 @@
+<div class="wrapper">
+    <ol class="c-timeline">
+      <li class="c-timeline__item" *ngFor="let waypoint of waypointsInfo; let i = index">
+        <div class="c-timeline__content">
+            <div [ngClass]="{
+                'c-timeline__icon--fuelStation': waypoint.type === 'FUEL_STATION',
+                'c-timeline__icon--restBreak': waypoint.type === 'REST_BREAK',
+                'c-timeline__icon--destination': waypoint.type === 'DESTINATION',
+                'c-timeline__icon--electricStation': waypoint.type === 'ELECTRIC_STATION',
+                'c-timeline__icon--start': waypoint.type === 'START',
+              }"></div>
+      
+          <h3 class="c-timeline__title">  {{ getWaypointDetails(waypoint) }}</h3>
+          <p class="c-timeline__desc"></p>{{ waypoint.address }}
+        </div>
+      </li>
+    </ol>
+</div>

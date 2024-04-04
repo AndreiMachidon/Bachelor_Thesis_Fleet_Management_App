@@ -100,7 +100,6 @@ export class RoutesComponent {
     this.getUserLocation();
     this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken()).then(() => {
       this.webSocketService.subscribeToRouteStatuses((routeStatus) => {
-        console.log("New route status received:", routeStatus);
         this.updateRoutesList();
       });
     });

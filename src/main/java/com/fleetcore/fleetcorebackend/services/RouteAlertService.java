@@ -4,7 +4,7 @@ import com.fleetcore.fleetcorebackend.dto.RouteAlertDto;
 import com.fleetcore.fleetcorebackend.entities.RouteAlert;
 import com.fleetcore.fleetcorebackend.entities.enums.AlertStatus;
 import com.fleetcore.fleetcorebackend.entities.enums.AlertType;
-import com.fleetcore.fleetcorebackend.repository.RouteAlertRepository;
+import com.fleetcore.fleetcorebackend.repositories.RouteAlertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

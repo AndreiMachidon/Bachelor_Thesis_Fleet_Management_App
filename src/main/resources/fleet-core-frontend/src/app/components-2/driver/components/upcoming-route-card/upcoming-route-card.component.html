@@ -22,6 +22,10 @@
         </div>
     </div>
     <div class="card-actions">
-        <button mat-raised-button color="primary" (click)="viewRoute()">View Route</button>
+        <button mat-raised-button color="primary" 
+        (click)="viewRoute()" 
+        style="border-radius: 50px; width: 90%; height: 40px;"
+        [disabled]="startedRouteId  !== null && startedRouteId !== route.id"
+        >View Route</button>
     </div>
 </div>

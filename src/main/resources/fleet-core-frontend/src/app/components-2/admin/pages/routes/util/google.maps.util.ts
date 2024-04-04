@@ -6,14 +6,15 @@ import { WaypointDto } from '../dto/waypoint-dto.model';
 import { RouteAlertDto } from '../dto/route-alert-dto.model';
 import { GoogleMapsService } from '../services/google-maps.service';
 
-function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, iconUrl: string) {
+function createCustomMarker(map: google.maps.Map, location: google.maps.LatLng, iconUrl: string, isDriverMarker: boolean = false) {
   return new google.maps.Marker({
     map: map,
     position: location,
     icon: {
       url: iconUrl,
       scaledSize: new google.maps.Size(40, 40)
-    }
+    },
+    animation: isDriverMarker ? google.maps.Animation.BOUNCE : null
   });
 }
 

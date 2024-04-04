@@ -85,7 +85,7 @@ export class RouteDetailsCardComponent {
   updateDriverLocationOnMap(driverLocationDto: DriverLocationDto) {
     const newPosition = new google.maps.LatLng(driverLocationDto.latitude, driverLocationDto.longitude);
     if(!this.realTimeUpdatesService.getDriverMarker()) {
-      this.realTimeUpdatesService.setDriverMarker(createCustomMarker(this.map, new google.maps.LatLng(driverLocationDto.latitude, driverLocationDto.longitude), '../../../../../../../assets/markers/driver_location_marker.png')); 
+      this.realTimeUpdatesService.setDriverMarker(createCustomMarker(this.map, new google.maps.LatLng(driverLocationDto.latitude, driverLocationDto.longitude), '../../../../../../../assets/markers/driver_location_marker.png', true)); 
     }else{
       this.realTimeUpdatesService.getDriverMarker().setPosition(newPosition);
     }
@@ -113,8 +113,6 @@ export class RouteDetailsCardComponent {
 
   createMarkersForAlerts(){
     this.realTimeUpdatesService.getRouteAlerts().forEach(alert => {
-      console.log(alert);
-      
       if(alert.alertStatus === 'UNRESOLVED'){
         const marker = createCustomMarker(this.map, new google.maps.LatLng(alert.latitude, alert.longitude), '../../../../../../../assets/markers/active_alert_marker.png');
         createInfoWindowForAlertsMarker(this.map, alert, marker);

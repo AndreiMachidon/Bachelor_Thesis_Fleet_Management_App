@@ -25,8 +25,6 @@ export class PolylineService {
   }
 
   setWaypoints(waypoints: WaypointDto[], map: google.maps.Map, fuelPriceService: FuelPricesService) {
-    console.log(waypoints);
-    
     this.waypointsMarkersSubject.getValue().forEach(marker => marker.setMap(null));
     let restBreakIndex = 0;
     const markers = waypoints.map((waypointDto, index) => {

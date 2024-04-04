@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouteDto } from 'src/app/components-2/admin/pages/routes/dto/route-dto.model';
 import { PolylineService } from 'src/app/components-2/admin/pages/routes/services/polyline.service';
 import { RoutesService } from 'src/app/components-2/admin/pages/routes/services/routes.service';
@@ -41,14 +41,16 @@ export class NavigateRouteComponent {
     private authService: AuthService,
     public dialog: MatDialog,
     public routeAlertService: RouteAlertService,
-    private monitorLocationService: MonitorLocationService) { }
+    private monitorLocationService: MonitorLocationService,
+    private router: Router) { }
 
   ngOnInit(): void {
+
     
     this.getNavigableRoute();
     this.webSocketService.initializeWebSocketConnection(this.authService.getAuthToken()).then(() => {
 
-      if(this.route.routeStatus === 'IN_PROGRESS'){
+      if(this.route.routeStatus === 'IN_PROGRESS' || this.route.routeStatus === 'ALERT_ACTIVE'){
         this.isRouteStarted = true;
         if(this.monitorLocationService.getWatchLocationId() == null){
         this.monitorUserLocation();
@@ -142,7 +144,7 @@ export class NavigateRouteComponent {
           },
           { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
         );
-        this.monitorLocationService.setWatchLocationId(watchId);
+        this.monitorLocationService.setWatchLocationId(watchId, this.route.id);
       } else {
         console.error('Geolocation is not supported by this browser.');
       }
@@ -240,6 +242,7 @@ export class NavigateRouteComponent {
         }
         this.monitorLocationService.resetUserPosition();
         this.updateRouteStatus('COMPLETED');
+        this.router.navigate(["driver-home/routes"]);
       }
     })
 
@@ -271,7 +274,7 @@ export class NavigateRouteComponent {
       );
     }, 2000) as unknown as number;
 
-    this.monitorLocationService.setMockLocationId(mockMovementIntervalId);
+    this.monitorLocationService.setMockLocationId(mockMovementIntervalId, this.route.id);
 
   }
 

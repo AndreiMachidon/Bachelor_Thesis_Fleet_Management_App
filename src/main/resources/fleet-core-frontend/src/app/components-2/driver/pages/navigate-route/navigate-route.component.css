@@ -1,9 +1,8 @@
 .navigation-container{
-    width: 100%;
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     overflow: auto;
 }
 
@@ -13,11 +12,20 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     background-color: #c8d7eb;
     overflow: auto;
   }
+
+  .start-route-button{
+    width: 85%;
+    margin-top: 2rem;
+    border-radius: 2rem;
+    margin-bottom: 2rem;
+    min-height: 2.7rem;
+  }
+
 
 .action-button{
     width: 80%;

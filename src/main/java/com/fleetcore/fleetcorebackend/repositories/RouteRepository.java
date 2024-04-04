@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.repository;
+package com.fleetcore.fleetcorebackend.repositories;
 
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
