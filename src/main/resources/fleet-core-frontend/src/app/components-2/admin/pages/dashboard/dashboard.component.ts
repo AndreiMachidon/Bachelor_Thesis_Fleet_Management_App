@@ -65,6 +65,9 @@ export class DashboardComponent {
   valuesPieChart: any[];
 
   constructor(private authService: AuthService, private dashboardService: DashboardService) {
+  }
+
+  ngOnInit() {
     this.userInfo = this.authService.getUserDetails();
     this.dashboardService.getDashboardCardsInfo(this.userInfo.id).subscribe(data => {
       this.dashboardCardsInfo = data;
@@ -77,7 +80,6 @@ export class DashboardComponent {
     this.dashboardService.getDashboardFuelCostsByType(this.userInfo.id).subscribe(data => {
       this.transformFuelExpensesToPieChartFormat(data);
     });
-
   }
 
   formatKilometers(value: number) {

@@ -18,14 +18,18 @@ import { DriverHomeComponent } from './components-2/driver/driver-home/driver-ho
 import { SeeDriverRoutesComponent } from './components-2/driver/pages/see-driver-routes/see-driver-routes.component';
 import { NavigateRouteComponent } from './components-2/driver/pages/navigate-route/navigate-route.component';
 import { DriverMainComponent } from './components-2/driver/driver-main/driver-main.component';
+import { AuthGuardAdmin } from './components-2/auth/auth-guards/auth-guard-admin';
+import { AuthGuardDriver } from './components-2/auth/auth-guards/auth-guard-driver';
+import { AuthGuardRedirectExistingUser } from './components-2/auth/auth-guards/auth-guard-redirect-existing-user';
 
 const routes: Routes = [
-  { path: '', component: LoginPageComponent },
+  { path: '', component: LoginPageComponent, canActivate: [AuthGuardRedirectExistingUser] },
   { path: 'register', component: RegisterPageComponent },
   { path: 'forgot-password', component: ForgotPasswordPageComponent },
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent,
+    canActivate: [AuthGuardAdmin],
     children: [
       { path: '', component: DashboardComponent },
       { path: 'dashboard', component: DashboardComponent },
@@ -41,6 +45,7 @@ const routes: Routes = [
   {
     path: 'driver-home',
     component: DriverMainComponent,
+    canActivate: [AuthGuardDriver],
     children: [
       {path: '', component: DriverHomeComponent},
       {path: 'routes', component: SeeDriverRoutesComponent },

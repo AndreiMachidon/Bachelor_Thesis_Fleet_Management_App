@@ -11,7 +11,7 @@
                 below.</p>
 
             <form class="login-form" (ngSubmit)="loginUser()">
-                <mat-form-field class="email-form-field" style="width: 100%;" color="primary">
+                <mat-form-field class="email-form-field" style="width: 90%;" color="primary">
                     <mat-label>Email</mat-label>
                     <input type="email" matInput [formControl]="loginFormGroup.controls['emailFormControl']"
                         placeholder="Ex. pat@example.com">
@@ -24,7 +24,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field style="width: 100%;" color="primary">
+                <mat-form-field style="width: 90%;" color="primary">
                     <mat-label>Password</mat-label>
                     <input matInput [type]="hidePassword ? 'password' : 'text'"
                         [formControl]="loginFormGroup.controls['passwordFormControl']">
@@ -37,9 +37,9 @@
                     </button>
                 </mat-form-field>
 
-                <p class="forgot-password-text">
+                <!-- <p class="forgot-password-text">
                     <a routerLink="forgot-password">Forgot Password?</a>
-                </p>
+                </p> -->
                 
                 <p class="login-error" *ngIf="emailNotFound">The email is not registered</p>
                 <p class="login-error" *ngIf="incorrectPassword">Incorrect Password</p>

@@ -83,6 +83,7 @@ import { RouteSavedDialogComponent } from './components-2/admin/pages/routes/dia
 import { DriverMainComponent } from './components-2/driver/driver-main/driver-main.component';
 import { DriverRouteWaypointsStepperComponent } from './components-2/driver/components/driver-route-waypoints-stepper/driver-route-waypoints-stepper.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SignOutDialogComponent } from './components-2/admin/admin-dashboard/dialogs/sign-out-dialog/sign-out-dialog.component';
 
 
 @NgModule({
@@ -131,6 +132,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     RouteSavedDialogComponent,
     DriverMainComponent,
     DriverRouteWaypointsStepperComponent,
+    SignOutDialogComponent,
   ],
   imports: [
     BrowserModule,

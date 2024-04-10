@@ -47,7 +47,6 @@ export class MyFleetComponent implements OnInit{
     }
 
     deleteSelectedVehicles() {
-
       const dialogRef = this.dialog.open(DeleteVehicleDialogComponent);
 
       dialogRef.afterClosed().subscribe(result => {

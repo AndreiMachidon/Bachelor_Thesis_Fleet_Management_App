@@ -10,14 +10,15 @@ import jwtDecode from 'jwt-decode';
 import { DecodedTokenAdmin } from '../dto/DecodedTokenAdmin';
 import { Driver } from '../dto/Driver';
 import { DecodedTokenDriver } from '../dto/DecodedTokenDriver';
-
+import { TokenEncryptionService } from './token-encryption-service.service';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenEncryptionService: TokenEncryptionService, private router: Router) { }
 
   public login(signInDto: SignInDto) : Observable<UserDto>{
     return this.http.post<UserDto>(`${API_URL}/login`, signInDto);
@@ -25,6 +26,11 @@ export class AuthService {
 
   public register(signUpDto: SignUpDto): Observable<UserDto> {
      return this.http.post<UserDto>(`${API_URL}/register/admin`, signUpDto);
+  }
+
+  public signOut(): void { 
+    localStorage.removeItem('auth_token');
+    this.router.navigate(['']);
   }
 
   public getImageData(userId: number): Observable<string>{
@@ -36,12 +42,14 @@ export class AuthService {
   }
 
   getAuthToken(): string | null {
-    return window.localStorage.getItem("auth_token");
+    const encryptedToken = window.localStorage.getItem('auth_token');
+    return encryptedToken ? this.tokenEncryptionService.decrypt(encryptedToken) : null;
   }
 
   setAuthToken(token: string | null): void {
       if(token != null){
-        window.localStorage.setItem("auth_token", token);
+        const encryptedToken = this.tokenEncryptionService.encrypt(token);
+        window.localStorage.setItem("auth_token", encryptedToken);
       }else{
         window.localStorage.removeItem("auth_token");
       }

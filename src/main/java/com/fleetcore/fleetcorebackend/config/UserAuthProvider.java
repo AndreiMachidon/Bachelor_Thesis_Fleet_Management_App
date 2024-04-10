@@ -21,7 +21,7 @@ import java.util.Date;
 @Component
 public class UserAuthProvider {
 
-    @Value("${secutiry.jwt.token.secret-key:secrety-key}")
+    @Value("${security.jwt.token.secret-key}")
     private String secretKey;
 
     @PostConstruct
