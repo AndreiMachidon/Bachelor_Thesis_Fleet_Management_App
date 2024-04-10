@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddMaintenanceComponent } from './add-maintenance/add-maintenance.component';
 import { Maintenance } from '../../../admin-dashboard/models/maintanance.model';
 import { MaintenanceHistoryComponent } from './maintenance-history/maintenance-history.component';
+import { VehicleStatisticsDto } from './dto/vehicle-statistics-dto';
 
 
 @Component({
@@ -24,12 +25,14 @@ export class VehicleDetailsComponent {
   daysUntilNextMaintenance: number = 0;
   kilometersUntilNextMaintenance: number;
   nextMaintenance: Maintenance;
+  numberCardsData : any;
 
   constructor(private route: ActivatedRoute,
     private vehicleService: VehicleService,
     private router: Router,
     public dialog: MatDialog,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe) { 
+    }
 
   ngOnInit() {
     const vehicleId = Number.parseInt(this.route.snapshot.paramMap.get('id'));
@@ -44,6 +47,15 @@ export class VehicleDetailsComponent {
           (error) => {
             console.error(error);
             this.isMaintenanceMandatory = true;
+          }
+        );
+
+        this.vehicleService.getVehicleStatistics(vehicleId).subscribe(
+          (vehicleStatistics) => {
+            this.convertVehicleStatisticsToNumberCardsFormat(vehicleStatistics);
+          },
+          (error) => {
+            console.error(error);
           }
         );
       }
@@ -139,8 +151,27 @@ export class VehicleDetailsComponent {
       this.daysUntilNextMaintenance = daysDifference % 30;
     }
   }
-
-
+  
+  convertVehicleStatisticsToNumberCardsFormat(vehicleStatistics: VehicleStatisticsDto) {
+    this.numberCardsData = [
+      {
+        "name": "Breakdowns",
+        "value": vehicleStatistics.numberOfBreakdowns
+      },
+      {
+        "name": "Accidents",
+        "value": vehicleStatistics.numberOfAccidents
+      },
+      {
+        "name": "Maintances",
+        "value": vehicleStatistics.numberOfMaintenances
+      },
+      {
+        "name": "Completed Routes",
+        "value": vehicleStatistics.numberOfCompletedRoutes
+      },
+    ]
+  }
 
 }
 

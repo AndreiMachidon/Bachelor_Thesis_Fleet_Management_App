@@ -82,6 +82,8 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { RouteSavedDialogComponent } from './components-2/admin/pages/routes/dialogs/route-saved-dialog/route-saved-dialog.component';
 import { DriverMainComponent } from './components-2/driver/driver-main/driver-main.component';
 import { DriverRouteWaypointsStepperComponent } from './components-2/driver/components/driver-route-waypoints-stepper/driver-route-waypoints-stepper.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 @NgModule({
   declarations: [
@@ -161,7 +163,8 @@ import { DriverRouteWaypointsStepperComponent } from './components-2/driver/comp
     NgxMatTimepickerModule,
     MatMenuModule,
     MatBadgeModule,
-    MatTabsModule
+    MatTabsModule,
+    NgxChartsModule,
   ],
   
   providers: [DatePipe, 

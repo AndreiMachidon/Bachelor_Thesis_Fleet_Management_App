@@ -56,9 +56,9 @@ public class MockEntities {
         List<Vehicle> vehicleList = new ArrayList<>();
 
         String[][] truckData = {
-                {"Volvo", "FH16", "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/volvo-fh-the-highest-trim-level?qlt=82&wid=768&ts=1675756364022&dpr=off&fit=constrain", FuelType.DIESEL.name(), "44000", "500", "16.1"},
+                {"Volvo", "FH16", "https://assets.volvo.com/is/image/VolvoInformationTechnologyAB/volvo-fh-the-highest-trim-level?qlt=82&wid=768&ts=1675756364022&dpr=off&fit=constrain", FuelType.DIESEL.name(), "44", "500", "16.1"},
                 {"Mercedes-Benz", "Actros", "https://traficmedia.ro/wp-content/uploads/2020/09/20C0493_005.jpg", FuelType.ELECTRIC.name(), "40000", "480", "15.6"},
-                {"MAN", "TGX", "https://www.man.eu/ntg_media/media/content_medien/img/bw_master_1/truck/truck_1/tgx/man-lkw-tgx-individual-lion-teaser-1-1_width_534_height_300.jpg", FuelType.DIESEL.name(), "44000", "500", "12.4"},
+                {"MAN", "TGX", "https://www.man.eu/ntg_media/media/content_medien/img/bw_master_1/truck/truck_1/tgx/man-lkw-tgx-individual-lion-teaser-1-1_width_534_height_300.jpg", FuelType.DIESEL.name(), "44", "500", "12.4"},
                 {"Scania", "R 500", "https://d1hv7ee95zft1i.cloudfront.net/custom/truck-model-photo/original/60a3b86144a02.jpg", FuelType.DIESEL.name(), "44000", "500", "13.0"},
                 {"DAF", "XF", "https://www.daf.com.au/wp-content/uploads/2020/02/XF_800x400px.jpg", FuelType.DIESEL.name(), "44000", "500", "12.9"},
                 {"VOLVO", "FM","https://www.volvotrucks.ro/content/dam/volvo-trucks/markets/master/home/trucks/volvo-fm/specifications/volvo-fm-specifications-cabs.jpg", FuelType.DIESEL.name(), "400", "480", "12.8"},

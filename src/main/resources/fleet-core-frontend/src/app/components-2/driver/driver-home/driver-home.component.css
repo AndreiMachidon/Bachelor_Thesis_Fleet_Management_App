@@ -3,11 +3,11 @@
     height: 85%;
     margin: 2rem auto;
     padding: 2rem;
-    background-color: #F0F8FF;
+    background-color: white;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-    
+    border: 2px solid #ddd;
 }
 
 .logo-container {
@@ -24,7 +24,7 @@
 }
 
 .welcome-header {
-    color: #0E3F89;
+    color: #15275F;
     font-weight: bold;
     font-size: 2rem;
     margin-bottom: 1rem;
@@ -37,7 +37,8 @@
     font-size: 1.4rem;
     margin-bottom: 2rem;
     line-height: 2.2rem;
-    font-weight: bold;
+    font-weight: 500;
+
 }
 
 .welcome-text {
@@ -45,6 +46,7 @@
     font-size: 1rem;
     line-height: 1.5;
     margin-bottom: 1rem;
+    font-style: italic;
 }
 
 .view-routes-button{

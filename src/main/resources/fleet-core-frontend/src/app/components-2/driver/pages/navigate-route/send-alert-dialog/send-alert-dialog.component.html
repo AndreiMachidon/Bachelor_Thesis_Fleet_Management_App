@@ -1,7 +1,8 @@
 <div class="main-container">
     <form class="send-alert-form" [formGroup]="sendAlertFormGroup">
+      <h2>Chose alert</h2>
         <mat-form-field>
-            <mat-label>Choose one</mat-label>
+            <mat-label>Choose type</mat-label>
             <mat-select formControlName="alertTypeFormControl">
                 <mat-option *ngFor="let type of alertTypes" [value]="type.value">{{ type.viewValue }}</mat-option>
             </mat-select>

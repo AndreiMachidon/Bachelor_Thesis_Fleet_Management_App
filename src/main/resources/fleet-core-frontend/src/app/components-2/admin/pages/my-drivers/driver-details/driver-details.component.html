@@ -15,13 +15,13 @@
                 <mat-divider></mat-divider>
                 <div class="general-details-body">
                     <div class="column">
-                        <p>Name: {{driver.firstName}} {{driver.lastName}}</p>
-                        <p>Orgaisation name: {{driver.organisationName}}</p>
+                        <p><span style="color: #0E3F89;">Name: </span> <span style="color: gray; font-weight: 400;">{{driver.firstName}} {{driver.lastName}}</span></p>
+                        <p><span style="color: #0E3F89;">Organisation name: </span> <span style="color: gray; font-weight: 400;">{{driver.organisationName}}</span></p>
                     </div>
                     <mat-divider vertical style="width: 2px; width: 1px; height: 100%; margin-top: 0.1rem;"></mat-divider>
                     <div class="column">
-                        <p>Email: {{driver.email}}</p>
-                        <p>Phone number: {{driver.phoneNumber}}</p>
+                        <p><span style="color: #0E3F89;">Email: </span> <span style="color: gray; font-weight: 400;">{{driver.email}}</span></p>
+                        <p><span style="color: #0E3F89;">Phone number: </span> <span style="color: gray; font-weight: 400;">{{driver.phoneNumber}}</span></p>
                     </div>
                 </div>
             </div>
@@ -33,13 +33,13 @@
                 <mat-divider></mat-divider>
                 <div class="specific-details-body">
                     <div class="column">
-                        <p>Rate per kilometer: {{driver.ratePerKilometer}} € / km</p>
-                        <p>License expiry date: {{driver.licenseExpiryDate | date:'dd-MM-yyyy'}}</p>
+                        <p><span style="color: #0E3F89;">Rate per kilometer: </span> <span style="color: gray; font-weight: 400;">{{driver.ratePerKilometer}} € / km</span></p>
+                        <p><span style="color: #0E3F89;">License expiry date: </span> <span style="color: gray; font-weight: 400;">{{driver.licenseExpiryDate | date:'dd-MM-yyyy'}}</span></p>
                     </div>
                     <mat-divider vertical style="width: 2px; width: 1px; height: 100%; margin-top: 0.1rem;"></mat-divider>
                     <div class="column">
-                        <p>Experience: {{driver.yearsOfExperience}} years</p>
-                        <p>Total kilometers: {{formatMilenage(driver.totalKilometersDriven)}} km</p>
+                        <p><span style="color: #0E3F89;">Experience: </span> <span style="color: gray; font-weight: 400;">{{driver.yearsOfExperience}} years</span></p>
+                        <p><span style="color: #0E3F89;">Total kilometers: </span> <span style="color: gray; font-weight: 400;">{{formatMilenage(driver.totalKilometersDriven)}} km</span></p>
                     </div>
                 </div>
 
@@ -52,7 +52,25 @@
                 <img src="../../../../../../assets/images/driver-statistics-icon.svg" style="width: 45px; height: 45px; ">
                 <h2 class="driver-statistics-title">Driver Statistics</h2>
             </div>
-            <mat-divider></mat-divider>
+            <div class="statistics-cards">
+                <ngx-charts-number-card
+                [view]="[800,150]"
+                [scheme]="'air'"
+                [results]="driverGeneralStatistics"
+                [cardColor]="'#E0EDF7'"
+                >
+              </ngx-charts-number-card>
+              <ngx-charts-number-card
+              [view]="[400,150]"
+              [scheme]="'air'"
+              [results]="driverTotalEarningsStatistic"
+              [bandColor]="'#5CABEC'"
+              style="margin-left: -1em;"
+              [valueFormatting]="formatTotalEarnings"
+              >
+            </ngx-charts-number-card>
+            </div>
+           
         </div>
     </div>
    

@@ -2,9 +2,11 @@ package com.fleetcore.fleetcorebackend.controller;
 
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.dto.RouteDto;
+import com.fleetcore.fleetcorebackend.dto.statistics.DriverStatisticsDto;
 import com.fleetcore.fleetcorebackend.services.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,10 +60,18 @@ public class DriverController {
         try{
             List<RouteDto> upcomingRoutes = driverService.getAllUpcomingRoutesForDriver(driverId);
             return ResponseEntity.ok(upcomingRoutes);
-        }catch (Error error){
+        }catch (Exception ex){
             return ResponseEntity.status(400).build();
         }
     }
 
-
+    @GetMapping("/statistics")
+    public ResponseEntity<DriverStatisticsDto> getDriverStatistics(@RequestParam("driverId") Long driverId) {
+        try{
+            DriverStatisticsDto statisticsDto = driverService.getDriverStatistics(driverId);
+            return ResponseEntity.ok(statisticsDto);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }

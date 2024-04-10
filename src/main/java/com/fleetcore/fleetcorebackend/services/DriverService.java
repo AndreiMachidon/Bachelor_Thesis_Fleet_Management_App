@@ -3,14 +3,18 @@ package com.fleetcore.fleetcorebackend.services;
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.dto.RouteDto;
 import com.fleetcore.fleetcorebackend.dto.WaypointDto;
+import com.fleetcore.fleetcorebackend.dto.statistics.DriverStatisticsDto;
 import com.fleetcore.fleetcorebackend.email.EmailDetails;
 import com.fleetcore.fleetcorebackend.email.EmailServiceImpl;
 import com.fleetcore.fleetcorebackend.entities.DriverDetails;
+import com.fleetcore.fleetcorebackend.entities.RouteAlert;
 import com.fleetcore.fleetcorebackend.entities.User;
+import com.fleetcore.fleetcorebackend.entities.enums.AlertType;
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
 import com.fleetcore.fleetcorebackend.entities.routes.Route;
 import com.fleetcore.fleetcorebackend.exceptions.AuthException;
 import com.fleetcore.fleetcorebackend.repositories.DriverDetailsRepository;
+import com.fleetcore.fleetcorebackend.repositories.RouteAlertRepository;
 import com.fleetcore.fleetcorebackend.repositories.RouteRepository;
 import com.fleetcore.fleetcorebackend.repositories.UserRepository;
 import com.fleetcore.fleetcorebackend.util.DriverPasswordGenerator;
@@ -41,6 +45,8 @@ public class DriverService {
     private final RouteService routeService;
 
     private final WaypointService waypointService;
+
+    private final RouteAlertRepository routeAlertRepository;
 
 
     public List<DriverDto> getDriversByAdminId(Long adminId) {
@@ -223,6 +229,23 @@ public class DriverService {
         }
 
         return routeDtoList;
+    }
+
+    public DriverStatisticsDto getDriverStatistics(Long driverId) {
+        DriverStatisticsDto statisticsDto = new DriverStatisticsDto();
+        List<Route> routesList = routeRepository.getAllByDriverId(driverId).stream()
+                .filter(route -> route.getRouteStatus().equals(RouteStatus.COMPLETED))
+                .toList();
+
+        for(Route route : routesList) {
+            statisticsDto.addEarnings(route.getDriverCost());
+            List<RouteAlert> routeAlertList = routeAlertRepository.getAllByRouteId(route.getId()).stream()
+                            .filter(routeAlert -> routeAlert.getAlertType().equals(AlertType.ACCIDENT_REPORT))
+                            .toList();
+            statisticsDto.addAccidents(routeAlertList.size());
+        }
+        statisticsDto.setNumberOfCompletedRoutes(routesList.size());
+        return statisticsDto;
     }
 
 }

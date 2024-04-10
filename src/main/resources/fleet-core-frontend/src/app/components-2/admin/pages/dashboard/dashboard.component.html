@@ -1,1 +1,143 @@
-<p>dashboard works!</p>
+<div class="main-container">
+    <div class="upper-container">
+        <div class="card">
+            <div class="card-left">
+                <div class="circle-icon">
+                    <img src="../../../../../assets/dashboard/truck-card.svg"
+                        style="width: 4em; height: 4em;">
+                </div>
+            </div>
+            <div class="card-right">
+                <div class="card-title">
+                    Vehicles
+                </div>
+                <div class="vehiles-card-info-box">
+                    <div class="vehicle-status-info-total"
+                        style="color: #0E3F89;">
+                        <span>Total vehicles</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.totalVehicles}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="vehicle-status-info" style="color: #E4C580;">
+                        <span>Idle</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.idleVehicles}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="vehicle-status-info" style="color: #8FCB81;">
+                        <span>On route</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.onRouteVehicles}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="vehicle-status-info" style="color: #FF8882;">
+                        <span>In service</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.inServiceVehicles}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-left">
+                <div class="circle-icon">
+                    <img src="../../../../../assets/dashboard/driver-card.svg"
+                        style="width: 4em; height: 4em;">
+                </div>
+            </div>
+            <div class="card-right">
+                <div class="card-title">
+                    Drivers
+                </div>
+                <div class="driver-card-info-box">
+                    <div class="driver-info" style="color: #0E3F89;">
+                        <span>Total Drivers</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.totalDrivers}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="driver-info" style="color: #0E3F89;">
+                        <span>Total distance</span> <span
+                            style="margin-right: 1em;">{{formatKilometers(dashboardCardsInfo.totalDistance)}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="driver-info" style="color: #0E3F89;">
+                        <span>Average rate</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.averageDriversRate.toFixed(2)}} € / km</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-left">
+                <div class="circle-icon">
+                    <img src="../../../../../assets/dashboard/routes-card.svg"
+                        style="width: 4em; height: 4em;">
+                </div>
+            </div>
+            <div class="card-right">
+                <div class="card-title">
+                    Routes
+                </div>
+                <div class="vehiles-card-info-box">
+                    <div class="vehicle-status-info-total"
+                        style="color: #0E3F89;">
+                        <span>Total routes</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.totalRoutes}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="vehicle-status-info" style="color: #E4C580;">
+                        <span>Upcoming</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.upcomingRoutes}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="vehicle-status-info" style="color: #8FCB81;">
+                        <span>In Progress</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.inProgressRoutes}}</span>
+                    </div>
+                    <mat-divider class="card-divider"></mat-divider>
+                    <div class="vehicle-status-info" style="color: #c2bbbb;">
+                        <span>Completed</span> <span
+                            style="margin-right: 1em;">{{dashboardCardsInfo.completedRoutes}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lower-container">
+        <div class="barchart-container">
+            <div class="barchart-title">Fleet expenses by catrogory</div>
+            <ngx-charts-bar-vertical
+                [view]="[610, 450]"
+                [scheme]="'air'"
+                [results]="valuesBarChart"
+                [gradient]="false"
+                [xAxis]="true"
+                [yAxis]="true"
+                [legend]="false"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [xAxisLabel]="xAxisLabel"
+                [yAxisLabel]="yAxisLabel"
+                [yAxisTickFormatting]="yAxisTickFormatting"
+                [wrapTicks]="true"
+                >
+                <ng-template #tooltipTemplate let-model="model">
+                    <div class="custom-tooltip">
+                      <strong>{{ model.name }}</strong>
+                      <div>{{ yAxisTickFormatting(model.value) }} spent</div>
+                    </div>
+                </ng-template>
+            </ngx-charts-bar-vertical>
+        </div>
+        <div class="piechart-container">
+            <div class="piechart-title">Distribution of Fuel Expenditures by Type</div>
+            <ngx-charts-pie-chart
+                [view]="[640, 450]"
+                [scheme]="'air'"
+                [results]="valuesPieChart"
+                [gradient]="false"
+                [legend]="false"
+                [labels]="true"
+                [doughnut]="false"
+                [tooltipText]="tooltipFormatting">
+            </ngx-charts-pie-chart>
+        </div>
+    </div>
+</div>

@@ -100,9 +100,10 @@ public class RouteService {
         try{
             Route foundRoute = routeRepository.findById(routeId).orElseThrow();
             foundRoute.setRouteStatus(RouteStatus.valueOf(routeStatus));
-            if(RouteStatus.IN_PROGRESS.equals(routeStatus)){
+            if(RouteStatus.IN_PROGRESS.name().equals(routeStatus)){
                 Vehicle vehicle = vehicleRepository.getVehicleById(foundRoute.getVehicleId());
                 vehicle.setVehicleStatus(VehicleStatus.ON_ROUTE);
+                vehicleRepository.save(vehicle);
             }
             if(RouteStatus.COMPLETED.name().equals(routeStatus)){
                 DriverDetails driverDetails = driverDetailsRepository.getDriverDetailsById(foundRoute.getDriverId());

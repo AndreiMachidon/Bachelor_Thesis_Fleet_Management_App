@@ -1,5 +1,4 @@
 .user-details-container {
-    background: linear-gradient(#E0EDF7, #5CABEC);
     height: 50px;
     width: 300px;
     border-radius: 25px; 
@@ -8,17 +7,21 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    padding-left: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    padding-left: 1px;
+    box-shadow: 10px 8px 12px rgba(0, 0, 0, 0.1); 
     justify-content: space-between;
+    border: 0.5px solid rgb(170, 165, 165, 0.4);
 }
 
 .profile-image {
-    border: 2px solid #0E3F89;
+    border: 2px solid #E0EDF7;
     border-radius: 50%;
     height: 45px;
     width: 45px;
     overflow: hidden;
+    border: 2px groove #ddd;
+    margin-right: 1.3em;
+
 }
 
 .avatar {
@@ -39,12 +42,13 @@
 
 .name-text{
     margin-top: 10px;
-    color: #0E3F89;
+    color: white;
 }
 
 .role-text{
     margin-top: -24px;
-    color: #152F5F;
+    color: white;
+    font-weight: 100;
 }
 
 

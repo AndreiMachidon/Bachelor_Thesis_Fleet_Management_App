@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Driver } from 'src/app/components-2/auth/dto/Driver';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
 import { API_URL } from 'src/app/contants';
+import { DriverStatisticsDto } from '../dto/driver-statistics.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,10 @@ export class MyDriversService {
       .set('arrivalTime', arrivalTime.toISOString());
 
     return this.http.get<Driver[]>(`${API_URL}/drivers/available`, {'headers': this.httpHeaders, params});
+  }
+
+  public getDriverStatistics(driverId: number): Observable<DriverStatisticsDto> {
+    return this.http.get<DriverStatisticsDto>(`${API_URL}/drivers/statistics?driverId=${driverId}`, {'headers': this.httpHeaders});
   }
 
 }

@@ -29,7 +29,6 @@ public class UserAuthProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-
     public String createTokenForAdmin(User user){
 
         Date now = new Date();

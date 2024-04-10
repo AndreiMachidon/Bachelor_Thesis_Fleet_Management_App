@@ -1,5 +1,6 @@
 package com.fleetcore.fleetcorebackend.controller;
 
+import com.fleetcore.fleetcorebackend.dto.statistics.VehicleStatisticsDto;
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
 import com.fleetcore.fleetcorebackend.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,16 @@ public class VehicleController {
 
         List<Vehicle> vehicles = vehicleService.getAvailableVehicles(adminId, startTime, arrivalTime);
         return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<VehicleStatisticsDto> getVehicleStatistics(@RequestParam("vehicleId") Long vehicleId){
+        try {
+            VehicleStatisticsDto statisticsDto = vehicleService.getVehicleStatistics(vehicleId);
+            return ResponseEntity.ok(statisticsDto);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
 }

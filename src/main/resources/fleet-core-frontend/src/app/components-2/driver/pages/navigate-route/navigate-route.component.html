@@ -12,19 +12,19 @@
     <div *ngIf="isRouteStarted" class="route-in-progress-container"
         [ngClass]="{'alert-active': isAlertActiveUnresolved}">
         <div class="progress-title" *ngIf="!isAlertActiveUnresolved">
-            <p style="font-size: 2rem; font-weight: bold;">Route in progress</p>
-            <p style="font-size: 1rem; font-weight: bold;">Your location is now
+            <p style="font-size: 2rem; font-weight: bold; margin-bottom: 1.2em;">Route in progress</p>
+            <p style="font-size: 1rem; font-weight: 500;">Your location is now
                 shared with the organisation admin</p>
-            <p style="font-size: 1rem; font-weight: bold;">If you leave this
+            <p style="font-size: 1rem; font-weight: 500;">If you leave this
                 window, please refresh the page in order for the location
                 sharing to continue.</p>
         </div>
         <div *ngIf="isAlertActiveUnresolved" class="progress-title">
             <p
-                style="font-size: 2rem; font-weight: bold; line-height: 2.5rem;">You
+                style="font-size: 1.6rem; font-weight: bold; line-height: 2.5rem;">You
                 have an active route alert :
                 {{formatAlertType(activeRouteAlert.alertType)}}</p>
-            <p style="font-size: 1rem; font-weight: bold;">Please notify the
+            <p style="font-size: 1rem; font-weight: 500; font-style: italic;">Please notify the
                 admin when the alert is resolved!</p>
         </div>
         <div *ngIf="isRouteStarted" class="bg"></div>

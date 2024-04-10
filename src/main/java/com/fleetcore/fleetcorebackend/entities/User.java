@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Base64;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -66,6 +64,4 @@ public class User {
             return null;
         }
     }
-
-
 }

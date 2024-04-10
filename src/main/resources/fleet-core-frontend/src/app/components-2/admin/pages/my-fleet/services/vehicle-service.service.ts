@@ -5,6 +5,7 @@ import { Vehicle } from '../../../admin-dashboard/models/vehicle.model';
 import { API_URL } from 'src/app/contants';
 import { Observable } from 'rxjs';
 import { Maintenance } from '../../../admin-dashboard/models/maintanance.model';
+import { VehicleStatisticsDto } from '../vehicle-details/dto/vehicle-statistics-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,10 @@ export class VehicleService {
       .set('arrivalTime', arrivalTime.toISOString());
   
     return this.http.get<Vehicle[]>(`${API_URL}/vehicles/available`, { headers: this.httpHeaders, params });
+  }
+
+  public getVehicleStatistics(vehicleId: number) : Observable<VehicleStatisticsDto> {
+    return this.http.get<VehicleStatisticsDto>(`${API_URL}/vehicles/statistics?vehicleId=${vehicleId}`, {headers: this.httpHeaders})
   }
 
   

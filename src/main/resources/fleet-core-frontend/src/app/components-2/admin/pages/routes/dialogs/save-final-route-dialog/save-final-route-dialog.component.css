@@ -22,7 +22,7 @@
 }
 
 .divider{
-    background-color: black;
+    background-color: rgb(216, 211, 211);
     height: 1px;
     margin-bottom: 1rem;
 }
@@ -40,7 +40,7 @@
     align-items: center;
     gap: 10px;
     font-weight: bolder;
-    font-size: 20px;
+    font-size: 25px;
     color: #0E3F89
   }
 
