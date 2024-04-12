@@ -40,37 +40,29 @@ export class RoutesComponent {
   startingLocation: string = '';
   destinationLocation: string = '';
 
-
-  
   isRouteConfigured: boolean = false;
   distance: number;
   duration: number;
   directionResult: google.maps.DirectionsResult = null;
 
-  
   showSelectOptions: boolean = true;
   showAddRoute: boolean = false;
   showViewRoutes: boolean = true;
 
-  
   dateControl = new FormControl();
   minDate: Date = new Date();
   startTime: Date = null;
   arrivalTime: Date = null;
-
-  
+ 
   selectedVehicle: Vehicle = null;
   selectedDriver: Driver = null;
 
-  
   showFuelStationsFlag: boolean = false;
   fuelStationsMarkers: google.maps.Marker[] = [];
 
-  
   waypoints: CustomWaypoint[] = [];
   waypointsMarkers: google.maps.Marker[] = [];
-
-  
+ 
   showTrafficLayer: boolean = false;
   trafficLayer: google.maps.TrafficLayer;
 
@@ -192,7 +184,6 @@ export class RoutesComponent {
   }
 
   openChoseVehicleDialog() {
-
     this.fuelStationsMarkers.forEach(marker => marker.setMap(null));
     this.fuelStationsMarkers = [];
     this.findOptimalRoute();
@@ -281,21 +272,17 @@ export class RoutesComponent {
         this.map.fitBounds(response.routes[0].bounds);
         this.directionResult = response;
         this.isRouteConfigured = true;
-
-        
+ 
         const startMarker = createCustomMarker(this.map, response.routes[0].legs[0].start_location, '../../../assets/markers/start_point.png');
         this.waypointsMarkers.push(startMarker);
 
-        
         const endMarker = createCustomMarker(this.map, response.routes[0].legs[response.routes[0].legs.length - 1].end_location, '../../../assets/markers/end_point.png');
         this.waypointsMarkers.push(endMarker);
 
-        
         if (!isFuelWaypointAdded && !areBreaksWaypointsAdded) {
           this.addRestBreakWaipoints(response);
         }
-
-        
+   
         this.placeWaypointMarkers();
 
       } else {
@@ -356,10 +343,10 @@ export class RoutesComponent {
             latitude: location.lat(),
             longitude: location.lng()
           },
-          radius: 20000.0
+          radius: 50000.0
         }
       },
-      maxResultCount: 5,
+      maxResultCount: 2,
       languageCode: "en"
     }
 
@@ -475,14 +462,12 @@ export class RoutesComponent {
       infoWindowContent.style.width = '500px';
       infoWindowContent.style.height = 'auto';
 
-      
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
       stationName.style.color = '#0E3F89';
       stationName.textContent = place.displayName.text;
 
-      
       const stationImage = document.createElement('img');
       stationImage.src = '../../../assets/images/gas-station-info-window-icon.svg';
       stationImage.alt = 'Station Icon';
@@ -495,28 +480,20 @@ export class RoutesComponent {
       titleContainer.style.alignItems = 'center';
       titleContainer.style.justifyContent = 'flex-start';
 
-      
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
 
-      
       infoWindowContent.appendChild(titleContainer);
 
-
-      
       const stationAddress = document.createElement('div');
       stationAddress.style.fontSize = '15px';
       stationAddress.style.color = '#5CABEC';
       stationAddress.textContent = place.formattedAddress;
       infoWindowContent.appendChild(stationAddress);
 
-
-      
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averageGasolinePrice = this.fuelPriceService.getGasolinePrice(country);
       const averageDieselPrice = this.fuelPriceService.getDieselPrice(country);
-      
-
       
       let fuelOptionsHtml = '';
 
@@ -596,14 +573,12 @@ export class RoutesComponent {
       infoWindowContent.style.width = '500px';
       infoWindowContent.style.height = 'auto';
 
-      
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
       stationName.style.color = '#0E3F89';
       stationName.textContent = place.displayName.text;
 
-      
       const stationImage = document.createElement('img');
       stationImage.src = '../../../assets/images/electric-station-info-window-icon.svg';
       stationImage.alt = 'Station Icon';
@@ -616,15 +591,11 @@ export class RoutesComponent {
       titleContainer.style.alignItems = 'center';
       titleContainer.style.justifyContent = 'flex-start';
 
-      
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
-
       
       infoWindowContent.appendChild(titleContainer);
 
-
-      
       const stationAddress = document.createElement('div');
       stationAddress.style.fontSize = '15px';
       stationAddress.style.color = '#5CABEC';
@@ -638,6 +609,8 @@ export class RoutesComponent {
       let chargeOptionsHtml = '';
 
       if (place.evChargeOptions && place.evChargeOptions.connectorAggregation) {
+        console.log(place.evChargeOptions);
+        
         chargeOptionsHtml += '<div style="font-weight: bold; margin-bottom: 10px; margin-top: 12px; font-size:18px; color: #0E3F89;">Charge Options:</div>';
         chargeOptionsHtml += place.evChargeOptions.connectorAggregation.map((connector, index, array) => {
           return `<div style="padding: 10px; border-bottom: ${index === array.length - 1 ? 'none' : '1px solid #ddd'};">
@@ -766,35 +739,23 @@ export class RoutesComponent {
   }
 
   showFinalDetails() {
-
-    
     const routeDuration = this.duration;
-
-    
     const restBreaksDuration = this.waypoints.filter(wp => wp.type === "restBreak").length * 2700;
-
-    
     const totalRouteDuration = routeDuration + restBreaksDuration;
 
-    
     const routeDurationFormatted = calculateDurationInHoursAndMinutes(routeDuration);
     const restBreaksDurationFormatted = calculateDurationInHoursAndMinutes(restBreaksDuration);
     const totalRouteDurationFormatted = calculateDurationInHoursAndMinutes(totalRouteDuration);
 
-    
     this.arrivalTime = new Date(this.startTime.getTime() + (routeDuration + restBreaksDuration) * 1000);
 
-    
     const totalDistance = this.distance / 1000;
 
-    
     const waypointsInfo = calculateDistanceAndDurationBetweenWaypoints(this.directionResult, this.waypoints);
 
-    
     let averageFuelPrice = 0;
     let numberOfFuelStations = 0;
 
-    
     this.waypoints.forEach((waypoint) => {
       if (waypoint.type !== "restBreak") {
         if (this.selectedVehicle.fuelType === "GASOLINE" && waypoint.fuelType === 'gasoline') {
@@ -809,7 +770,7 @@ export class RoutesComponent {
         }
       }
     });
-    if (numberOfFuelStations > 0) {
+    if (numberOfFuelStations > 0 && averageFuelPrice > 0) {
       averageFuelPrice = averageFuelPrice / numberOfFuelStations;
     } else {
       switch (this.selectedVehicle.fuelType) {
@@ -829,8 +790,7 @@ export class RoutesComponent {
     const totalDistanceInKm = totalDistance;
     const fuelConsumptionPer100Km = this.selectedVehicle.fuelConsumption;
     const totalFuelCost = (totalDistanceInKm / 100) * fuelConsumptionPer100Km * averageFuelPrice;
-
-    
+ 
     const driverRatePerKilometer = this.selectedDriver.ratePerKilometer; 
 
     const totalDriverCost = totalDistanceInKm * driverRatePerKilometer;

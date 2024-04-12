@@ -178,7 +178,7 @@ export class NavigateRouteComponent {
     const destinationCoords = `${destination.latitude},${destination.longitude}`;
 
     const waypoints = this.route.waypoints
-      .filter(wp => wp.type !== 'DESTINATION' && wp.type !== 'START')
+      .filter(wp => wp.type !== 'DESTINATION')
       .map(wp => `${wp.latitude},${wp.longitude}`)
       .join('|');
 

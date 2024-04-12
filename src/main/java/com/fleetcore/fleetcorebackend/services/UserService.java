@@ -86,10 +86,17 @@ public class UserService {
 
     public void updateUserDetails(User newUser) {
         User existingUser = userRepository.findUserById(newUser.getId());
-        newUser.setPassword(existingUser.getPassword());
+        if(newUser.getPassword().isEmpty()) {
+            newUser.setPassword(existingUser.getPassword());
+        } else {
+            String encodedPassword = passwordConfig.passwordEncoder().encode(newUser.getPassword());
+            newUser.setPassword(encodedPassword);
+        }
+
         if(newUser.getImageData() == null) {
             newUser.setImageData(existingUser.getImageData());
         }
+
         userRepository.save(newUser);
     }
 }

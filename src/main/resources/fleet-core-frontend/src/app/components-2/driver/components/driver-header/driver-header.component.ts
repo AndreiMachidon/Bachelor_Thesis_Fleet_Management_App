@@ -12,9 +12,7 @@ export class DriverHeaderComponent {
   driverDetails: any;
   driverName: string;
 
-
   constructor(private authService: AuthService) {}
-
 
   ngOnInit() {
     this.driverDetails = this.authService.getUserDetails();

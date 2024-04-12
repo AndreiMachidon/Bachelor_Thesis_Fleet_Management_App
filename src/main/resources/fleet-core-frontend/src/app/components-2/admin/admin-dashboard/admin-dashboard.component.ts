@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout'; // Import BreakpointState
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { delay, filter } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { AuthService } from '../../auth/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SignOutDialogComponent } from './dialogs/sign-out-dialog/sign-out-dialog.component';
 
-interface MyBreakpointState extends BreakpointState {} // Define your own BreakpointState interface
+interface MyBreakpointState extends BreakpointState {}
 
 @UntilDestroy()
 @Component({

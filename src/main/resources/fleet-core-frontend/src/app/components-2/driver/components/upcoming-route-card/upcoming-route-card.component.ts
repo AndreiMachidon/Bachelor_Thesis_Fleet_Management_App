@@ -11,9 +11,7 @@ import { MonitorLocationService } from '../../services/monitor-location.service'
 export class UpcomingRouteCardComponent {
 
   @Input() route: RouteDto;
-
-
-   //1. Start and end location for the route
+  
    startLocationAddress: string;
    endLocationAddress: string;
    startedRouteId: number;

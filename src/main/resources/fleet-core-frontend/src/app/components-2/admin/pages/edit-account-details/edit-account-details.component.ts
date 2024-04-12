@@ -43,7 +43,6 @@ export class EditAccountDetailsComponent {
           if(data) {
             this.uploadedImage = 'data:image/jpeg;base64,' + data;
           }
-         
         },
       );
     }
@@ -93,7 +92,7 @@ export class EditAccountDetailsComponent {
         role: this.userDetails.role,
         imageData: imageData,
         organisationName: this.userDetails.organisationName,
-        password: '',
+        password: this.editAccountFormGroup.get('passwordFormControl').value,
         driverDetailsId: null
     };
 

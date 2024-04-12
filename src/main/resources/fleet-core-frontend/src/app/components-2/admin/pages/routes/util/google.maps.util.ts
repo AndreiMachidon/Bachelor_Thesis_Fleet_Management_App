@@ -95,14 +95,12 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       infoWindowContent.style.width = '500px';
       infoWindowContent.style.height = 'auto';
 
-      
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
       stationName.style.color = '#0E3F89';
       stationName.textContent = waypoint.evChargeInfo.displayName.text;
 
-      
       const stationImage = document.createElement('img');
       stationImage.src = '../../../assets/images/electric-station-info-window-icon.svg';
       stationImage.alt = 'Station Icon';
@@ -115,14 +113,11 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       titleContainer.style.alignItems = 'center';
       titleContainer.style.justifyContent = 'flex-start';
 
-      
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
 
-      
       infoWindowContent.appendChild(titleContainer);
 
-      
       const stationAddress = document.createElement('div');
       stationAddress.style.fontSize = '15px';
       stationAddress.style.color = '#5CABEC';
