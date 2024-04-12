@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.config;
+package com.fleetcore.fleetcorebackend.config.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

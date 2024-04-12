@@ -4,6 +4,7 @@ import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.dto.SignInDto;
 import com.fleetcore.fleetcorebackend.dto.SignUpDto;
 import com.fleetcore.fleetcorebackend.dto.UserDto;
+import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.exceptions.AuthException;
 import com.fleetcore.fleetcorebackend.services.DriverService;
 import com.fleetcore.fleetcorebackend.services.UserService;
@@ -48,10 +49,10 @@ public class AuthController {
 
     @PostMapping("register/driver")
     public ResponseEntity<DriverDto> registerDriver(@RequestParam("adminId") Long adminId, @RequestBody DriverDto driverDto) {
-        try{
+        try {
             DriverDto createdDriver = driverService.registerDriver(adminId, driverDto);
             return ResponseEntity.ok(createdDriver);
-        }catch (AuthException ex){
+        } catch (AuthException ex) {
             return ResponseEntity
                     .status(ex.getStatus())
                     .build();
@@ -59,12 +60,22 @@ public class AuthController {
     }
 
     @GetMapping("/getImageData")
-    public ResponseEntity<String> getImageData(@RequestParam("userId") Long userId){
+    public ResponseEntity<String> getImageData(@RequestParam("userId") Long userId) {
         String imageData = userService.getImageData(userId);
-        if(imageData != null){
+        if (imageData != null) {
             return ResponseEntity.ok(imageData);
-        }else{
+        } else {
             return ResponseEntity.status(400).build();
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUserDetails(@RequestBody User user) {
+        try {
+            userService.updateUserDetails(user);
+            return ResponseEntity.ok("User updated successfully!");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

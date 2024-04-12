@@ -11,7 +11,7 @@
                 <div class="next-maintenance maintanance-box">
                     <h2>Next maintenance:</h2>
                     <div
-                        *ngIf="!isMaintenanceScheduled && !isMaintenanceMandatory"
+                        *ngIf="!isMaintenanceScheduled && !isMaintenanceMandatory && !isMaintenanceToday"
                         class="maintenance-due">
                         <p style="font-weight: bold; font-size: 1rem;">There is
                             no maintenance due</p>
@@ -31,7 +31,7 @@
                                 km</strong>
                         </p>
                     </div>
-                    <div *ngIf="isMaintenanceMandatory && !isMaintenanceToday"
+                    <div *ngIf="isMaintenanceMandatory && !isMaintenanceToday && !isMaintenanceScheduled"
                         class="maintanance-mandatory">
                         <p style="color: red; font-weight: bold;">YOU MUST
                             SCHEDULE A MAINTENANCE NOW!</p>

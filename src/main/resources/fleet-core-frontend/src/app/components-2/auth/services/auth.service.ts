@@ -41,6 +41,14 @@ export class AuthService {
     return this.http.get(`${API_URL}/getImageData?userId=${userId}`, { 'headers': httpHeaders, responseType: 'text' });
   }
 
+  public updateUser(user: any): Observable<string> {
+    let httpHeaders: HttpHeaders;
+    const token = this.getAuthToken();
+    httpHeaders = new HttpHeaders()
+    .set('Authorization', 'Bearer ' + token)
+    return this.http.put(`${API_URL}/update`, user, { 'headers': httpHeaders, responseType: 'text' });
+  }
+
   getAuthToken(): string | null {
     const encryptedToken = window.localStorage.getItem('auth_token');
     return encryptedToken ? this.tokenEncryptionService.decrypt(encryptedToken) : null;

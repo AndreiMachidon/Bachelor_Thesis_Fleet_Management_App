@@ -24,9 +24,6 @@ export class UerDetailsComponent {
     this.authService.getImageData(this.authService.getUserDetails().id).subscribe(
       data => {
         this.imageData = data;
-        
-      },
-      error => {
       }
     );
     

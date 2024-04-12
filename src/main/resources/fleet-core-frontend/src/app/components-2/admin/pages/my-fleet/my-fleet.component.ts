@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Vehicle } from '../../admin-dashboard/models/vehicle.model';
 import { VehicleService } from './services/vehicle-service.service';
 import { AuthService } from 'src/app/components-2/auth/services/auth.service';
-import { response } from 'express';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteVehicleDialogComponent } from './dialogs/delete-vehicle-dialog/delete-vehicle-dialog.component';
-import { Maintenance } from '../../admin-dashboard/models/maintanance.model';
 
 @Component({
   selector: 'app-my-fleet',

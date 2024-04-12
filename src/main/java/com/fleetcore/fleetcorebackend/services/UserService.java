@@ -1,6 +1,7 @@
 package com.fleetcore.fleetcorebackend.services;
 
-import com.fleetcore.fleetcorebackend.config.UserAuthProvider;
+import com.fleetcore.fleetcorebackend.config.security.PasswordConfig;
+import com.fleetcore.fleetcorebackend.config.security.UserAuthProvider;
 import com.fleetcore.fleetcorebackend.dto.DriverDto;
 import com.fleetcore.fleetcorebackend.dto.SignInDto;
 import com.fleetcore.fleetcorebackend.dto.SignUpDto;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.CharBuffer;
@@ -24,7 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordConfig passwordConfig;
 
     private final DriverService driverService;
 
@@ -40,7 +40,7 @@ public class UserService {
                 .orElseThrow(() -> new AuthException("Unknown user", HttpStatus.NOT_FOUND));
 
         UserDto userDto = new UserDto();
-        if (passwordEncoder.matches(CharBuffer.wrap(signInDto.password()), user.getPassword())) {
+        if (passwordConfig.passwordEncoder().matches(CharBuffer.wrap(signInDto.password()), user.getPassword())) {
             if (user.getRole().equals("admin")) {
                 logger.info("Signing in an user with admin rights");
                 userDto.setToken(userAuthProvider.createTokenForAdmin(user));
@@ -54,8 +54,6 @@ public class UserService {
         }else{
             throw new AuthException("Invalid password", HttpStatus.BAD_REQUEST);
         }
-
-
     }
 
     public UserDto register(SignUpDto signUpDto){
@@ -73,7 +71,7 @@ public class UserService {
         user.setEmail(signUpDto.email());
         user.setRole(signUpDto.role());
         user.setPhoneNumber(signUpDto.phoneNumber());
-        user.setPassword(passwordEncoder.encode(CharBuffer.wrap(signUpDto.password())));
+        user.setPassword(passwordConfig.passwordEncoder().encode(CharBuffer.wrap(signUpDto.password())));
         userRepository.save(user);
         UserDto userDto = new UserDto();
         userDto.setToken(userAuthProvider.createTokenForAdmin(user));
@@ -82,7 +80,16 @@ public class UserService {
     }
 
     public String getImageData(Long userId){
-        String imageData = userRepository.getImageDataByUserId(userId).orElse(null);
-        return imageData;
+        User user = userRepository.findUserById(userId);
+        return user.getImageData();
+    }
+
+    public void updateUserDetails(User newUser) {
+        User existingUser = userRepository.findUserById(newUser.getId());
+        newUser.setPassword(existingUser.getPassword());
+        if(newUser.getImageData() == null) {
+            newUser.setImageData(existingUser.getImageData());
+        }
+        userRepository.save(newUser);
     }
 }

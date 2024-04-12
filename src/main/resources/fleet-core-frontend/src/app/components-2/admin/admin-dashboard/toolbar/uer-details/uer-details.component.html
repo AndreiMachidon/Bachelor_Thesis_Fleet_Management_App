@@ -2,7 +2,7 @@
   <div class="profile-image">
     <img
       class="avatar mat-elevation-z8"
-      src="https://source.unsplash.com/c_GmwfHBDzk/200x200" />
+      [src]="imageData ? 'data:image/jpeg;base64,' + imageData : 'https://source.unsplash.com/c_GmwfHBDzk/200x200'" />
   </div>
   <div class="text-container">
     <p class="name-text">{{firstName}} {{lastName}}</p>
@@ -12,9 +12,9 @@
     <mat-icon style="color: white;">menu</mat-icon>
   </button>
   <mat-menu #menu="matMenu" class="custom-menu">
-    <button mat-menu-item>
+    <button mat-menu-item routerLink="edit-account">
       <mat-icon>settings</mat-icon>
-      <span>Account Settings</span>
+      <span>Edit account</span>
     </button>
   </mat-menu>
 </div>

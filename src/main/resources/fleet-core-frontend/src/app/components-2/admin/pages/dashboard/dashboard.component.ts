@@ -6,40 +6,6 @@ import { DashboardService } from './services/dashboard.service';
 import { DashboardFleetExpensesByCategoryDto } from './dto/dashboard-fleex-expenses.dto';
 import { DashboardFuelCostsByTypeDto } from './dto/dashboard-fuel-costs.dto';
 
-export var valuesBarChart = [
-  {
-    "name": "Vehicle Maintenances",
-    "value": 4500
-  },
-  {
-    "name": "Fuel",
-    "value": 8700
-  },
-  {
-    "name": "Drivers",
-    "value": 5200
-  },
-  {
-    "name": "Vehicle Breakdowns",
-    "value": 1200
-  },
-
-];
-
-export var valuesPieChart = [
-  {
-    "name": "Diesel",
-    "value": 4500
-  },
-  {
-    "name": "Gasoline",
-    "value": 5200
-  },
-  {
-    "name": "Electricty",
-    "value": 1800
-  },
-];
 
 @Component({
   selector: 'app-dashboard',
@@ -49,19 +15,12 @@ export var valuesPieChart = [
 export class DashboardComponent {
 
   userInfo: any;
-
-  //Data for cards
   dashboardCardsInfo: DashboardCardsInfoDto;
 
-  // Bar chart
   valuesBarChart: any[];
-
-    // options
     xAxisLabel = 'Expenses';
     yAxisLabel = 'Costs in €';
 
-
-  // Pie chart
   valuesPieChart: any[];
 
   constructor(private authService: AuthService, private dashboardService: DashboardService) {

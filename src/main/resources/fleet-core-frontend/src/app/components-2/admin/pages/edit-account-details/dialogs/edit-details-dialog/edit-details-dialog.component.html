@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Edit account settings</h2>
+<mat-dialog-content class="mat-typography">
+    <h3>Are you sure you want to edit your account details?</h3>
+    <p>You will be signed out from the app!</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button [mat-dialog-close]="'Close'" cdkFocusInitial>Close</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="'Edit'">Edit</button>
+</mat-dialog-actions>

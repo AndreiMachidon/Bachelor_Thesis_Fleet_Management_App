@@ -10,7 +10,6 @@ import { WebSocketsService } from 'src/app/components-2/global-services/web-sock
 })
 export class SeeDriverRoutesComponent {
 
-  //1. The array of upcoming routes
   upcomingRoutes: any[] = [];
 
   constructor(private driverService: DriverService, 

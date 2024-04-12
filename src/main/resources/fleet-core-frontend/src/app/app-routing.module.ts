@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 //auth components
 import { LoginPageComponent } from './components-2/auth/pages/login-page/login-page.component';
-import { ForgotPasswordPageComponent } from './components-2/auth/pages/forgot-password-page/forgot-password-page.component';
 import { RegisterPageComponent } from './components-2/auth/pages/register-page/register-page.component';
 import { AdminDashboardComponent } from './components-2/admin/admin-dashboard/admin-dashboard.component';
 import { MyFleetComponent } from './components-2/admin/pages/my-fleet/my-fleet.component';
@@ -21,11 +20,11 @@ import { DriverMainComponent } from './components-2/driver/driver-main/driver-ma
 import { AuthGuardAdmin } from './components-2/auth/auth-guards/auth-guard-admin';
 import { AuthGuardDriver } from './components-2/auth/auth-guards/auth-guard-driver';
 import { AuthGuardRedirectExistingUser } from './components-2/auth/auth-guards/auth-guard-redirect-existing-user';
+import { EditAccountDetailsComponent } from './components-2/admin/pages/edit-account-details/edit-account-details.component';
 
 const routes: Routes = [
   { path: '', component: LoginPageComponent, canActivate: [AuthGuardRedirectExistingUser] },
   { path: 'register', component: RegisterPageComponent },
-  { path: 'forgot-password', component: ForgotPasswordPageComponent },
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent,
@@ -39,7 +38,8 @@ const routes: Routes = [
       {path: 'add-vehicle', component: AddVehicleComponent},
       {path: 'add-driver', component: AddDriverComponent},
       {path: 'vehicle-details/:id', component: VehicleDetailsComponent},
-      {path: 'driver-details/:id', component: DriverDetailsComponent}
+      {path: 'driver-details/:id', component: DriverDetailsComponent},
+      {path: 'edit-account', component: EditAccountDetailsComponent}
     ],
   },
   {

@@ -43,7 +43,6 @@ export class AddMaintenanceComponent {
   
 
   saveMaintenance(){
-
     if(this.selectedMaintenanceType !== '' && this.selectedMaintananceDate != undefined){
       this.maintenance.maintenanceType = this.selectedMaintenanceType;  
       this.maintenance.maintananceDate = this.selectedMaintananceDate

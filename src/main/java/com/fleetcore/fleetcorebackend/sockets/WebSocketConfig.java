@@ -1,7 +1,7 @@
 package com.fleetcore.fleetcorebackend.sockets;
 
-import com.fleetcore.fleetcorebackend.config.JwtChannelInterceptor;
-import com.fleetcore.fleetcorebackend.config.UserAuthProvider;
+import com.fleetcore.fleetcorebackend.config.security.JwtChannelInterceptor;
+import com.fleetcore.fleetcorebackend.config.security.UserAuthProvider;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

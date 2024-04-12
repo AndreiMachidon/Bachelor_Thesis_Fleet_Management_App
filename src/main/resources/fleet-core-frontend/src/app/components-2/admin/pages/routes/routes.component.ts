@@ -30,52 +30,47 @@ import { RouteSavedDialogComponent } from './dialogs/route-saved-dialog/route-sa
 })
 export class RoutesComponent {
 
-
-  //I. ADD ROUTE WINDOW
-
-  //1. Map, User, DirectionRenderer and DirectionService
   map: google.maps.Map;
   userPosition: google.maps.LatLng;
   directionRenderer: google.maps.DirectionsRenderer = null;
   directionService: google.maps.DirectionsService = null;
 
-  //2. For starting and destination location
   startingLocationControl = new FormControl();
   destinationLocationControl = new FormControl();
   startingLocation: string = '';
   destinationLocation: string = '';
 
 
-  //3. Details of the optimal route
+  
   isRouteConfigured: boolean = false;
   distance: number;
   duration: number;
   directionResult: google.maps.DirectionsResult = null;
 
-  //4. Flags for showing the current window
+  
   showSelectOptions: boolean = true;
   showAddRoute: boolean = false;
   showViewRoutes: boolean = true;
 
-  //5. For selecting the route date
+  
   dateControl = new FormControl();
   minDate: Date = new Date();
   startTime: Date = null;
   arrivalTime: Date = null;
 
-  //6.Selected Vehicle and driver
+  
   selectedVehicle: Vehicle = null;
   selectedDriver: Driver = null;
 
-  //7. For fuel stations
+  
   showFuelStationsFlag: boolean = false;
   fuelStationsMarkers: google.maps.Marker[] = [];
 
-  //8. For custom waypoints
+  
   waypoints: CustomWaypoint[] = [];
   waypointsMarkers: google.maps.Marker[] = [];
 
-  //9. For map costumisation options
+  
   showTrafficLayer: boolean = false;
   trafficLayer: google.maps.TrafficLayer;
 
@@ -83,7 +78,7 @@ export class RoutesComponent {
   @ViewChild('startingLocationAuto') startingLocationAuto: MatAutocomplete;
   @ViewChild('destinationLocationAuto') destinationLocationAuto: MatAutocomplete;
 
-  //II. VIEW ROUTES WINDOW
+  
   routesList: RouteDto[] = [];
 
   constructor(
@@ -113,7 +108,7 @@ export class RoutesComponent {
       mapTypeId: google.maps.MapTypeId.HYBRID,
       mapId: '1d3279d2082b9187',
       restriction: {
-        latLngBounds: { //europe limits
+        latLngBounds: { 
           north: 71,
           south: 34,
           east: 40,
@@ -287,20 +282,20 @@ export class RoutesComponent {
         this.directionResult = response;
         this.isRouteConfigured = true;
 
-        //marker for start
+        
         const startMarker = createCustomMarker(this.map, response.routes[0].legs[0].start_location, '../../../assets/markers/start_point.png');
         this.waypointsMarkers.push(startMarker);
 
-        // Marker for destination
+        
         const endMarker = createCustomMarker(this.map, response.routes[0].legs[response.routes[0].legs.length - 1].end_location, '../../../assets/markers/end_point.png');
         this.waypointsMarkers.push(endMarker);
 
-        //adding waypoints for rest breaks
+        
         if (!isFuelWaypointAdded && !areBreaksWaypointsAdded) {
           this.addRestBreakWaipoints(response);
         }
 
-        //placing markers for waypoints
+        
         this.placeWaypointMarkers();
 
       } else {
@@ -315,7 +310,7 @@ export class RoutesComponent {
   }
 
   async addRestBreakWaipoints(directionResult: google.maps.DirectionsResult) {
-    const maxDrivingTime = 4.5 * 3600; // 4.5 hours in seconds
+    const maxDrivingTime = 4.5 * 3600; 
     let totalDrivenTime = 0;
     let promises: Promise<any>[] = [];
 
@@ -480,14 +475,14 @@ export class RoutesComponent {
       infoWindowContent.style.width = '500px';
       infoWindowContent.style.height = 'auto';
 
-      // Adăugarea titlului stației
+      
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
       stationName.style.color = '#0E3F89';
       stationName.textContent = place.displayName.text;
 
-      // Create an image element
+      
       const stationImage = document.createElement('img');
       stationImage.src = '../../../assets/images/gas-station-info-window-icon.svg';
       stationImage.alt = 'Station Icon';
@@ -500,15 +495,15 @@ export class RoutesComponent {
       titleContainer.style.alignItems = 'center';
       titleContainer.style.justifyContent = 'flex-start';
 
-      // Append the image and station name to the title container
+      
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
 
-      // Now, append the title container to your main info window content
+      
       infoWindowContent.appendChild(titleContainer);
 
 
-      //Adaugare adresa statie
+      
       const stationAddress = document.createElement('div');
       stationAddress.style.fontSize = '15px';
       stationAddress.style.color = '#5CABEC';
@@ -516,13 +511,13 @@ export class RoutesComponent {
       infoWindowContent.appendChild(stationAddress);
 
 
-      //getting the country for the place
+      
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averageGasolinePrice = this.fuelPriceService.getGasolinePrice(country);
       const averageDieselPrice = this.fuelPriceService.getDieselPrice(country);
       
 
-      // Adăugăm opțiunile de combustibil la infowindow
+      
       let fuelOptionsHtml = '';
 
       if (averageGasolinePrice && averageDieselPrice) {
@@ -537,7 +532,7 @@ export class RoutesComponent {
       fuelOptionsDiv.innerHTML = fuelOptionsHtml;
       infoWindowContent.appendChild(fuelOptionsDiv);
 
-      // Crearea și adăugarea butonului de adăugare la rută
+      
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
       Object.assign(addToRouteButton.style, {
@@ -601,14 +596,14 @@ export class RoutesComponent {
       infoWindowContent.style.width = '500px';
       infoWindowContent.style.height = 'auto';
 
-      // Adăugarea titlului stației
+      
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
       stationName.style.color = '#0E3F89';
       stationName.textContent = place.displayName.text;
 
-      // Create an image element
+      
       const stationImage = document.createElement('img');
       stationImage.src = '../../../assets/images/electric-station-info-window-icon.svg';
       stationImage.alt = 'Station Icon';
@@ -621,22 +616,22 @@ export class RoutesComponent {
       titleContainer.style.alignItems = 'center';
       titleContainer.style.justifyContent = 'flex-start';
 
-      // Append the image and station name to the title container
+      
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
 
-      // Now, append the title container to your main info window content
+      
       infoWindowContent.appendChild(titleContainer);
 
 
-      //Adaugare adresa statie
+      
       const stationAddress = document.createElement('div');
       stationAddress.style.fontSize = '15px';
       stationAddress.style.color = '#5CABEC';
       stationAddress.textContent = place.formattedAddress;
       infoWindowContent.appendChild(stationAddress);
 
-      //getting the country for the place
+      
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averagePrice = this.fuelPriceService.getElectricityPrice(country);
 
@@ -655,12 +650,12 @@ export class RoutesComponent {
         chargeOptionsHtml = '<div style="font-size:15px; margin-top: 10px; color:black; font-weight: bold; color: #0E3F89;">No information about the charging options available.</div>';
       }
 
-      // Adaugă opțiunile de încărcare la infowindow
+      
       const chargeOptionsDiv = document.createElement('div');
       chargeOptionsDiv.innerHTML = chargeOptionsHtml;
       infoWindowContent.appendChild(chargeOptionsDiv);
 
-      //Daugam pretul mediu la electricitate
+      
       if (averagePrice) {
         const averagePriceHtml = document.createElement('div');
         averagePriceHtml.innerHTML = `<div style="margin-top: 25px; color:black; font-size:15px; font-weight:bold;">
@@ -669,7 +664,7 @@ export class RoutesComponent {
         infoWindowContent.appendChild(averagePriceHtml);
       }
 
-      // Crearea și adăugarea butonului de adăugare la rută
+      
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
       Object.assign(addToRouteButton.style, {
@@ -772,34 +767,34 @@ export class RoutesComponent {
 
   showFinalDetails() {
 
-    //1. Durata calatoriei
+    
     const routeDuration = this.duration;
 
-    // Calculăm durata totală a pauzelor în secunde
+    
     const restBreaksDuration = this.waypoints.filter(wp => wp.type === "restBreak").length * 2700;
 
-    // Calculăm durata totală a călătoriei
+    
     const totalRouteDuration = routeDuration + restBreaksDuration;
 
-    // Calculam durata în format ore și minute
+    
     const routeDurationFormatted = calculateDurationInHoursAndMinutes(routeDuration);
     const restBreaksDurationFormatted = calculateDurationInHoursAndMinutes(restBreaksDuration);
     const totalRouteDurationFormatted = calculateDurationInHoursAndMinutes(totalRouteDuration);
 
-    //Calculam arrivel time
+    
     this.arrivalTime = new Date(this.startTime.getTime() + (routeDuration + restBreaksDuration) * 1000);
 
-    //2. Distanta totala parcursa
+    
     const totalDistance = this.distance / 1000;
 
-    //3. Distanta si durata pentru fiecare etapa a calatoriei
+    
     const waypointsInfo = calculateDistanceAndDurationBetweenWaypoints(this.directionResult, this.waypoints);
 
-    //calculam pretul mediu la carburant pentru toate statiile de alimentare/incarcare de pe toata ruta
+    
     let averageFuelPrice = 0;
     let numberOfFuelStations = 0;
 
-    //4. Costurile de carburant
+    
     this.waypoints.forEach((waypoint) => {
       if (waypoint.type !== "restBreak") {
         if (this.selectedVehicle.fuelType === "GASOLINE" && waypoint.fuelType === 'gasoline') {
@@ -830,13 +825,13 @@ export class RoutesComponent {
       }
     }
 
-    // Costul total al carburantului pentru ruta este: Cost = (Distanta totala / 100) * (Consumul mediu / 100) * (Pretul mediu la carburant)
+    
     const totalDistanceInKm = totalDistance;
     const fuelConsumptionPer100Km = this.selectedVehicle.fuelConsumption;
     const totalFuelCost = (totalDistanceInKm / 100) * fuelConsumptionPer100Km * averageFuelPrice;
 
-    //5. Costurile pentru sofer
-    const driverRatePerKilometer = this.selectedDriver.ratePerKilometer; // tariful pe kilometru pentru șoferul selectat
+    
+    const driverRatePerKilometer = this.selectedDriver.ratePerKilometer; 
 
     const totalDriverCost = totalDistanceInKm * driverRatePerKilometer;
 
@@ -866,14 +861,12 @@ export class RoutesComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'Saved') {
-        console.log("Route saved successfully!");
         const dialogRef = this.dialog.open(RouteSavedDialogComponent);
         dialogRef.afterClosed().subscribe(result => {
           this.updateRoutesList();
         });
         this.resetMapConfiguration();
       } else if (result === 'NotSaved') {
-        console.log("There was an error while saving the route!");
         alert("There was an error while saving the route!");
       }
     });
@@ -911,11 +904,9 @@ export class RoutesComponent {
     this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
       (routes) => {
         this.routesList = routes;
-        console.log(routes);
         
       },
       (error) => {
-        console.log(error)
         alert("There was an error while fetching the routes from the server!");
       }
     );

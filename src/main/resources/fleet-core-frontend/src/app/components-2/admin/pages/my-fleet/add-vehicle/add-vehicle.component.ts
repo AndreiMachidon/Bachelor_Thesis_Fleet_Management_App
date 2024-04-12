@@ -238,10 +238,8 @@ export class AddVehicleComponent {
 
       this.vehicleService.addVehicle(vehicle).subscribe((response) => {
         this.dialog.open(AddVehicleDialogComponent);
+        this.router.navigate(['admin-dashboard/my-fleet']);
       });
-
-      this.router.navigate(['admin-dashboard/my-fleet']);
-
     }).catch(error => {
       console.error("Error converting image to base64:", error);
     });

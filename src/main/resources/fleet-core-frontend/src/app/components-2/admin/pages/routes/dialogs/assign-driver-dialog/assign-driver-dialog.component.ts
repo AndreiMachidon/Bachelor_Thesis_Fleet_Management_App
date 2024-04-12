@@ -34,7 +34,7 @@ export class AssignDriverDialogComponent {
         this.dataSource = new MatTableDataSource(response);
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       }
     );
   }

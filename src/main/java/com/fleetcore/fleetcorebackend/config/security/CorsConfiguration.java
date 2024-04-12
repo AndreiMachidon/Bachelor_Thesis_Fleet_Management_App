@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.config;
+package com.fleetcore.fleetcorebackend.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

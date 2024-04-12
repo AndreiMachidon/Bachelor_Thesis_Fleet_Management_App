@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.config;
+package com.fleetcore.fleetcorebackend.config.security;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;

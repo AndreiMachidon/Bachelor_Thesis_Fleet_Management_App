@@ -111,7 +111,6 @@ export class SaveFinalRouteDialogComponent {
       this.dialogRef.close("Saved");
     },
     (error) => {
-      console.log(error);
       this.dialogRef.close("Error");
     }
     );

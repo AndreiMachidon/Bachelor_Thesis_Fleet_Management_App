@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginPageComponent } from './components-2/auth/pages/login-page/login-page.component';
 import { RegisterPageComponent } from './components-2/auth/pages/register-page/register-page.component';
-import { ForgotPasswordPageComponent } from './components-2/auth/pages/forgot-password-page/forgot-password-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //locales
@@ -84,6 +83,8 @@ import { DriverMainComponent } from './components-2/driver/driver-main/driver-ma
 import { DriverRouteWaypointsStepperComponent } from './components-2/driver/components/driver-route-waypoints-stepper/driver-route-waypoints-stepper.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SignOutDialogComponent } from './components-2/admin/admin-dashboard/dialogs/sign-out-dialog/sign-out-dialog.component';
+import { EditAccountDetailsComponent } from './components-2/admin/pages/edit-account-details/edit-account-details.component';
+import { EditDetailsDialogComponent } from './components-2/admin/pages/edit-account-details/dialogs/edit-details-dialog/edit-details-dialog.component';
 
 
 @NgModule({
@@ -91,7 +92,6 @@ import { SignOutDialogComponent } from './components-2/admin/admin-dashboard/dia
     AppComponent,
     LoginPageComponent,
     RegisterPageComponent,
-    ForgotPasswordPageComponent,
     CustomDialogComponent,
     FailedRegisterDialogComponent,
     AdminDashboardComponent,
@@ -133,6 +133,8 @@ import { SignOutDialogComponent } from './components-2/admin/admin-dashboard/dia
     DriverMainComponent,
     DriverRouteWaypointsStepperComponent,
     SignOutDialogComponent,
+    EditAccountDetailsComponent,
+    EditDetailsDialogComponent,
   ],
   imports: [
     BrowserModule,

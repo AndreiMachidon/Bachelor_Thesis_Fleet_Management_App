@@ -26,14 +26,14 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     infoWindowContent.style.width = '500px';
     infoWindowContent.style.height = 'auto';
 
-    // Adăugarea titlului stației
+    
     const stationName = document.createElement('div');
     stationName.style.fontSize = '25px';
     stationName.style.fontWeight = 'bold';
     stationName.style.color = '#0E3F89';
     stationName.textContent = waypoint.gasStationInfo.displayName.text;
 
-    // Create an image element
+    
     const stationImage = document.createElement('img');
     stationImage.src = '../../../assets/images/gas-station-info-window-icon.svg';
     stationImage.alt = 'Station Icon';
@@ -46,15 +46,15 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     titleContainer.style.alignItems = 'center';
     titleContainer.style.justifyContent = 'flex-start';
 
-    // Append the image and station name to the title container
+    
     titleContainer.appendChild(stationImage);
     titleContainer.appendChild(stationName);
 
-    // Now, append the title container to your main info window content
+    
     infoWindowContent.appendChild(titleContainer);
 
 
-    // Adaugare adresa statie
+    
     const stationAddress = document.createElement('div');
     stationAddress.style.fontSize = '15px';
     stationAddress.style.color = '#5CABEC';
@@ -62,7 +62,7 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     infoWindowContent.appendChild(stationAddress);
 
 
-    // Adăugăm opțiunile de combustibil la infowindow
+    
     let fuelOptionsHtml = '';
 
     if (waypoint.gasolinePrice && waypoint.diselPrice) {
@@ -95,14 +95,14 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       infoWindowContent.style.width = '500px';
       infoWindowContent.style.height = 'auto';
 
-      // Adăugarea titlului stației
+      
       const stationName = document.createElement('div');
       stationName.style.fontSize = '25px';
       stationName.style.fontWeight = 'bold';
       stationName.style.color = '#0E3F89';
       stationName.textContent = waypoint.evChargeInfo.displayName.text;
 
-      // Create an image element
+      
       const stationImage = document.createElement('img');
       stationImage.src = '../../../assets/images/electric-station-info-window-icon.svg';
       stationImage.alt = 'Station Icon';
@@ -115,14 +115,14 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       titleContainer.style.alignItems = 'center';
       titleContainer.style.justifyContent = 'flex-start';
 
-      // Append the image and station name to the title container
+      
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
 
-      // Now, append the title container to your main info window content
+      
       infoWindowContent.appendChild(titleContainer);
 
-      //Adaugare adresa statie
+      
       const stationAddress = document.createElement('div');
       stationAddress.style.fontSize = '15px';
       stationAddress.style.color = '#5CABEC';
@@ -131,7 +131,7 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
 
 
 
-    // Verificăm dacă există opțiuni de încărcare electrică
+    
     let chargeOptionsHtml = '';
 
     if (waypoint.evChargeInfo.evChargeOptions && waypoint.evChargeInfo.evChargeOptions.connectorAggregation) {
@@ -147,12 +147,12 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       chargeOptionsHtml = '<div style="font-size:15px; margin-top: 10px; color:black; font-weight: bold; color: #0E3F89;">No information about the charging options available.</div>';
     }
 
-    // Adăugăm opțiunile de încărcare la infowindow
+    
     const chargeOptionsDiv = document.createElement('div');
     chargeOptionsDiv.innerHTML = chargeOptionsHtml;
     infoWindowContent.appendChild(chargeOptionsDiv);
 
-    //Daugam pretul mediu la electricitate
+    
     if (waypoint.electricityPrice) {
       const averagePriceHtml = document.createElement('div');
       averagePriceHtml.innerHTML = `<div style="margin-top: 20px; color:black; font-size:15px; font-weight:bold; margin-bottom:10px">
@@ -176,14 +176,14 @@ function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypo
   infoWindowContent.style.height = '200px';
   infoWindowContent.style.paddingRight = '10px';
 
-  // Adăugarea titlului stației
+  
   const stationName = document.createElement('div');
   stationName.style.fontSize = '25px';
   stationName.style.fontWeight = 'bold';
   stationName.style.color = '#0E3F89';
   stationName.textContent = "Rest Break " + (index + 1) + " -45 minutes";
 
-  // Create an image element
+  
   const stationImage = document.createElement('img');
   stationImage.src = '../../../assets/images/rest-break-info-window-icon.svg';
   stationImage.alt = 'Station Icon';
@@ -223,7 +223,7 @@ function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypo
   infoWindowContent.appendChild(restBreakInfoParagraph);
 
 
-  // Creating the infowindow
+  
   const infoWindow = new google.maps.InfoWindow({
     content: infoWindowContent
   });
@@ -287,35 +287,23 @@ function createInfoWindowForAlertsMarker(map: google.maps.Map, alert: RouteAlert
   });
 }
 
-/**
-* Here we will select the points along the route where we will search for fuel stations
-* In order to limit the number of requests to the Google Places API, we will select just some points along the route in order to search for fuel stations alongise it
-*/
 function getPointsAlongRoute(directionResult: google.maps.DirectionsResult) {
   let points = [];
   const legs = directionResult.routes[0].legs;
-
-  //total route distance in meters
   const totalDistance = directionResult.routes[0].legs.reduce((total, leg) => total + leg.distance.value, 0);
-
-  //the interval in kilometers in which we will select the points along the route to search for fuel stations
-  let interval = 100 * 1000; //we will search for fuel stations every 200 km
-
-  //accumulated distance between 2 points along the route in which we will search for fuel stations
+  let interval = 100 * 1000; 
   let accumulatedDistance = 0;
 
-  //1. Case 1: If the total distance is shorter then the interval, we will search for fuel stations at the midpoint of the route
   if (totalDistance < interval) {
     const midpoint = this.calculateMidpoint(directionResult);
     points.push(midpoint);
   } else {
-    //2. Case 2: If the total distance is greater then the interval, we will search for fuel stations at the start and end of the route and at the points along the route
     legs.forEach((leg) => {
       leg.steps.forEach((step) => {
         accumulatedDistance += step.distance.value;
-        if (accumulatedDistance >= interval) { //if the accumulated distance is greater then the interval, it shows that we need to search for fuel stations at that point
-          points.push(step.start_location); //we push it into the array the points we are going to search fuel stations for
-          accumulatedDistance -= interval; // we substract the interval from the acummulated distance, in order to keep an accurate distance between the current point and the next one
+        if (accumulatedDistance >= interval) { 
+          points.push(step.start_location); 
+          accumulatedDistance -= interval; 
         }
       });
     });
@@ -326,32 +314,21 @@ function getPointsAlongRoute(directionResult: google.maps.DirectionsResult) {
 
 function calculateMidpoint(directionResult: google.maps.DirectionsResult) {
   const totalDistance = directionResult.routes[0].legs.reduce((acc, leg) => acc + leg.distance.value, 0);
-
-  // Jumătatea distanței totale
   let halfDistance = totalDistance / 2;
 
-  // Variabile pentru stocarea informațiilor despre mijlocul rutei
   let midPoint = null;
   let accumulatedDistance = 0;
 
-  // Iterăm prin fiecare leg al rutei
   for (let leg of directionResult.routes[0].legs) {
-    // Iterăm prin fiecare step al leg-ului
     for (let step of leg.steps) {
       accumulatedDistance += step.distance.value;
-
-      // Verificăm dacă am depășit jumătatea distanței
-      if (accumulatedDistance >= halfDistance) {
-        // Salvăm locația de start a step-ului curent ca fiind mijlocul rutei
+      if (accumulatedDistance >= halfDistance) { 
         midPoint = step.start_location;
         break;
       }
     }
-
-    if (midPoint) break; // Dacă am găsit mijlocul, ieșim din buclă
+    if (midPoint) break; 
   }
-
-  // Returnăm mijlocul rutei ca obiect LatLng
   return midPoint ? new google.maps.LatLng(midPoint.lat(), midPoint.lng()) : null;
 
 }
@@ -362,7 +339,7 @@ function calculateDurationInHoursAndMinutes(durationInSeconds: number) {
   return `${hours}h ${minutes}m`;
 }
 
-//functions for calculating final information about the route
+
 function calculateDistanceAndDurationBetweenWaypoints(directionResult: google.maps.DirectionsResult, customWaypoints: CustomWaypoint[]) {
   let result = [];
   const legs = directionResult.routes[0].legs;
