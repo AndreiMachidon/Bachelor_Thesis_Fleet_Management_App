@@ -24,12 +24,11 @@ export class WebSocketsService {
         resolve();
         return;
       }
-  
+
       const ws = new SockJS(SOCKET_LIVE_LOCATION_URL);
       this.stompClient = Stomp.over(ws);
-      this.stompClient.connect({ Authorization: `Bearer ${jwtToken}` },
+      this.stompClient.connect({ 'Authorization': `Bearer ${jwtToken}`},
         (frame) => {
-          console.log('Connected to live location socket: ' + frame);
           resolve();
         },
         (error) => {
