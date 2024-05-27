@@ -1,7 +1,7 @@
 package com.fleetcore.fleetcorebackend.controller;
 
 import com.fleetcore.fleetcorebackend.dto.RouteDto;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import com.fleetcore.fleetcorebackend.services.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

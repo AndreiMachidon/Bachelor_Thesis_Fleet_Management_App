@@ -6,7 +6,7 @@ import com.fleetcore.fleetcorebackend.entities.RouteAlert;
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
 import com.fleetcore.fleetcorebackend.entities.enums.AlertType;
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import com.fleetcore.fleetcorebackend.repositories.MaintenanceRepository;
 import com.fleetcore.fleetcorebackend.repositories.RouteAlertRepository;
 import com.fleetcore.fleetcorebackend.repositories.RouteRepository;

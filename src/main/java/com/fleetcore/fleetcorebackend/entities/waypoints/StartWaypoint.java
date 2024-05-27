@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.entities.routes.waypoints;
+package com.fleetcore.fleetcorebackend.entities.waypoints;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity
-@DiscriminatorValue("DESTINATION")
+@DiscriminatorValue("START")
 @Data
 @AllArgsConstructor
-public class DestinationWaypoint extends Waypoint {
-
+public class StartWaypoint extends Waypoint {
 }
+
+

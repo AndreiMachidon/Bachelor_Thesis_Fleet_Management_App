@@ -26,14 +26,14 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     infoWindowContent.style.width = '500px';
     infoWindowContent.style.height = 'auto';
 
-    
+
     const stationName = document.createElement('div');
     stationName.style.fontSize = '25px';
     stationName.style.fontWeight = 'bold';
     stationName.style.color = '#0E3F89';
     stationName.textContent = waypoint.gasStationInfo.displayName.text;
 
-    
+
     const stationImage = document.createElement('img');
     stationImage.src = '../../../assets/images/gas-station-info-window-icon.svg';
     stationImage.alt = 'Station Icon';
@@ -46,15 +46,15 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     titleContainer.style.alignItems = 'center';
     titleContainer.style.justifyContent = 'flex-start';
 
-    
+
     titleContainer.appendChild(stationImage);
     titleContainer.appendChild(stationName);
 
-    
+
     infoWindowContent.appendChild(titleContainer);
 
 
-    
+
     const stationAddress = document.createElement('div');
     stationAddress.style.fontSize = '15px';
     stationAddress.style.color = '#5CABEC';
@@ -62,7 +62,7 @@ function createInfoWindowForGasStationsMarkerWaypoint(map: google.maps.Map, wayp
     infoWindowContent.appendChild(stationAddress);
 
 
-    
+
     let fuelOptionsHtml = '';
 
     if (waypoint.gasolinePrice && waypoint.diselPrice) {
@@ -126,7 +126,7 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
 
 
 
-    
+
     let chargeOptionsHtml = '';
 
     if (waypoint.evChargeInfo.evChargeOptions && waypoint.evChargeInfo.evChargeOptions.connectorAggregation) {
@@ -142,12 +142,12 @@ function createInfoWindowForElectricStationsMarkerWaypoint(map: google.maps.Map,
       chargeOptionsHtml = '<div style="font-size:15px; margin-top: 10px; color:black; font-weight: bold; color: #0E3F89;">No information about the charging options available.</div>';
     }
 
-    
+
     const chargeOptionsDiv = document.createElement('div');
     chargeOptionsDiv.innerHTML = chargeOptionsHtml;
     infoWindowContent.appendChild(chargeOptionsDiv);
 
-    
+
     if (waypoint.electricityPrice) {
       const averagePriceHtml = document.createElement('div');
       averagePriceHtml.innerHTML = `<div style="margin-top: 20px; color:black; font-size:15px; font-weight:bold; margin-bottom:10px">
@@ -171,14 +171,14 @@ function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypo
   infoWindowContent.style.height = '200px';
   infoWindowContent.style.paddingRight = '10px';
 
-  
+
   const stationName = document.createElement('div');
   stationName.style.fontSize = '25px';
   stationName.style.fontWeight = 'bold';
   stationName.style.color = '#0E3F89';
   stationName.textContent = "Rest Break " + (index + 1) + " -45 minutes";
 
-  
+
   const stationImage = document.createElement('img');
   stationImage.src = '../../../assets/images/rest-break-info-window-icon.svg';
   stationImage.alt = 'Station Icon';
@@ -214,11 +214,11 @@ function createInfoWindowForRestBreaksMarkerWaypoint(map: google.maps.Map, waypo
       <p>The duration of this break should be 45 minutes. </p>
       <p>This location is indicative as the algorithm seeks leisure locations near the required rest break area.</p>
     </div>`;
-    
+
   infoWindowContent.appendChild(restBreakInfoParagraph);
 
 
-  
+
   const infoWindow = new google.maps.InfoWindow({
     content: infoWindowContent
   });
@@ -263,7 +263,7 @@ function createInfoWindowForAlertsMarker(map: google.maps.Map, alert: RouteAlert
     <p style="margin: 5px 0;"><strong>Description:</strong> ${alert.alertDescription}</p>
     <p style="margin: 5px 0; font-size: 14px; color: ${statusColor};"><strong>Status:</strong> ${formatAlertStatus(alert.alertStatus)}</p>
     <p style="margin: 5px 0;"><strong>Issued:</strong> ${new Date(alert.alertIssuedDate).toLocaleString()}</p>
-    
+
   </div>`;
 
   if (alert.alertStatus === "RESOLVED" && alert.alertResolvedDate) {
@@ -286,24 +286,23 @@ function getPointsAlongRoute(directionResult: google.maps.DirectionsResult) {
   let points = [];
   const legs = directionResult.routes[0].legs;
   const totalDistance = directionResult.routes[0].legs.reduce((total, leg) => total + leg.distance.value, 0);
-  let interval = 100 * 1000; 
+  let interval = 100 * 1000;
   let accumulatedDistance = 0;
 
   if (totalDistance < interval) {
-    const midpoint = this.calculateMidpoint(directionResult);
+    const midpoint = calculateMidpoint(directionResult);
     points.push(midpoint);
   } else {
     legs.forEach((leg) => {
       leg.steps.forEach((step) => {
         accumulatedDistance += step.distance.value;
-        if (accumulatedDistance >= interval) { 
-          points.push(step.start_location); 
-          accumulatedDistance -= interval; 
+        if (accumulatedDistance >= interval) {
+          points.push(step.start_location);
+          accumulatedDistance -= interval;
         }
       });
     });
   }
-
   return points;
 }
 
@@ -317,12 +316,12 @@ function calculateMidpoint(directionResult: google.maps.DirectionsResult) {
   for (let leg of directionResult.routes[0].legs) {
     for (let step of leg.steps) {
       accumulatedDistance += step.distance.value;
-      if (accumulatedDistance >= halfDistance) { 
+      if (accumulatedDistance >= halfDistance) {
         midPoint = step.start_location;
         break;
       }
     }
-    if (midPoint) break; 
+    if (midPoint) break;
   }
   return midPoint ? new google.maps.LatLng(midPoint.lat(), midPoint.lng()) : null;
 

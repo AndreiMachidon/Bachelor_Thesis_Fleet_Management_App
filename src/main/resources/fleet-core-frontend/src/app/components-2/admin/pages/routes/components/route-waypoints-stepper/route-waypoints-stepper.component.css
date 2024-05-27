@@ -5,25 +5,25 @@
     gap: 1.5rem;
     margin-bottom: 2rem;
   }
-  
+
   .c-timeline__item .c-timeline__content {
     flex: 1;
     padding: 0 1.5rem;
     padding-bottom: 2rem;
   }
-  
+
   .c-timeline__content:before {
     content: "";
     position: absolute;
     left: 0;
     top: 0;
-    bottom: -2rem; /* Aceasta ar trebui să fie aceeași valoare ca și margin-bottom de la .c-timeline__item */
+    bottom: -2rem;
     width: 2px;
     background-color: lightgrey;
     z-index: 0;
 
   }
-  
+
   .c-timeline__content:after {
     content: "";
     position: absolute;
@@ -37,29 +37,29 @@
     border-radius: 50%;
 
   }
-  
+
   .c-timeline__item:last-child .c-timeline__content:before {
     display: none;
   }
-  
+
   .c-timeline__title {
     font-weight: bold;
     color: #0E3F89;
     font-size: 22px;
   }
-  
+
   .c-timeline__desc {
     color: gray;
     margin-top: -1rem;
   }
-  
+
   .waypoint-details {
     text-align: start;
     color: #5CABEC;
     font-weight: bold;
     margin-top: 3rem;
   }
-  
+
   .wrapper {
     max-width: 600px;
     margin: 2rem auto;
@@ -70,13 +70,13 @@
     left: 2px;
     top: 11px;
     bottom: 0;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
     z-index: 2;
-    background-size: cover; 
+    background-size: cover;
     width: 26px;
     height: 26px;
     background-repeat: no-repeat;
-    background-image: url('../../../../../../../assets/stepper-icons/destination_stepper_icon.png'); 
+    background-image: url('../../../../../../../assets/stepper-icons/destination_stepper_icon.png');
   }
 
   .c-timeline__icon--start{
@@ -84,9 +84,9 @@
     left: 2px;
     top: 11px;
     bottom: 0;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
     z-index: 2;
-    background-size: cover; 
+    background-size: cover;
     width: 26px;
     height: 26px;
     background-repeat: no-repeat;
@@ -98,9 +98,9 @@
     left: 2px;
     top: 11px;
     bottom: 0;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
     z-index: 2;
-    background-size: cover; 
+    background-size: cover;
     width: 26px;
     height: 26px;
     background-repeat: no-repeat;
@@ -112,9 +112,9 @@
     left: 2px;
     top: 11px;
     bottom: 0;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
     z-index: 2;
-    background-size: cover; 
+    background-size: cover;
     width: 26px;
     height: 26px;
     background-repeat: no-repeat;
@@ -126,9 +126,9 @@
     left: 2px;
     top: 11px;
     bottom: 0;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
     z-index: 2;
-    background-size: cover; 
+    background-size: cover;
     width: 26px;
     height: 26px;
     background-repeat: no-repeat;

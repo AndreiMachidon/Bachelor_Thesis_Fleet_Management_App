@@ -80,12 +80,12 @@ public class UserService {
     }
 
     public String getImageData(Long userId){
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findById(userId).get();
         return user.getImageData();
     }
 
     public void updateUserDetails(User newUser) {
-        User existingUser = userRepository.findUserById(newUser.getId());
+        User existingUser = userRepository.findById(newUser.getId()).get();
         if(newUser.getPassword().isEmpty()) {
             newUser.setPassword(existingUser.getPassword());
         } else {

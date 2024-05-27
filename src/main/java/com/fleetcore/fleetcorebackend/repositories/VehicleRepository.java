@@ -12,8 +12,6 @@ import java.util.List;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
-
-
     List<Vehicle> getVehiclesByAdminId(Long adminId);
 
     Vehicle getVehicleById(Long id);
@@ -29,8 +27,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             "    SELECT m.vehicleId FROM Maintenance m WHERE m.vehicleId = v.id AND (" +
             "        m.maintananceDate BETWEEN :startTime AND :endTime))")
     List<Vehicle> findAvailableVehicles(@Param("adminId") Long adminId,
-                                                         @Param("startTime") Date startTime,
-                                                         @Param("endTime") Date endTime);
+                                        @Param("startTime") Date startTime,
+                                        @Param("endTime") Date endTime);
 
 
 }

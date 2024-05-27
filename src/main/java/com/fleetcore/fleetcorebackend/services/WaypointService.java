@@ -1,10 +1,9 @@
 package com.fleetcore.fleetcorebackend.services;
 
 import com.fleetcore.fleetcorebackend.dto.WaypointDto;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
-import com.fleetcore.fleetcorebackend.entities.routes.waypoints.*;
+import com.fleetcore.fleetcorebackend.entities.Route;
+import com.fleetcore.fleetcorebackend.entities.waypoints.*;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 

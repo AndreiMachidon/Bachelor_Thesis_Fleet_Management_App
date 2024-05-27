@@ -11,13 +11,13 @@ import com.fleetcore.fleetcorebackend.entities.RouteAlert;
 import com.fleetcore.fleetcorebackend.entities.User;
 import com.fleetcore.fleetcorebackend.entities.enums.AlertType;
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import com.fleetcore.fleetcorebackend.exceptions.AuthException;
 import com.fleetcore.fleetcorebackend.repositories.DriverDetailsRepository;
 import com.fleetcore.fleetcorebackend.repositories.RouteAlertRepository;
 import com.fleetcore.fleetcorebackend.repositories.RouteRepository;
 import com.fleetcore.fleetcorebackend.repositories.UserRepository;
-import com.fleetcore.fleetcorebackend.util.DriverPasswordGenerator;
+import com.fleetcore.fleetcorebackend.config.security.DriverPasswordGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,7 +54,7 @@ public class DriverService {
         List<DriverDto> drivers = new ArrayList<>();
 
         for (DriverDetails details : driverDetails) {
-            User userDetails = userRepository.findUserByDriverDetailsId(details.getId());
+            User userDetails = userRepository.findByDriverDetailsId(details.getId()).get();
             DriverDto driverDto = new DriverDto();
             driverDto.setId(details.getId());
             driverDto.setOrganisationName(userDetails.getOrganisationName());
@@ -158,7 +158,7 @@ public class DriverService {
     public DriverDto getDriverByDriverId(Long driverId) {
         try {
             DriverDetails driverDetails = driverDetailsRepository.getDriverDetailsById(driverId);
-            User user = userRepository.findUserByDriverDetailsId(driverId);
+            User user = userRepository.findByDriverDetailsId(driverId).get();
 
             DriverDto driverDto = DriverDto.builder()
                     .id(driverDetails.getId())

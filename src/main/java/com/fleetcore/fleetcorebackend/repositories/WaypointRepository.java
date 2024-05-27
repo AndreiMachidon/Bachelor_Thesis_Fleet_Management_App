@@ -1,6 +1,6 @@
 package com.fleetcore.fleetcorebackend.repositories;
 
-import com.fleetcore.fleetcorebackend.entities.routes.waypoints.Waypoint;
+import com.fleetcore.fleetcorebackend.entities.waypoints.Waypoint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

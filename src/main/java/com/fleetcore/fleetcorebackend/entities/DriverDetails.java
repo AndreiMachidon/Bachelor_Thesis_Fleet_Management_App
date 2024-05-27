@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -34,7 +33,6 @@ public class DriverDetails {
     @Column(name = "total_kilometers_driven")
     private double totalKilometersDriven;
 
-    //todo: foreign key
     @Column(name = "admin_id")
     private Long adminId;
 
