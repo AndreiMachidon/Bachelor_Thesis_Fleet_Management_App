@@ -4,8 +4,7 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
-    padding-left: 0.8em;
-    padding-right: 0.8em;
+
 }
 
 
@@ -39,7 +38,7 @@
 	from {
 		-webkit-transform: translateX(0);
 	}
-	to { 
+	to {
 		-webkit-transform: translateX(46px);
 	}
 }
@@ -48,7 +47,7 @@
 	from {
 		transform: translateX(0);
 	}
-	to { 
+	to {
 		transform: translateX(46px);
 	}
 }
@@ -79,7 +78,7 @@
     top: 0;
     bottom: 0;
     z-index: -1;
-	
+
     background: -webkit-repeating-linear-gradient(
       145deg,
       #dbe8f8 1px, /* Nuanță mai deschisă de albastru */
@@ -96,12 +95,12 @@
       #c8d7eb 12px, /* Albastru mediu */
       #c8d7eb 20px
     );
-    
+
     -webkit-animation-name: MOVE-BG;
 	-webkit-animation-duration: .6s;
 	-webkit-animation-timing-function: linear;
 	-webkit-animation-iteration-count: infinite;
-	
+
     animation-name: MOVE-BG;
 	animation-duration: .6s;
 	animation-timing-function: linear;
@@ -121,4 +120,3 @@
 }
 
 
-  

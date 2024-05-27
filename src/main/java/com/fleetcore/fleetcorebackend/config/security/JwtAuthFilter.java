@@ -22,7 +22,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-
         if (header != null) {
             String[] authElements = header.split(" ");
 
@@ -37,7 +36,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }

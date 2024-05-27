@@ -16,4 +16,4 @@ export const SOCKET_ROUTE_STATUS_SUBSCRIBE_URL = "/topic/routeStatuses"
 
 export const TOKEN_ENCRYPTION_SECRET = "MDWEObP3ozFYkQFxw2Fjh4oNqJEQz_Cj2AWa2GDB8DWBWQcH1IIVgshle1ltlmHLUovFrTDcGCJTE1gU_AqOlg";
 
-
+export const GOOGLE_MAPS_API_KEY = "<api-key>";

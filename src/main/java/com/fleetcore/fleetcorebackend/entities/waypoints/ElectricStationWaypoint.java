@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.entities.routes.waypoints;
+package com.fleetcore.fleetcorebackend.entities.waypoints;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

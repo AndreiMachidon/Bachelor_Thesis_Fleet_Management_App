@@ -1,6 +1,6 @@
 package com.fleetcore.fleetcorebackend.repositories;
 
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

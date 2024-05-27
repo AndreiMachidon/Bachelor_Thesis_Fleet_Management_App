@@ -9,7 +9,7 @@ import com.fleetcore.fleetcorebackend.entities.RouteAlert;
 import com.fleetcore.fleetcorebackend.entities.Vehicle;
 import com.fleetcore.fleetcorebackend.entities.enums.AlertStatus;
 import com.fleetcore.fleetcorebackend.entities.enums.AlertType;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import com.fleetcore.fleetcorebackend.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package com.fleetcore.fleetcorebackend.entities.routes;
+package com.fleetcore.fleetcorebackend.entities;
 
 
 import com.fleetcore.fleetcorebackend.entities.enums.RouteStatus;
-import com.fleetcore.fleetcorebackend.entities.routes.waypoints.Waypoint;
+import com.fleetcore.fleetcorebackend.entities.waypoints.Waypoint;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

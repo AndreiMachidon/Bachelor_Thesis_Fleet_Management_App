@@ -3,8 +3,6 @@ import { FormControl } from '@angular/forms';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { } from 'googlemaps';
 import { MatDialog } from '@angular/material/dialog';
-import { VehicleService } from '../my-fleet/services/vehicle-service.service';
-import { MyDriversService } from '../my-drivers/services/my-drivers-service.service';
 import { AssignVehicleDialogComponent } from './dialogs/assign-vehicle-dialog/assign-vehicle-dialog.component';
 import { Vehicle } from '../../admin-dashboard/models/vehicle.model';
 import { AssignDriverDialogComponent } from './dialogs/assign-driver-dialog/assign-driver-dialog.component';
@@ -17,7 +15,6 @@ import { calculateDistanceAndDurationBetweenWaypoints, calculateDurationInHoursA
 import { SaveFinalRouteDialogComponent } from './dialogs/save-final-route-dialog/save-final-route-dialog.component';
 import { RoutesService } from './services/routes.service';
 import { RouteDto } from './dto/route-dto.model';
-import * as e from 'express';
 import { WebSocketsService } from 'src/app/components-2/global-services/web-sockets.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { RouteSavedDialogComponent } from './dialogs/route-saved-dialog/route-saved-dialog.component';
@@ -53,7 +50,7 @@ export class RoutesComponent {
   minDate: Date = new Date();
   startTime: Date = null;
   arrivalTime: Date = null;
- 
+
   selectedVehicle: Vehicle = null;
   selectedDriver: Driver = null;
 
@@ -62,7 +59,7 @@ export class RoutesComponent {
 
   waypoints: CustomWaypoint[] = [];
   waypointsMarkers: google.maps.Marker[] = [];
- 
+
   showTrafficLayer: boolean = false;
   trafficLayer: google.maps.TrafficLayer;
 
@@ -70,7 +67,7 @@ export class RoutesComponent {
   @ViewChild('startingLocationAuto') startingLocationAuto: MatAutocomplete;
   @ViewChild('destinationLocationAuto') destinationLocationAuto: MatAutocomplete;
 
-  
+
   routesList: RouteDto[] = [];
 
   constructor(
@@ -100,7 +97,7 @@ export class RoutesComponent {
       mapTypeId: google.maps.MapTypeId.HYBRID,
       mapId: '1d3279d2082b9187',
       restriction: {
-        latLngBounds: { 
+        latLngBounds: {
           north: 71,
           south: 34,
           east: 40,
@@ -170,7 +167,7 @@ export class RoutesComponent {
   }
 
   toggleTrafficLayer(show: boolean) {
-    this.showTrafficLayer = show; 
+    this.showTrafficLayer = show;
     if (this.showTrafficLayer) {
       this.trafficLayer.setMap(this.map);
     } else {
@@ -265,6 +262,8 @@ export class RoutesComponent {
     this.directionService.route(request, (response: google.maps.DirectionsResult, status: google.maps.DirectionsStatus) => {
 
       if (status === google.maps.DirectionsStatus.OK) {
+        console.log(this.directionResult);
+
         this.directionRenderer.setMap(this.map);
         this.directionRenderer.setDirections(response);
         this.distance = response.routes[0].legs.reduce((acc, leg) => acc + leg.distance.value, 0);
@@ -272,7 +271,7 @@ export class RoutesComponent {
         this.map.fitBounds(response.routes[0].bounds);
         this.directionResult = response;
         this.isRouteConfigured = true;
- 
+
         const startMarker = createCustomMarker(this.map, response.routes[0].legs[0].start_location, '../../../assets/markers/start_point.png');
         this.waypointsMarkers.push(startMarker);
 
@@ -282,7 +281,7 @@ export class RoutesComponent {
         if (!isFuelWaypointAdded && !areBreaksWaypointsAdded) {
           this.addRestBreakWaipoints(response);
         }
-   
+
         this.placeWaypointMarkers();
 
       } else {
@@ -297,7 +296,7 @@ export class RoutesComponent {
   }
 
   async addRestBreakWaipoints(directionResult: google.maps.DirectionsResult) {
-    const maxDrivingTime = 4.5 * 3600; 
+    const maxDrivingTime = 4.5 * 3600;
     let totalDrivenTime = 0;
     let promises: Promise<any>[] = [];
 
@@ -327,7 +326,7 @@ export class RoutesComponent {
         };
         this.waypoints.push(waypoint);
       }
-     
+
     });
 
     this.findOptimalRoute(false, true);
@@ -494,7 +493,7 @@ export class RoutesComponent {
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averageGasolinePrice = this.fuelPriceService.getGasolinePrice(country);
       const averageDieselPrice = this.fuelPriceService.getDieselPrice(country);
-      
+
       let fuelOptionsHtml = '';
 
       if (averageGasolinePrice && averageDieselPrice) {
@@ -509,7 +508,7 @@ export class RoutesComponent {
       fuelOptionsDiv.innerHTML = fuelOptionsHtml;
       infoWindowContent.appendChild(fuelOptionsDiv);
 
-      
+
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
       Object.assign(addToRouteButton.style, {
@@ -593,7 +592,7 @@ export class RoutesComponent {
 
       titleContainer.appendChild(stationImage);
       titleContainer.appendChild(stationName);
-      
+
       infoWindowContent.appendChild(titleContainer);
 
       const stationAddress = document.createElement('div');
@@ -602,7 +601,7 @@ export class RoutesComponent {
       stationAddress.textContent = place.formattedAddress;
       infoWindowContent.appendChild(stationAddress);
 
-      
+
       const country = this.fuelPriceService.getCountryFromPlace(place);
       const averagePrice = this.fuelPriceService.getElectricityPrice(country);
 
@@ -610,7 +609,7 @@ export class RoutesComponent {
 
       if (place.evChargeOptions && place.evChargeOptions.connectorAggregation) {
         console.log(place.evChargeOptions);
-        
+
         chargeOptionsHtml += '<div style="font-weight: bold; margin-bottom: 10px; margin-top: 12px; font-size:18px; color: #0E3F89;">Charge Options:</div>';
         chargeOptionsHtml += place.evChargeOptions.connectorAggregation.map((connector, index, array) => {
           return `<div style="padding: 10px; border-bottom: ${index === array.length - 1 ? 'none' : '1px solid #ddd'};">
@@ -623,12 +622,12 @@ export class RoutesComponent {
         chargeOptionsHtml = '<div style="font-size:15px; margin-top: 10px; color:black; font-weight: bold; color: #0E3F89;">No information about the charging options available.</div>';
       }
 
-      
+
       const chargeOptionsDiv = document.createElement('div');
       chargeOptionsDiv.innerHTML = chargeOptionsHtml;
       infoWindowContent.appendChild(chargeOptionsDiv);
 
-      
+
       if (averagePrice) {
         const averagePriceHtml = document.createElement('div');
         averagePriceHtml.innerHTML = `<div style="margin-top: 25px; color:black; font-size:15px; font-weight:bold;">
@@ -637,7 +636,7 @@ export class RoutesComponent {
         infoWindowContent.appendChild(averagePriceHtml);
       }
 
-      
+
       const addToRouteButton = document.createElement('button');
       addToRouteButton.textContent = 'Add to route';
       Object.assign(addToRouteButton.style, {
@@ -786,12 +785,12 @@ export class RoutesComponent {
       }
     }
 
-    
+
     const totalDistanceInKm = totalDistance;
     const fuelConsumptionPer100Km = this.selectedVehicle.fuelConsumption;
     const totalFuelCost = (totalDistanceInKm / 100) * fuelConsumptionPer100Km * averageFuelPrice;
- 
-    const driverRatePerKilometer = this.selectedDriver.ratePerKilometer; 
+
+    const driverRatePerKilometer = this.selectedDriver.ratePerKilometer;
 
     const totalDriverCost = totalDistanceInKm * driverRatePerKilometer;
 
@@ -864,7 +863,7 @@ export class RoutesComponent {
     this.routesService.getAll(this.authService.getUserDetails().id).subscribe(
       (routes) => {
         this.routesList = routes;
-        
+
       },
       (error) => {
         alert("There was an error while fetching the routes from the server!");

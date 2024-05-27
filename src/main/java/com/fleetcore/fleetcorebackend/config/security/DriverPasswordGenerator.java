@@ -1,4 +1,4 @@
-package com.fleetcore.fleetcorebackend.util;
+package com.fleetcore.fleetcorebackend.config.security;
 
 import java.security.SecureRandom;
 

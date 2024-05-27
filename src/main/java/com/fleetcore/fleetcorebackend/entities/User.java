@@ -14,36 +14,35 @@ import java.util.Base64;
 @Builder
 @Data
 @Entity
-@Table(name = "app_user")
+@Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "organisation_name", nullable = false)
+    @Column(nullable = false)
     private String organisationName;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Column(nullable = false)
     private String email;
 
-    @Column(name = "role", nullable = false)
+    @Column(nullable = false)
     private String role;
 
-    @Column(nullable = true)
     private String password;
 
     @Lob
-    @Column(name = "image_data", columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
     @Nullable
@@ -64,4 +63,5 @@ public class User {
             return null;
         }
     }
+
 }

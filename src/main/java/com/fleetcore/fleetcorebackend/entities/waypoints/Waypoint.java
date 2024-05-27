@@ -1,8 +1,8 @@
-package com.fleetcore.fleetcorebackend.entities.routes.waypoints;
+package com.fleetcore.fleetcorebackend.entities.waypoints;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fleetcore.fleetcorebackend.entities.enums.WaypointType;
-import com.fleetcore.fleetcorebackend.entities.routes.Route;
+import com.fleetcore.fleetcorebackend.entities.Route;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
