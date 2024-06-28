@@ -37,7 +37,6 @@ public class MaintenanceScheduler {
                     vehicle.setVehicleStatus(VehicleStatus.IDLE);
                     vehicleService.updateVehicle(vehicle);
                 }
-
             }
         }
     }

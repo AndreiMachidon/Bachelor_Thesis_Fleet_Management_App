@@ -1,8 +1,16 @@
 FROM node:16-alpine AS build
 WORKDIR /app
+
+ARG GOOGLE_MAPS_API_KEY
+ARG TOKEN_ENCRYPTION_SECRET
+
 COPY package*.json ./
 RUN npm install
 COPY . .
+
+RUN sed -i "s/GOOGLE_MAPS_API_KEY_placeholder/${GOOGLE_MAPS_API_KEY}/g" src/environments/environment.prod.ts
+RUN sed -i "s/TOKEN_ENCRYPTION_SECRET_placeholder/${TOKEN_ENCRYPTION_SECRET}/g" src/environments/environment.prod.ts
+
 RUN npm run build
 EXPOSE 4200
-CMD ["npm", "start", "--", "--host", "0.0.0.0", "--port", "4200"]
+CMD ["npm", "run", "start:prod"]

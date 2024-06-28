@@ -30,7 +30,7 @@ jobs:
     - name: Build and push container image to registry
       run: |
         cd src/main/resources/fleet-core-frontend
-        docker build -t index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64e618ff5107472c8f12be39490fee86 }}/fleet-core-frontend:${{ github.sha }} -f Dockerfile-Frontend .
+        docker build --build-arg GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }} --build-arg TOKEN_ENCRYPTION_SECRET=${{ secrets.TOKEN_ENCRYPTION_SECRET }} -t index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64e618ff5107472c8f12be39490fee86 }}/fleet-core-frontend:${{ github.sha }} -f Dockerfile-Frontend .
         docker push index.docker.io/${{ secrets.AzureAppService_ContainerUsername_64e618ff5107472c8f12be39490fee86 }}/fleet-core-frontend:${{ github.sha }}
 
   deploy:
